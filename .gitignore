@@ -1,0 +1,8 @@
+node_modules/
+dist/
+# ảnh trang dùng để đọc khi sinh nội dung, tái tạo bằng scripts/extract.py
+data/page-images/
+*.log
+scripts/__pycache__/
+# text thô trích từ slide (có credential in trên slide), tái tạo bằng npm run extract
+data/raw/

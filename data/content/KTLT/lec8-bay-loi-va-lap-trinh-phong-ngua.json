@@ -1,0 +1,946 @@
+{
+  "version": 1,
+  "subject": "KTLT",
+  "lesson": "lec8-bay-loi-va-lap-trinh-phong-ngua",
+  "title": "Bài 8 – Bẫy lỗi và lập trình phòng ngừa",
+  "summary": "## 1. Khái niệm lập trình phòng ngừa [tr. 4](#p4)–[tr. 9](#p9)\n- **Lập trình phòng ngừa (defensive programming)** tự bảo vệ chương trình khỏi:\n  - Ảnh hưởng tiêu cực của **dữ liệu không hợp lệ**.\n  - Sự kiện tưởng như \"không bao giờ\" xảy ra.\n  - Sai lầm của lập trình viên khác.\n- Ý tưởng chính: chương trình nhận dữ liệu lỗi vẫn chạy thông, kể cả khi chương trình khác cũng đã nhận dữ liệu lỗi đó [tr. 5](#p5).\n- **Các lỗi có thể phòng ngừa** [tr. 6](#p6):\n  - Phần cứng: buffer overflow, divide by zero.\n  - Chương trình: giá trị biến luôn trong vùng kiểm soát. **\"Do not trust anything; verify everything\"**.\n  - Người dùng: đừng cho rằng họ luôn làm đúng chỉ dẫn.\n  - Chính mã phòng ngừa cũng có thể gây lỗi.\n- **Các giai đoạn** [tr. 7](#p7):\n  - Lập kế hoạch: dành thời gian kiểm tra, gỡ rối; xong trước hạn ít nhất 3 ngày.\n  - Thiết kế giải thuật trước khi viết code.\n  - Giữ vững cấu trúc: viết và kiểm thử từng phần và mối liên kết. Dùng điều kiện trước/sau khi gọi mỗi phần. Chú thích cấu trúc.\n- **Testing** chỉ ra vấn đề làm chương trình không chạy. Kiểm tra theo cấu trúc chương trình, vd hàm `ReadWord()` bị lỗi thì sao [tr. 8](#p8).\n- **Error handling**: xử lý lỗi dự kiến sẽ xảy ra. Tuỳ tình huống có thể [tr. 9](#p9):\n  - Trả về giá trị trung lập.\n  - Thay bằng đoạn dữ liệu hợp lệ tiếp theo.\n  - Trả về giá trị như lần trước.\n  - Thay bằng giá trị hợp lệ gần nhất.\n  - Ghi cảnh báo vào tệp.\n  - Trả về mã lỗi.\n  - Gọi thủ tục hoặc đối tượng xử lý lỗi.\n  - Hiện thông báo hoặc tắt máy.\n\n## 2. Bảo vệ chương trình khỏi đầu vào không hợp lệ [tr. 10](#p10)–[tr. 21](#p21)\n- Chạy thông một lần, hoặc đúng với input n, **không** có nghĩa đúng với mọi input. Với bất cứ đầu vào nào chương trình cũng không được crash. Có lỗi thì dừng và thông báo [tr. 11](#p11).\n- **GIGO** (\"Garbage in, garbage out\") là dấu hiệu chương trình tồi. Chương trình tốt thì rác vào không có gì ra, hoặc có thông báo lỗi, hoặc không cho rác vào [tr. 12](#p12).\n- **Kiểm tra mọi tham số và dữ liệu từ nguồn ngoài** (file, bàn phím, mạng) [tr. 13](#p13)–[tr. 14](#p14):\n  - Số nằm trong dung sai, xâu đủ ngắn.\n  - Với ứng dụng bảo mật, chú ý tràn bộ nhớ, SQL injection, HTML/XML injection, tràn số.\n- Lỗi nhập phổ biến: dữ liệu quá lớn, sai kiểu, quá nhỏ hoặc âm, **chia cho 0** [tr. 15](#p15).\n- Ví dụ [tr. 16](#p16)–[tr. 19](#p19):\n  - `avg(a, n)` lỗi khi **n = 0**.\n  - `class_of_degree` thêm kiểm tra `percent < 0 || percent > 100`.\n  - `my_strlen` bắt đầu `len = 1` nên bỏ qua `string[0]` và đọc ngoài xâu khi xâu rỗng.\n  - Luôn kiểm tra **điều kiện biên** và divide by zero.\n- **Tràn số** [tr. 20](#p20)–[tr. 21](#p21):\n  - Ariane 5 (04/06/1996) nổ sau 37 giây ở độ cao 3700 m do chuyển số thực 64 bit sang số nguyên 16 bit bị tràn. Chi phí phát triển 7 tỷ USD, hàng hoá 370 triệu USD.\n  - Cần biết giá trị lớn nhất kiểu dữ liệu lưu được: unsigned char 0–255, kích thước int có thể thay đổi.\n\n## 3. Assertions [tr. 22](#p22)–[tr. 32](#p32)\n- **Assertion** là macro hoặc chương trình con cho phép chương trình **tự kiểm tra khi chạy** trong quá trình phát triển [tr. 23](#p23):\n  - True là OK, false là có lỗi.\n  - Ghi lại giả thiết trong code, loại bỏ điều kiện không mong đợi.\n  - Vd assert số bản ghi ≤ 50 000.\n- Kiểm tra giả thiết như [tr. 24](#p24):\n  - Tham số trong phạm vi mong đợi.\n  - File/stream đang mở hoặc đóng.\n  - Pointer non-NULL.\n  - Mảng đủ phần tử, danh sách rỗng hoặc đầy…\n- End user không cần thấy assertion. Assertion được dịch khi phát triển và **loại bỏ khỏi bản sản phẩm** để nâng hiệu năng. Có thể tự viết macro `ASSERT(condition, message)` [tr. 25](#p25)–[tr. 26](#p26).\n- **Assertion và error handling** [tr. 27](#p27)–[tr. 28](#p28):\n  - Error handling dùng cho tình huống **lường trước** (bad input data).\n  - Assertion dùng cho tình huống **không lường trước** (bug trong code).\n  - **Tránh đặt code xử lý trong assertion**, vì tắt assertion thì code đó mất.\n  - Chương trình lớn: xác nhận lỗi bằng assertion trước rồi bẫy lỗi bằng error handling. Có thể dùng cả hai cho cùng lỗi (vd mã nguồn Microsoft Word).\n- `void assert(int bieu_thuc)` trong `<assert.h>` [tr. 29](#p29)–[tr. 32](#p32):\n  - Biểu thức false thì in thông điệp ra standard error và gọi `abort()`.\n  - Biểu thức true thì không làm gì.\n  - Vd `assert(a >= 10)`.\n\n## 4. Kỹ thuật xử lý lỗi [tr. 33](#p33)–[tr. 42](#p42)\n- **Lỗi**: chương trình chạy không như dự định. Cần định vị nguồn gây lỗi và kiểm soát lỗi. In lỗi ra `stderr` bằng `fprintf(stderr, ...)` [tr. 34](#p34).\n- Kiểm tra mọi thao tác nhập và dùng dữ liệu [tr. 35](#p35):\n  - Kiểm tra mỗi lần mở tệp hoặc cấp phát bộ nhớ.\n  - Out of memory thì in lỗi và kết thúc (-1).\n  - Dữ liệu người dùng lỗi thì cho nhập lại.\n- **Phục hồi tài nguyên**: gán giá trị hợp lý cho biến còn dùng. Với transaction cập nhật nhiều bảng thì cần **rollback** [tr. 37](#p37).\n- **Chắc chắn (robustness)**: luôn chạy thông kể cả khi có lỗi. **Chính xác (correctness)**: không bao giờ gặp lại lỗi.\n  - Ưu tiên **chắc chắn**, vì kết quả nào đó thường tốt hơn shutdown. Vd trình soạn thảo hiển thị sai thì nhấn PgUp/PgDn để làm mới [tr. 38](#p38).\n- Không phải lúc nào cũng loại bỏ hết lỗi: lỗi nhỏ không ảnh hưởng mục đích chính có thể bỏ qua. Phần mềm \"chịu lỗi\" sống chung với lỗi [tr. 39](#p39).\n- **Hàm bao gói (wrapper)** = gọi hàm gốc + bẫy lỗi. Vd `safe_malloc`: malloc, kiểm tra NULL, báo \"out of memory\" kèm `__LINE__`, `__FILE__`, rồi `exit(-1)` [tr. 40](#p40)–[tr. 41](#p41).\n- **Giao diện rõ ràng**: hàm dễ hiểu, tái sử dụng được, ít tham số. Nghĩ xem cần truyền gì vào và lấy được gì ra [tr. 42](#p42).\n\n## 5. Xử lý ngoại lệ (C++) [tr. 43](#p43)–[tr. 50](#p50)\n- Ba từ khoá **try, catch, throw** [tr. 44](#p44)–[tr. 45](#p45):\n  - Code có thể gây lỗi đặt trong `try`.\n  - Bất thường thì `throw` ngoại lệ, và khối code đang chạy dừng lại.\n  - `catch` đặt sau `try`, chỉ bắt ngoại lệ đúng kiểu. Không có catch phù hợp thì chương trình kết thúc.\n- `throw 997;`, `throw string(\"Bye world!\");`, `throw \"Division by zero!\";`, bắt bằng `catch (const char* msg)`. `catch (...)` bắt mọi kiểu [tr. 46](#p46)–[tr. 48](#p48).\n- **Ngoại lệ chuẩn** trong `<exception>` [tr. 49](#p49)–[tr. 50](#p50):\n  - Gốc là `std::exception`.\n  - `bad_alloc` (new thất bại), `bad_cast` (dynamic_cast), `bad_typeid`.\n  - `logic_error` gồm domain_error, invalid_argument, length_error, out_of_range.\n  - `runtime_error` gồm overflow_error, range_error, underflow_error.",
+  "keyConcepts": [
+    {
+      "term": "Lập trình phòng ngừa",
+      "definition": "Tự bảo vệ chương trình khỏi dữ liệu không hợp lệ, sự kiện 'không bao giờ xảy ra' và sai lầm của lập trình viên khác.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Do not trust anything; verify everything",
+      "definition": "Nguyên tắc: kiểm tra mọi giá trị, không tin bất cứ nguồn nào.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Error handling",
+      "definition": "Xử lý các lỗi dự kiến sẽ xảy ra: giá trị trung lập, mã lỗi, ghi log, thông báo…",
+      "pages": [
+        9,
+        36
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "GIGO",
+      "definition": "Garbage in, garbage out – dấu hiệu chương trình tồi; chương trình tốt không cho rác vào hoặc báo lỗi.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Kiểm tra dữ liệu nguồn ngoài",
+      "definition": "Dữ liệu từ file, bàn phím, mạng phải nằm trong giới hạn; chú ý tấn công injection, tràn bộ nhớ.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Lỗi nhập phổ biến",
+      "definition": "Quá lớn, sai kiểu, quá nhỏ/âm, chia cho 0.",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Điều kiện biên",
+      "definition": "Kiểm tra giá trị quá lớn/quá nhỏ và trường hợp divide by zero.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Tràn số (overflow)",
+      "definition": "Giá trị vượt khả năng lưu của kiểu; vd Ariane 5 chuyển float 64 bit sang int 16 bit.",
+      "pages": [
+        20,
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Assertion",
+      "definition": "Macro/chương trình con giúp chương trình tự kiểm tra giả thiết khi chạy trong quá trình phát triển.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Assertion trong sản phẩm",
+      "definition": "Dịch khi phát triển, loại bỏ khỏi bản sản phẩm; end user không thấy.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Assertion vs error handling",
+      "definition": "Error handling cho tình huống lường trước (bad input); assertion cho tình huống không lường trước (bug).",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Không đặt xử lý trong assertion",
+      "definition": "Tắt assertion sẽ làm mất code xử lý.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "assert()",
+      "definition": "Hàm trong <assert.h>: biểu thức false thì in lỗi ra stderr và gọi abort().",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "stderr",
+      "definition": "Luồng lỗi chuẩn, dùng fprintf(stderr, …) để in lỗi.",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Phục hồi tài nguyên / rollback",
+      "definition": "Đưa thông tin về trạng thái rõ ràng, vô hại; transaction nhiều bảng cần rollback.",
+      "pages": [
+        37
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Chắc chắn vs chính xác",
+      "definition": "Robustness: luôn chạy thông; correctness: không gặp lại lỗi – ưu tiên chắc chắn.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Phần mềm chịu lỗi",
+      "definition": "Sống chung với lỗi nhỏ để đảm bảo liên tục, ổn định.",
+      "pages": [
+        39
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Hàm bao gói (wrapper)",
+      "definition": "Gọi hàm gốc + bẫy lỗi, vd safe_malloc.",
+      "pages": [
+        40,
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "try / throw / catch",
+      "definition": "try bao code có thể lỗi; throw ném ngoại lệ; catch bắt đúng kiểu, catch(...) bắt mọi kiểu.",
+      "pages": [
+        44,
+        45,
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Ngoại lệ chuẩn C++",
+      "definition": "std::exception, bad_alloc, bad_cast, logic_error (out_of_range…), runtime_error (overflow_error…).",
+      "pages": [
+        49,
+        50
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Hàm thiếu kiểm tra đầu vào",
+      "language": "c",
+      "code": "double avg(double a[], int n)\n/* a là mảng gồm n số kiểu double */\n{\n    int i;\n    double sum = 0;\n    for (i = 0; i < n; i++) {\n        sum += a[i];\n    }\n    return sum / n;          /* n == 0 ? */\n}\n\nint my_strlen(char *string)\n/* Khi tính độ dài xâu, hàm này sai ở đâu */\n{\n    int len = 1;             /* bỏ qua string[0] */\n    while (string[len] != '\\0')\n        len++;\n    return len;\n}",
+      "explanation": "avg chia cho 0 khi n = 0. my_strlen trả đúng với 'abc' (3) nhưng với xâu rỗng sẽ đọc string[1] nằm ngoài xâu – phải bắt đầu len = 0 (đã chạy thử).",
+      "parts": [
+        {
+          "lines": "1-10",
+          "note": "Thiếu kiểm tra n > 0."
+        },
+        {
+          "lines": "12-19",
+          "note": "Lỗi điều kiện biên."
+        }
+      ],
+      "pages": [
+        16,
+        19
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Lọc giá trị đầu vào",
+      "language": "c",
+      "code": "void class_of_degree(char degree[], double percent)\n/* Xếp hạng sinh viên dựa vào tổng điểm tính theo % */\n{\n    if (percent < 0 || percent > 100)\n        strcpy(degree, \"Error in mark\");\n    else if (percent >= 70)\n        strcpy(degree, \"First\");\n    else if (percent >= 60)\n        strcpy(degree, \"Two-one\");\n    /* .... */\n}",
+      "explanation": "Thêm nhánh đầu tiên để báo lỗi khi điểm ngoài [0, 100].",
+      "parts": [
+        {
+          "lines": "4-5",
+          "note": "Dòng thêm vào để báo lỗi."
+        },
+        {
+          "lines": "6-9",
+          "note": "Xếp hạng bình thường."
+        }
+      ],
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Macro ASSERT tự viết và assert chuẩn",
+      "language": "c",
+      "code": "#define ASSERT(condition, message) {                 \\\n    if (!(condition)) {                              \\\n        fprintf(stderr, \"Assertion %s failed: %s\\n\", \\\n                #condition, message);                \\\n        exit(EXIT_FAILURE);                          \\\n    }                                                \\\n}\n\n#include <assert.h>\nint main() {\n    int a;\n    printf(\"Nhap mot gia tri nguyen: \\n\");\n    scanf(\"%d\", &a);\n    assert(a >= 10);         /* a < 10: in lỗi ra stderr và abort() */\n    printf(\"Gia tri nguyen vua nhap la %d\\n\", a);\n    return 0;\n}",
+      "explanation": "Slide truyền condition trực tiếp vào %s; bản này dùng #condition để in biểu thức thành chuỗi. Định nghĩa NDEBUG trước <assert.h> sẽ tắt mọi assert.",
+      "parts": [
+        {
+          "lines": "1-7",
+          "note": "Macro kiểm tra và thoát."
+        },
+        {
+          "lines": "14",
+          "note": "assert chuẩn: nhập 12 thì chạy tiếp, nhập nhỏ hơn 10 thì 'Assertion failed'."
+        }
+      ],
+      "pages": [
+        26,
+        30,
+        31,
+        32
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "title": "Hàm bao gói safe_malloc",
+      "language": "c",
+      "code": "#include <stdlib.h>\n#include <stdio.h>\n\nvoid *safe_malloc(size_t size)\n/* Cấp phát bộ nhớ hoặc báo lỗi và thoát */\n{\n    void *ptr;\n    ptr = malloc(size);\n    if (ptr == NULL) {\n        fprintf(stderr,\n            \"Không đủ bộ nhớ để thực hiện dòng lệnh :%d file :%s\\n\",\n            __LINE__, __FILE__);\n        exit(-1);\n    }\n    return ptr;\n}",
+      "explanation": "Dùng safe_malloc thay malloc để không phải lặp lại đoạn kiểm tra NULL mỗi lần cấp phát.",
+      "parts": [
+        {
+          "lines": "8",
+          "note": "Gọi hàm gốc."
+        },
+        {
+          "lines": "9-14",
+          "note": "Bẫy lỗi: kiểm tra, báo out of memory kèm vị trí, thoát."
+        }
+      ],
+      "pages": [
+        40,
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Ném và bắt ngoại lệ",
+      "language": "cpp",
+      "code": "#include <iostream>\nusing namespace std;\n\ndouble division(int a, int b) {\n    if (b == 0) {\n        throw \"Division by zero!\";\n    }\n    return (a / b);\n}\n\nint main() {\n    int x = 50;\n    int y = 0;\n    double z = 0;\n    try {\n        z = division(x, y);\n        cout << z << endl;\n    } catch (const char* msg) {\n        cerr << msg << endl;\n    }\n    return 0;\n}",
+      "explanation": "throw một chuỗi hằng nên catch phải có kiểu const char*. Lưu ý a / b là phép chia nguyên: division(50, 3) trả 16 (đã chạy thử).",
+      "parts": [
+        {
+          "lines": "5-7",
+          "note": "Ném ngoại lệ khi b == 0."
+        },
+        {
+          "lines": "15-17",
+          "note": "Code được bảo vệ – dòng 17 không chạy khi có ngoại lệ."
+        },
+        {
+          "lines": "18-20",
+          "note": "Bắt và in ra cerr."
+        }
+      ],
+      "pages": [
+        46,
+        48
+      ],
+      "source": "slide"
+    }
+  ],
+  "figures": [
+    {
+      "page": 20,
+      "caption": "Ariane 5 nổ do tràn số"
+    },
+    {
+      "page": 31,
+      "caption": "assert thất bại"
+    },
+    {
+      "page": 41,
+      "caption": "safe_malloc"
+    },
+    {
+      "page": 49,
+      "caption": "Cây ngoại lệ chuẩn C++"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "Lập trình phòng ngừa bảo vệ chương trình khỏi những gì?",
+      "back": "Dữ liệu không hợp lệ; sự kiện 'không bao giờ' xảy ra; sai lầm của lập trình viên khác.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "Ý tưởng chính của lập trình phòng ngừa?",
+      "back": "Nhận dữ liệu lỗi vẫn chạy thông, kể cả khi chương trình khác cũng nhận dữ liệu lỗi đó.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "Khẩu hiệu cho lỗi liên quan đến chương trình?",
+      "back": "Do not trust anything; verify everything.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "Nên hoàn thành chương trình trước hạn bao lâu?",
+      "back": "Ít nhất 3 ngày.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "Kể 4 cách xử lý khi gặp lỗi dự kiến.",
+      "back": "Giá trị trung lập, giá trị hợp lệ gần nhất, ghi cảnh báo vào tệp, trả mã lỗi (… gọi thủ tục xử lý, thông báo/tắt máy).",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "GIGO là gì?",
+      "back": "Garbage in, garbage out – dấu hiệu chương trình tồi.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "Chương trình tốt xử lý 'rác vào' thế nào?",
+      "back": "Không có gì ra, hoặc có thông báo lỗi, hoặc không cho phép rác vào.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Dữ liệu nguồn ngoài nào cần kiểm tra?",
+      "back": "File, bàn phím, mạng và các nguồn ngoài khác.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "Lỗi nhập phổ biến?",
+      "back": "Quá lớn, sai kiểu, quá nhỏ hoặc âm, chia cho 0.",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "avg(a, n) lỗi khi nào?",
+      "back": "n = 0 – chia cho 0.",
+      "pages": [
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Ariane 5 nổ vì sao?",
+      "back": "Chuyển số thực 64 bit sang số nguyên 16 bit bị tràn số.",
+      "pages": [
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "unsigned char có miền giá trị?",
+      "back": "0 đến 255.",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "Assertion là gì?",
+      "back": "Macro/chương trình con cho phép chương trình tự kiểm tra giả thiết khi chạy.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "Assertion có trong bản sản phẩm không?",
+      "back": "Không – chỉ dùng khi phát triển, loại bỏ để nâng hiệu năng.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Error handling vs assertion?",
+      "back": "Error handling: tình huống lường trước (bad input). Assertion: tình huống không lường trước (bug).",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Vì sao tránh đặt code xử lý trong assertion?",
+      "back": "Khi tắt assertion, code đó cũng mất.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "assert(expr) làm gì khi expr = 0?",
+      "back": "In thông điệp ra standard error rồi gọi abort().",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Header của assert()?",
+      "back": "<assert.h>.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "In lỗi ra đâu?",
+      "back": "stderr: fprintf(stderr, \"...\").",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "Chắc chắn và chính xác khác nhau?",
+      "back": "Chắc chắn: luôn chạy thông kể cả khi lỗi. Chính xác: không bao giờ gặp lại lỗi.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "Nên ưu tiên chắc chắn hay chính xác?",
+      "back": "Chắc chắn – kết quả nào đó thường tốt hơn shutdown.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "Hàm bao gói là gì?",
+      "back": "Gọi hàm gốc + bẫy lỗi, vd safe_malloc.",
+      "pages": [
+        40
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "3 từ khoá xử lý ngoại lệ C++?",
+      "back": "try, catch, throw.",
+      "pages": [
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "Bắt mọi kiểu ngoại lệ thế nào?",
+      "back": "catch (...).",
+      "pages": [
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-25",
+      "front": "Ngoại lệ khi new thất bại?",
+      "back": "std::bad_alloc.",
+      "pages": [
+        50
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-26",
+      "front": "out_of_range thuộc nhóm nào?",
+      "back": "logic_error.",
+      "pages": [
+        49,
+        50
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-27",
+      "front": "overflow_error thuộc nhóm nào?",
+      "back": "runtime_error.",
+      "pages": [
+        49,
+        50
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "Lập trình phòng ngừa KHÔNG nhằm bảo vệ chương trình khỏi điều nào?",
+      "options": [
+        "Việc người dùng nâng cấp phần cứng",
+        "Sự kiện tưởng như không bao giờ xảy ra",
+        "Sai lầm của lập trình viên khác",
+        "Dữ liệu đầu vào không hợp lệ"
+      ],
+      "answer": 0,
+      "explanation": "Ba mục đầu là định nghĩa trên slide.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "hiểu",
+      "question": "Chương trình trả kết quả đúng với input n thì?",
+      "options": [
+        "Đúng với mọi input",
+        "Chưa chắc đúng với input m khác",
+        "Chắc chắn không crash",
+        "Không cần kiểm thử thêm"
+      ],
+      "answer": 1,
+      "explanation": "Chạy thông một lần không có nghĩa lần sau sẽ chạy thông.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "hiểu",
+      "question": "Theo slide, 'rác vào → rác ra' (GIGO) là dấu hiệu của?",
+      "options": [
+        "Chương trình tối ưu",
+        "Chương trình hướng đối tượng",
+        "Chương trình tồi, không an toàn",
+        "Lập trình phòng ngừa tốt"
+      ],
+      "answer": 2,
+      "explanation": "Chương trình tốt: rác vào thì không có gì ra hoặc có thông báo lỗi.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "vận dụng",
+      "question": "Hàm avg trên slide lỗi khi nào?",
+      "code": {
+        "language": "c",
+        "code": "double avg(double a[], int n) {\n  int i; double sum = 0;\n  for (i = 0; i < n; i++) sum += a[i];\n  return sum / n;\n}"
+      },
+      "options": [
+        "n rất lớn",
+        "Không bao giờ",
+        "a chứa số âm",
+        "n = 0"
+      ],
+      "answer": 3,
+      "explanation": "Chia cho 0 khi n = 0.",
+      "pages": [
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "vận dụng",
+      "question": "my_strlen trên slide trả về gì và sai khi nào?",
+      "code": {
+        "language": "c",
+        "code": "int my_strlen(char *string) {\n  int len = 1;\n  while (string[len] != '\\0') len++;\n  return len;\n}"
+      },
+      "options": [
+        "Đúng với \"abc\" (3) nhưng đọc ngoài xâu khi xâu rỗng",
+        "Luôn trả độ dài + 1",
+        "Luôn đúng",
+        "Luôn trả 1"
+      ],
+      "answer": 0,
+      "explanation": "Bỏ qua string[0]: \"abc\" → 3, \"a\" → 1 (đã chạy thử); \"\" thì đọc string[1] ngoài xâu.",
+      "pages": [
+        19
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-06",
+      "level": "nhớ",
+      "question": "Nguyên nhân vụ nổ Ariane 5 (1996)?",
+      "options": [
+        "Lỗi phần cứng động cơ",
+        "Tràn số khi chuyển float 64 bit sang int 16 bit",
+        "Chia cho 0",
+        "Rò rỉ bộ nhớ"
+      ],
+      "answer": 1,
+      "explanation": "Slide 20.",
+      "pages": [
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "vận dụng",
+      "question": "Đoạn sau in ra gì?",
+      "code": {
+        "language": "cpp",
+        "code": "unsigned char c = 255;\nc++;\ncout << (int)c;"
+      },
+      "options": [
+        "256",
+        "-1",
+        "0",
+        "255"
+      ],
+      "answer": 2,
+      "explanation": "unsigned char 0–255 nên tràn quay vòng về 0 (đã chạy thử).",
+      "pages": [
+        21
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-08",
+      "level": "hiểu",
+      "question": "Assertion nên dùng cho tình huống nào?",
+      "options": [
+        "Người dùng nhập sai định dạng",
+        "Hết bộ nhớ trong bản phát hành",
+        "File không tồn tại",
+        "Không lường trước – bug trong code"
+      ],
+      "answer": 3,
+      "explanation": "Error handling cho bad input lường trước; assertion cho bug.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "hiểu",
+      "question": "Vì sao không nên viết `assert(x = init())`?",
+      "options": [
+        "Khi tắt assertion, lệnh xử lý init() bị mất",
+        "Sai cú pháp",
+        "assert không nhận phép gán",
+        "Làm chậm chương trình"
+      ],
+      "answer": 0,
+      "explanation": "Tránh đưa code xử lý vào trong assertion.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "nhớ",
+      "question": "Khi biểu thức trong assert() bằng 0, điều gì xảy ra?",
+      "options": [
+        "Bỏ qua",
+        "In thông điệp ra stderr và gọi abort()",
+        "Ném std::exception",
+        "Trả về -1"
+      ],
+      "answer": 1,
+      "explanation": "Slide 29.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-11",
+      "level": "nhớ",
+      "question": "Assertion thường được xử lý thế nào trong bản sản phẩm?",
+      "options": [
+        "Giữ nguyên để báo lỗi cho user",
+        "Chuyển thành exception",
+        "Loại bỏ để nâng cao hiệu năng",
+        "Ghi log"
+      ],
+      "answer": 2,
+      "explanation": "End users không cần thấy thông báo assertion.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "hiểu",
+      "question": "Theo slide, nên ưu tiên tính nào?",
+      "options": [
+        "Chính xác hơn chắc chắn",
+        "Hiệu năng",
+        "Cả hai như nhau",
+        "Chắc chắn hơn chính xác"
+      ],
+      "answer": 3,
+      "explanation": "Kết quả nào đó thường tốt hơn shutdown.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "hiểu",
+      "question": "Hàm bao gói safe_malloc làm gì khi malloc trả NULL?",
+      "options": [
+        "In lỗi kèm __LINE__, __FILE__ ra stderr và exit(-1)",
+        "Trả NULL cho người gọi",
+        "Thử lại vô hạn",
+        "Ném std::bad_alloc"
+      ],
+      "answer": 0,
+      "explanation": "Slide 41.",
+      "pages": [
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "vận dụng",
+      "question": "Chương trình in ra gì (stdout/stderr)?",
+      "code": {
+        "language": "cpp",
+        "code": "double division(int a, int b) {\n  if (b == 0) throw \"Division by zero!\";\n  return (a / b);\n}\n...\ntry { z = division(50, 0); cout << z; }\ncatch (const char* msg) { cerr << msg; }"
+      },
+      "options": [
+        "0",
+        "Division by zero!",
+        "inf",
+        "Chương trình crash"
+      ],
+      "answer": 1,
+      "explanation": "Ngoại lệ kiểu const char* được bắt (đã chạy thử).",
+      "pages": [
+        48
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-15",
+      "level": "vận dụng",
+      "question": "`division(50, 3)` trên slide trả về?",
+      "options": [
+        "16.6667",
+        "17",
+        "16",
+        "Lỗi"
+      ],
+      "answer": 2,
+      "explanation": "a / b là phép chia nguyên trước khi đổi sang double (đã chạy thử).",
+      "pages": [
+        48
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-16",
+      "level": "vận dụng",
+      "question": "Đoạn sau in ra gì?",
+      "code": {
+        "language": "cpp",
+        "code": "try { throw 997; }\ncatch (double d) { cout << \"double\"; }\ncatch (...) { cout << \"any\"; }"
+      },
+      "options": [
+        "double",
+        "Không in gì",
+        "997",
+        "any"
+      ],
+      "answer": 3,
+      "explanation": "catch chỉ bắt đúng kiểu; int không khớp double nên rơi vào catch(...) (đã chạy thử).",
+      "pages": [
+        46,
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-17",
+      "level": "nhớ",
+      "question": "Ngoại lệ chuẩn nào được ném khi cấp phát bằng new thất bại?",
+      "options": [
+        "std::bad_alloc",
+        "std::out_of_range",
+        "std::overflow_error",
+        "std::bad_cast"
+      ],
+      "answer": 0,
+      "explanation": "Bảng tr. 50.",
+      "pages": [
+        50
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-18",
+      "level": "hiểu",
+      "question": "std::invalid_argument là lớp con của?",
+      "options": [
+        "runtime_error",
+        "logic_error",
+        "bad_alloc",
+        "bad_exception"
+      ],
+      "answer": 1,
+      "explanation": "logic_error: domain_error, invalid_argument, length_error, out_of_range.",
+      "pages": [
+        49,
+        50
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Lập trình phòng ngừa là gì? Trình bày các loại lỗi có thể phòng ngừa, các giai đoạn và các cách xử lý khi gặp lỗi dự kiến.",
+      "hints": "- Khái niệm [tr. 5](#p5); các lỗi [tr. 6](#p6).\n- Giai đoạn [tr. 7](#p7); kiểm tra cái gì [tr. 8](#p8).\n- Cách xử lý [tr. 9](#p9).",
+      "pages": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Trình bày cách bảo vệ chương trình khỏi dữ liệu đầu vào không hợp lệ. Chỉ ra lỗi trong hàm avg, my_strlen và nêu bài học từ Ariane 5.",
+      "hints": "- GIGO [tr. 12](#p12); kiểm tra [tr. 13](#p13)–[tr. 15](#p15).\n- avg, class_of_degree, my_strlen [tr. 16](#p16)–[tr. 19](#p19).\n- Tràn số [tr. 20](#p20)–[tr. 21](#p21).",
+      "pages": [
+        12,
+        14,
+        15,
+        16,
+        17,
+        19,
+        20,
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "Assertion là gì? So sánh assertion và error handling. Viết ví dụ dùng assert() và macro ASSERT tự viết.",
+      "hints": "- Khái niệm, giả thiết [tr. 23](#p23)–[tr. 25](#p25).\n- Macro tự viết [tr. 26](#p26).\n- So sánh [tr. 27](#p27)–[tr. 28](#p28); assert() [tr. 29](#p29)–[tr. 32](#p32).",
+      "pages": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "Trình bày kỹ thuật xử lý lỗi (phục hồi tài nguyên, chắc chắn vs chính xác, hàm bao gói) và cơ chế xử lý ngoại lệ try/catch/throw trong C++ cùng các ngoại lệ chuẩn.",
+      "hints": "- Xử lý lỗi [tr. 34](#p34)–[tr. 39](#p39).\n- safe_malloc [tr. 40](#p40)–[tr. 41](#p41).\n- try/catch/throw [tr. 44](#p44)–[tr. 48](#p48); ngoại lệ chuẩn [tr. 49](#p49)–[tr. 50](#p50).",
+      "pages": [
+        37,
+        38,
+        40,
+        41,
+        44,
+        46,
+        48,
+        49,
+        50
+      ],
+      "source": "slide"
+    }
+  ]
+}

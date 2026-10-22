@@ -1,0 +1,234 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Be Vietnam Pro", "Inter", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, "Liberation Mono", monospace;
+}
+
+:root {
+  color-scheme: light;
+}
+.dark {
+  color-scheme: dark;
+}
+
+html,
+body {
+  @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200;
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Markdown (tóm tắt, gợi ý, giải thích) ---------- */
+.md {
+  @apply leading-7;
+}
+.md > * + * {
+  @apply mt-3;
+}
+.md h1 {
+  @apply mt-6 text-2xl font-bold;
+}
+.md h2 {
+  @apply mt-8 border-b border-slate-200 pb-1 text-xl font-bold text-slate-900 dark:border-slate-800 dark:text-slate-50;
+}
+.md h2:first-child {
+  @apply mt-0;
+}
+.md h3 {
+  @apply mt-5 text-lg font-semibold text-slate-900 dark:text-slate-100;
+}
+.md ul {
+  @apply list-disc space-y-1 pl-6;
+}
+.md ol {
+  @apply list-decimal space-y-1 pl-6;
+}
+.md li > ul,
+.md li > ol {
+  @apply mt-1;
+}
+.md strong {
+  @apply font-semibold text-slate-900 dark:text-white;
+}
+.md em {
+  @apply italic;
+}
+.md a {
+  @apply text-indigo-600 underline-offset-2 hover:underline dark:text-indigo-400;
+}
+.md table {
+  @apply block w-full overflow-x-auto border-collapse text-sm;
+}
+.md th,
+.md td {
+  @apply border border-slate-200 px-3 py-1.5 text-left dark:border-slate-700;
+}
+.md th {
+  @apply bg-slate-100 font-semibold dark:bg-slate-800;
+}
+.md blockquote {
+  @apply border-l-4 border-slate-300 pl-4 text-slate-600 dark:border-slate-600 dark:text-slate-400;
+}
+.md-inline p {
+  @apply inline;
+}
+.md-inline > * + * {
+  @apply mt-2 block;
+}
+
+.inline-code {
+  @apply rounded bg-slate-200/70 px-1.5 py-0.5 font-mono text-[0.85em] text-rose-700 dark:bg-slate-800 dark:text-rose-300;
+}
+
+.page-link {
+  @apply inline-flex items-center rounded-md bg-indigo-50 px-1.5 text-[0.85em] font-medium text-indigo-700 no-underline ring-1 ring-indigo-200 ring-inset hover:bg-indigo-100 dark:bg-indigo-500/10 dark:text-indigo-300 dark:ring-indigo-500/30 dark:hover:bg-indigo-500/20;
+}
+
+/* ---------- highlight.js: màu token sáng/tối ---------- */
+.hljs {
+  color: #1e293b;
+}
+.dark .hljs {
+  color: #e2e8f0;
+}
+.hljs-comment,
+.hljs-quote {
+  color: #64748b;
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-doctag,
+.hljs-meta .hljs-keyword {
+  color: #7c3aed;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-meta .hljs-string {
+  color: #15803d;
+}
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet {
+  color: #c2410c;
+}
+.hljs-title,
+.hljs-title.function_,
+.hljs-section {
+  color: #2563eb;
+}
+.hljs-type,
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #0e7490;
+}
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  color: #b45309;
+}
+.hljs-name,
+.hljs-tag {
+  color: #be123c;
+}
+.hljs-meta {
+  color: #9333ea;
+}
+.hljs-deletion {
+  color: #b91c1c;
+}
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-literal,
+.dark .hljs-doctag,
+.dark .hljs-meta .hljs-keyword {
+  color: #c4b5fd;
+}
+.dark .hljs-string,
+.dark .hljs-regexp,
+.dark .hljs-addition,
+.dark .hljs-meta .hljs-string {
+  color: #86efac;
+}
+.dark .hljs-number,
+.dark .hljs-symbol,
+.dark .hljs-bullet {
+  color: #fdba74;
+}
+.dark .hljs-title,
+.dark .hljs-title.function_,
+.dark .hljs-section {
+  color: #93c5fd;
+}
+.dark .hljs-type,
+.dark .hljs-built_in,
+.dark .hljs-title.class_,
+.dark .hljs-class .hljs-title {
+  color: #67e8f9;
+}
+.dark .hljs-attr,
+.dark .hljs-attribute,
+.dark .hljs-variable,
+.dark .hljs-template-variable,
+.dark .hljs-selector-attr,
+.dark .hljs-selector-class,
+.dark .hljs-selector-id {
+  color: #fcd34d;
+}
+.dark .hljs-name,
+.dark .hljs-tag {
+  color: #fda4af;
+}
+.dark .hljs-meta {
+  color: #d8b4fe;
+}
+.dark .hljs-comment,
+.dark .hljs-quote {
+  color: #94a3b8;
+}
+
+/* ---------- flashcard lật ---------- */
+.flip {
+  perspective: 1400px;
+}
+.flip-inner {
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  backface-visibility: hidden;
+}
+.flip-back {
+  transform: rotateY(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .flip-inner {
+    transition: none;
+  }
+}

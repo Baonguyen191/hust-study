@@ -1,0 +1,1018 @@
+{
+  "version": 1,
+  "subject": "KTLT",
+  "lesson": "lec6-de-quy",
+  "title": "Bài 6 – Đệ quy và khử đệ quy",
+  "summary": "## 1. Khái niệm đệ quy [tr. 3](#p3)–[tr. 24](#p24)\n- **Đệ quy** là kỹ thuật giải quyết vấn đề bằng cách chia nó thành **các vấn đề nhỏ hơn có cùng dạng** [tr. 4](#p4).\n- **Ví dụ \"có bao nhiêu sinh viên ngồi sau bạn\"** [tr. 5](#p5)–[tr. 7](#p7):\n  - Hỏi người phía sau. Nếu không có ai sau thì trả lời 0.\n  - Nếu có, người đó lặp lại câu hỏi rồi lấy kết quả **+ 1**.\n- **Cấu trúc hàm đệ quy** [tr. 8](#p8)–[tr. 11](#p11):\n  - `if (trường hợp cơ bản)` thì tính trực tiếp.\n  - `else` thì chia thành vấn đề con, gọi đệ quy và kết hợp kết quả.\n  - **Base case**: tính trực tiếp, các lời gọi đệ quy giảm dần tới đây.\n  - **Recursive case**: mô tả qua trường hợp **nhỏ hơn** của cùng vấn đề.\n- **Ba điều kiện cần** [tr. 12](#p12):\n  1. Mọi input hợp lệ tương ứng một trường hợp trong code.\n  2. Có base case không gọi đệ quy.\n  3. Lời gọi đệ quy phải hướng tới trường hợp đơn giản hơn và dần tới base case.\n- **Hàm mũ** [tr. 13](#p13)–[tr. 18](#p18):\n  - Công thức: `x^0 = 1`, `x^n = x * x^(n-1)`.\n  - Mỗi lời gọi chờ các lời gọi sau trả kết quả. `power(5, 3)` = 5 * 25 = 125.\n  - **Nhanh hơn**: nếu exp chẵn thì `y = power(x, exp/2); return y*y;`. Độ phức tạp **O(log n)**.\n- **Trace mystery(648)** [tr. 19](#p19)–[tr. 24](#p24): 648 thành 64 + 8 = 72, 72 thành 7 + 2 = 9. Kết quả **9**.\n\n## 2. Phân loại đệ quy [tr. 25](#p25)–[tr. 41](#p41)\n- **Trực tiếp**: tuyến tính, nhị phân, phi tuyến. **Gián tiếp**: hỗ tương [tr. 26](#p26).\n- **Tuyến tính**: mỗi lần chỉ gọi P **một lần**, dạng `if (B) S; else { S*; gọi P }`.\n  - Vd `fact` [tr. 27](#p27).\n  - Vd `isPalindrome`: so ký tự đầu và cuối rồi gọi đệ quy với `substr(1, length-2)` [tr. 28](#p28)–[tr. 29](#p29).\n- **Nhị phân**: gọi P **hai lần** [tr. 30](#p30)–[tr. 37](#p37).\n  - Vd `fibo`.\n  - Vd **Tháp Hà Nội** (3 cọc A, B, C, đĩa nhỏ luôn trên đĩa lớn): chuyển n-1 đĩa A sang B qua C, chuyển đĩa lớn nhất A sang C, rồi chuyển n-1 đĩa B sang C qua A.\n- **Phi tuyến**: lời gọi đệ quy nằm **trong vòng lặp** [tr. 38](#p38)–[tr. 39](#p39). Vd `A(n) = n²A0 + (n-1)²A1 + … + 1²A(n-1)`.\n- **Hỗ tương (mutual)**: hàm X gọi Y và Y gọi X [tr. 40](#p40)–[tr. 41](#p41).\n  - `X(n) = X(n-1) + Y(n-1)`, `Y(n) = X(n-1) * Y(n-1)`.\n  - Cho X = 1, 2, 3, 5, 11, 41 và Y = 1, 1, 2, 6, 30, 330.\n\n## 3. Đệ quy có nhớ và quay lui [tr. 42](#p42)–[tr. 47](#p47)\n- **Đệ quy có nhớ (memoization)** [tr. 43](#p43)–[tr. 44](#p44):\n  - Bài toán quy hoạch động top-down thường gọi lại cùng một trường hợp nhiều lần.\n  - Lưu lời giải vấn đề con vào mảng `mem` và tái sử dụng.\n  - Fibonacci: từ **O(2ⁿ)** xuống **O(n)**. `memset(mem, -1, sizeof(mem))` đánh dấu chưa tính.\n- **Quay lui (backtracking)** [tr. 45](#p45)–[tr. 47](#p47):\n  - Bắt đầu từ lời giải rỗng, xây dần **lời giải bộ phận**.\n  - Nếu không phát triển tiếp được thì bỏ và thử ứng cử viên khác.\n  - Mẫu `Try(i)`: duyệt ứng viên → cập nhật trạng thái → ghi nhận x[i] → nếu i == n thì ghi nhận lời giải, ngược lại `Try(i+1)` → trả trạng thái cũ.\n  - Vd **n-Queens**: `isCandidate(j, k)` kiểm tra cột `j == a[i]` và đường chéo `|j - a[i]| == k - i`.\n\n## 4. Khử đệ quy [tr. 48](#p48)–[tr. 66](#p66)\n- **Ưu điểm đệ quy**: trực quan, mô phỏng cách giải quyết vấn đề; code đơn giản, dễ hiểu, dễ bảo trì; duyệt cây dễ hơn.\n- **Nhược điểm**: tốn bộ nhớ và thời gian; chậm, có thể **tràn stack** [tr. 49](#p49).\n- Mọi lời giải đệ quy đều viết được dạng vòng lặp, vì CPU thực hiện lời gọi đệ quy bằng stack.\n  - Thay thế bằng lời giải không đệ quy gọi là **khử đệ quy**.\n  - Khử đệ quy có thể phức tạp và khó bảo trì. Chỉ khử khi profiling cho thấy cần thiết [tr. 50](#p50).\n- **Khử bằng vòng lặp** [tr. 51](#p51)–[tr. 52](#p52):\n  - Với `f(n) = C` khi n = n0 và `f(n) = g(n, f(n-1))`, dùng `k = n0; F = C; while (k < n) { k++; F = g(k, F); }`.\n  - Áp dụng cho giai thừa và tổng đan dấu.\n- **Khử đệ quy đuôi** [tr. 53](#p53)–[tr. 56](#p56):\n  - Dạng `P(X) ≡ if B(X) then D(X) else { A(X); P(f(X)); }` thành `while (!B(X)) { A(X); X = f(X); } D(X);`.\n  - Vd USCLN: X = (m, n), B là `n == 0`, D là `return m`, f(m, n) = (n, m mod n).\n- **Khử bằng stack** [tr. 57](#p57)–[tr. 66](#p66):\n  - Mỗi lần gọi phải lưu trạng thái dang dở. Lời gọi cuối (base case) hoàn tất **đầu tiên**, nên cần cấu trúc **LIFO** là stack.\n  - **Tuyến tính** `P(X) ≡ if C(X) then D(X) else { A(X); P(f(X)); B(X); }`:\n    - Vòng 1: `while (!C(X)) { A(X); push(S, X); X = f(X); }`, sau đó `D(X)`.\n    - Vòng 2: `while (!empty(S)) { pop(S, X); B(X); }`.\n    - Vd đổi thập phân sang nhị phân [tr. 62](#p62).\n  - **Nhị phân** `A(X); P(f(X)); B(X); P(g(X))`: push kèm nhãn k = 1 hoặc 2 để biết lần gọi nào [tr. 63](#p63)–[tr. 64](#p64).\n    - Vd Tháp Hà Nội lặp với `struct state {n, A, B, C, k}` [tr. 65](#p65)–[tr. 66](#p66).",
+  "keyConcepts": [
+    {
+      "term": "Đệ quy",
+      "definition": "Kỹ thuật giải quyết vấn đề bằng cách chia thành các vấn đề nhỏ hơn có cùng dạng.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Base case",
+      "definition": "Trường hợp đơn giản tính trực tiếp không đệ quy; các lời gọi giảm dần tới đây.",
+      "pages": [
+        9,
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Recursive case",
+      "definition": "Trường hợp mô tả qua trường hợp nhỏ hơn của cùng vấn đề.",
+      "pages": [
+        9,
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "3 điều kiện cần",
+      "definition": "Mọi input hợp lệ có trường hợp tương ứng; có base case; lời gọi đệ quy tiến dần tới base case.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Lũy thừa nhanh",
+      "definition": "exp chẵn: y = power(x, exp/2), trả y*y; độ phức tạp O(log n).",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Đệ quy tuyến tính",
+      "definition": "Thân hàm gọi chính nó đúng 1 lần (fact, palindrome).",
+      "pages": [
+        27,
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Đệ quy nhị phân",
+      "definition": "Thân hàm gọi chính nó 2 lần (fibo, tháp Hà Nội).",
+      "pages": [
+        30,
+        37
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Đệ quy phi tuyến",
+      "definition": "Lời gọi đệ quy nằm trong vòng lặp.",
+      "pages": [
+        38,
+        39
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Đệ quy hỗ tương",
+      "definition": "Đệ quy gián tiếp: hàm X gọi Y và Y gọi X.",
+      "pages": [
+        40,
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Tháp Hà Nội",
+      "definition": "Chuyển n-1 đĩa sang cọc trung gian, chuyển đĩa lớn nhất, chuyển n-1 đĩa về đích.",
+      "pages": [
+        31,
+        34,
+        35,
+        36,
+        37
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Đệ quy có nhớ (memoization)",
+      "definition": "Lưu kết quả vấn đề con để tái sử dụng; Fibonacci O(2ⁿ) → O(n).",
+      "pages": [
+        43,
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Quay lui (backtracking)",
+      "definition": "Xây dần lời giải bộ phận; bỏ nhánh không phát triển tiếp được và thử ứng viên khác.",
+      "pages": [
+        45
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "n-Queens",
+      "definition": "Đặt n quân hậu không ăn nhau; kiểm tra cột và đường chéo bằng isCandidate.",
+      "pages": [
+        46,
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Ưu/nhược điểm đệ quy",
+      "definition": "Trực quan, code gọn; nhưng tốn bộ nhớ/thời gian, có thể tràn stack.",
+      "pages": [
+        49
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Khử đệ quy",
+      "definition": "Thay lời giải đệ quy bằng lời giải không đệ quy tương đương; chỉ làm khi profiling cho thấy cần.",
+      "pages": [
+        50
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Khử bằng vòng lặp",
+      "definition": "f(n) = g(n, f(n-1)) → lặp k từ n0 tới n, F = g(k, F).",
+      "pages": [
+        51,
+        52
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Khử đệ quy đuôi",
+      "definition": "if B(X) then D(X) else {A(X); P(f(X))} → while(!B(X)){A(X); X=f(X);} D(X).",
+      "pages": [
+        53,
+        55
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Khử bằng stack",
+      "definition": "Lưu trạng thái dang dở vào stack (LIFO) vì lời gọi cuối hoàn tất đầu tiên.",
+      "pages": [
+        57,
+        59
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Khử đệ quy tuyến tính bằng stack",
+      "definition": "Vòng 1 push X và X = f(X) tới khi C(X); D(X); vòng 2 pop và thực hiện B(X).",
+      "pages": [
+        60,
+        61
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Khử đệ quy nhị phân bằng stack",
+      "definition": "Push (X, k) với k đánh dấu lần gọi 1 hay 2.",
+      "pages": [
+        63,
+        64
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Đếm sinh viên ngồi sau",
+      "language": "cpp",
+      "code": "int numStudentsBehind(Student curr) {\n    if (noOneBehind(curr)) {\n        return 0;                                  // base case\n    } else {\n        Student personBehind = curr.getBehind();\n        return numStudentsBehind(personBehind) + 1; // recursive case\n    }\n}",
+      "explanation": "Mỗi người chỉ hỏi người ngay sau và cộng thêm 1.",
+      "parts": [
+        {
+          "lines": "2-3",
+          "note": "Trường hợp cơ bản."
+        },
+        {
+          "lines": "5-6",
+          "note": "Gọi đệ quy với vấn đề nhỏ hơn."
+        }
+      ],
+      "pages": [
+        7,
+        10,
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Lũy thừa: O(n) và O(log n)",
+      "language": "cpp",
+      "code": "int power(int x, int exp) {\n    if (exp == 0) {\n        return 1;                           // base case\n    } else if (exp % 2 == 1) {\n        return x * power(x, exp - 1);       // exp lẻ\n    } else {\n        int y = power(x, exp / 2);          // exp chẵn\n        return y * y;\n    }\n}\n// power(5, 3) = 125, power(2, 10) = 1024",
+      "explanation": "Bản cơ bản chỉ có nhánh x * power(x, exp - 1). Bản nhanh chia đôi số mũ khi chẵn (chạy thử cho đúng kết quả).",
+      "parts": [
+        {
+          "lines": "2-3",
+          "note": "x^0 = 1."
+        },
+        {
+          "lines": "4-5",
+          "note": "Giảm 1 khi lẻ."
+        },
+        {
+          "lines": "6-8",
+          "note": "Chia đôi khi chẵn – O(log n)."
+        }
+      ],
+      "pages": [
+        13,
+        17,
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Trace mystery và palindrome",
+      "language": "cpp",
+      "code": "int mystery(int n) {\n    if (n < 10) return n;\n    int a = n / 10;\n    int b = n % 10;\n    return mystery(a + b);\n}\n// mystery(648) -> mystery(72) -> mystery(9) -> 9\n\nbool isPalindrome(const string& s) {\n    if (s.length() < 2) return true;         // base case\n    if (s[0] != s[s.length() - 1]) return false;\n    string middle = s.substr(1, s.length() - 2);\n    return isPalindrome(middle);\n}",
+      "explanation": "mystery cộng phần đầu với chữ số cuối tới khi còn 1 chữ số. isPalindrome là đệ quy tuyến tính.",
+      "parts": [
+        {
+          "lines": "1-6",
+          "note": "mystery."
+        },
+        {
+          "lines": "9-14",
+          "note": "Bỏ ký tự đầu và cuối rồi gọi tiếp."
+        }
+      ],
+      "pages": [
+        19,
+        24,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Tháp Hà Nội",
+      "language": "cpp",
+      "code": "void THN(int n, char from, char to, char temp) {\n    if (n > 0) {\n        THN(n - 1, from, temp, to);\n        move(from, to);\n        THN(n - 1, temp, to, from);\n    }\n}\n// THN(3, 'A', 'C', 'B'): 7 lần chuyển, bắt đầu A->C A->B C->B A->C ...",
+      "explanation": "Đệ quy nhị phân; số lần chuyển là 2ⁿ - 1 (chạy thử n = 3 được 7).",
+      "parts": [
+        {
+          "lines": "3",
+          "note": "Bước 1: n-1 đĩa from → temp."
+        },
+        {
+          "lines": "4",
+          "note": "Bước 2: đĩa lớn nhất from → to."
+        },
+        {
+          "lines": "5",
+          "note": "Bước 3: n-1 đĩa temp → to."
+        }
+      ],
+      "pages": [
+        36,
+        37
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Đệ quy hỗ tương",
+      "language": "c",
+      "code": "long Y(int n);   // prototype của hàm Y\nlong X(int n) {\n    if (n == 0) return 1;\n    else return X(n - 1) + Y(n - 1);\n}\nlong Y(int n) {\n    if (n == 0) return 1;\n    else return X(n - 1) * Y(n - 1);\n}\n// X: 1 2 3 5 11 41 ...   Y: 1 1 2 6 30 330 ...",
+      "explanation": "Cần prototype của Y trước khi X dùng nó. X(5) = 41, Y(5) = 330 (đã chạy thử).",
+      "parts": [
+        {
+          "lines": "1",
+          "note": "Khai báo trước."
+        },
+        {
+          "lines": "2-5",
+          "note": "X gọi X và Y."
+        },
+        {
+          "lines": "6-9",
+          "note": "Y gọi X và Y."
+        }
+      ],
+      "pages": [
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Fibonacci có nhớ",
+      "language": "cpp",
+      "code": "int mem[1000];\nint fibo(int n) {\n    if (n <= 2) return 1;\n    if (mem[n] != -1) return mem[n];\n    int res = fibo(n - 2) + fibo(n - 1);\n    mem[n] = res;\n    return res;\n}\nint main() {\n    memset(mem, -1, sizeof(mem));\n    cout << fibo(10);   // 55\n}",
+      "explanation": "Mỗi n chỉ tính một lần nên O(n). Lưu ý: base case n <= 2 khác bản tr. 43 (n < 2 return 1), nên hai bản cho kết quả khác nhau.",
+      "parts": [
+        {
+          "lines": "4",
+          "note": "Đã tính thì trả ngay."
+        },
+        {
+          "lines": "5-6",
+          "note": "Tính và lưu."
+        },
+        {
+          "lines": "10",
+          "note": "-1 đánh dấu chưa tính."
+        }
+      ],
+      "pages": [
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Quay lui: n-Queens",
+      "language": "cpp",
+      "code": "int a[NMAX], n;\nbool isCandidate(int j, int k) {\n    for (int i = 1; i < k; i++)\n        if ((j == a[i]) || (fabs(j - a[i]) == (k - i)))\n            return false;\n    return true;\n}\nvoid TRY(int k) {\n    for (int j = 1; j <= n; j++) {\n        if (isCandidate(j, k)) {\n            a[k] = j;\n            if (k == n) print_sol();\n            else TRY(k + 1);\n        }\n    }\n}\n// n = 4: in \"2 4 1 3\" và \"3 1 4 2\"",
+      "explanation": "a[k] là cột của hậu ở hàng k. Ứng viên bị loại nếu trùng cột hoặc cùng đường chéo (chạy thử với n = 4).",
+      "parts": [
+        {
+          "lines": "2-7",
+          "note": "Kiểm tra cột và đường chéo với các hàng trước."
+        },
+        {
+          "lines": "8-15",
+          "note": "Thử từng cột; đủ n hàng thì in lời giải."
+        }
+      ],
+      "pages": [
+        46,
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Khử đệ quy: vòng lặp, đệ quy đuôi, stack",
+      "language": "cpp",
+      "code": "int fact(int n) {                  // vòng lặp\n    int k = 0, F = 1;\n    while (k < n) F = ++k * F;\n    return F;\n}\nint USCLN(int m, int n) {          // khử đệ quy đuôi\n    int temp;\n    while (n != 0) {               // !B(X)\n        temp = m; m = n; n = temp % n;   // X = f(X)\n    }\n    return m;                      // D(X)\n}\nvoid iter_binary(int m) {          // khử bằng stack\n    stack<int> stk;\n    while (m > 0) {                // !C(X)\n        stk.push(m);               // push(S, X)\n        m /= 2;                    // X = f(X)\n    }\n    while (!stk.empty()) {\n        int u = stk.top(); stk.pop();\n        cout << u % 2;             // B(X)\n    }\n}",
+      "explanation": "Ba kỹ thuật khử đệ quy trên slide. iter_binary(13) in 1101.",
+      "parts": [
+        {
+          "lines": "1-5",
+          "note": "f(n) = n * f(n-1) thành vòng lặp."
+        },
+        {
+          "lines": "6-12",
+          "note": "Đệ quy đuôi USCLN."
+        },
+        {
+          "lines": "13-23",
+          "note": "Đệ quy tuyến tính binary(m) dùng stack."
+        }
+      ],
+      "pages": [
+        52,
+        56,
+        62
+      ],
+      "source": "slide"
+    }
+  ],
+  "figures": [
+    {
+      "page": 8,
+      "caption": "Cấu trúc hàm đệ quy"
+    },
+    {
+      "page": 14,
+      "caption": "Chuỗi lời gọi power(5, 3)"
+    },
+    {
+      "page": 32,
+      "caption": "Tháp Hà Nội"
+    },
+    {
+      "page": 46,
+      "caption": "Bài toán n-Queens"
+    },
+    {
+      "page": 58,
+      "caption": "Sơ đồ THN(3, A, B, C)"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "Đệ quy là gì?",
+      "back": "Giải quyết vấn đề bằng cách chia thành các vấn đề nhỏ hơn có cùng dạng.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "Base case là gì?",
+      "back": "Trường hợp đơn giản tính trực tiếp, không gọi đệ quy.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "Recursive case là gì?",
+      "back": "Trường hợp mô tả qua trường hợp nhỏ hơn của cùng vấn đề.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "3 điều kiện cần của giải thuật đệ quy?",
+      "back": "Mọi input hợp lệ được xử lý; có base case; lời gọi đệ quy dần tới base case.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "power(5, 3) = ?",
+      "back": "125 = 5 * 25.",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Độ phức tạp lũy thừa nhanh?",
+      "back": "O(log n).",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "mystery(648) = ?",
+      "back": "9 (648 → 72 → 9).",
+      "pages": [
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Các loại đệ quy trực tiếp?",
+      "back": "Tuyến tính, nhị phân, phi tuyến.",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "Đệ quy gián tiếp gồm?",
+      "back": "Đệ quy hỗ tương.",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "Đệ quy tuyến tính là gì?",
+      "back": "Mỗi lần thực hiện chỉ gọi đệ quy một lần.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Đệ quy nhị phân là gì? Ví dụ?",
+      "back": "Gọi đệ quy hai lần; fibo, tháp Hà Nội.",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "Đệ quy phi tuyến là gì?",
+      "back": "Lời gọi đệ quy nằm trong vòng lặp.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "3 bước tháp Hà Nội?",
+      "back": "n-1 đĩa A→B (qua C); đĩa lớn nhất A→C; n-1 đĩa B→C (qua A).",
+      "pages": [
+        36
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "Số lần chuyển đĩa tháp Hà Nội n đĩa?",
+      "back": "2ⁿ - 1.",
+      "pages": [
+        36
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "fc-15",
+      "front": "X(n), Y(n) hỗ tương trên slide?",
+      "back": "X(n) = X(n-1) + Y(n-1); Y(n) = X(n-1) * Y(n-1); X(0) = Y(0) = 1.",
+      "pages": [
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Đệ quy có nhớ là gì?",
+      "back": "Lưu lời giải vấn đề con và tái sử dụng khi gặp lại.",
+      "pages": [
+        43
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "Fibonacci đệ quy thường và có nhớ: độ phức tạp?",
+      "back": "O(2ⁿ) và O(n).",
+      "pages": [
+        43,
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Quay lui là gì?",
+      "back": "Xây dần lời giải bộ phận; nếu không phát triển tiếp được thì bỏ và thử ứng viên khác.",
+      "pages": [
+        45
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "Điều kiện isCandidate trong n-Queens?",
+      "back": "Không trùng cột (j == a[i]) và không cùng đường chéo (|j - a[i]| == k - i).",
+      "pages": [
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "Ưu điểm đệ quy?",
+      "back": "Trực quan, code đơn giản dễ hiểu dễ bảo trì, duyệt cây dễ.",
+      "pages": [
+        49
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "Nhược điểm đệ quy?",
+      "back": "Tốn bộ nhớ và thời gian; chậm, có thể tràn stack.",
+      "pages": [
+        49
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "Khi nào nên khử đệ quy?",
+      "back": "Khi profiling hoặc bằng chứng rõ ràng cho thấy cần thiết.",
+      "pages": [
+        50
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "Khử đệ quy đuôi?",
+      "back": "while (!B(X)) { A(X); X = f(X); } D(X);",
+      "pages": [
+        55
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "Vì sao khử đệ quy dùng stack?",
+      "back": "Lời gọi cuối (base case) hoàn tất đầu tiên – LIFO.",
+      "pages": [
+        59
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-25",
+      "front": "Khử đệ quy nhị phân bằng stack cần lưu thêm gì?",
+      "back": "Nhãn k (1 hoặc 2) cho biết đang ở lần gọi nào.",
+      "pages": [
+        64
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "Thành phần nào bắt buộc phải có để hàm đệ quy dừng?",
+      "options": [
+        "Trường hợp cơ bản (base case)",
+        "Vòng lặp",
+        "Biến toàn cục",
+        "Stack tường minh"
+      ],
+      "answer": 0,
+      "explanation": "Phải có base case không thực hiện lời gọi đệ quy.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "hiểu",
+      "question": "Điều nào KHÔNG phải điều kiện cần của giải thuật đệ quy?",
+      "options": [
+        "Mọi input hợp lệ tương ứng một trường hợp",
+        "Phải dùng biến static",
+        "Lời gọi đệ quy hướng tới base case",
+        "Có base case"
+      ],
+      "answer": 1,
+      "explanation": "Ba điều kiện trên slide 12.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "vận dụng",
+      "question": "mystery(648) trả về?",
+      "code": {
+        "language": "cpp",
+        "code": "int mystery(int n) {\n  if (n < 10) return n;\n  int a = n/10, b = n % 10;\n  return mystery(a + b);\n}"
+      },
+      "options": [
+        "18",
+        "72",
+        "9",
+        "648"
+      ],
+      "answer": 2,
+      "explanation": "648 → 64 + 8 = 72 → 7 + 2 = 9.",
+      "pages": [
+        19,
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "vận dụng",
+      "question": "Với bản lũy thừa nhanh, power(2, 10) gọi tới đâu?",
+      "options": [
+        "power(2,9), power(2,8), … tuyến tính",
+        "power(2,10) gọi 2 lần power(2,5)",
+        "Chỉ power(2,5)",
+        "power(2,5) → power(2,4) → power(2,2) → power(2,1) → power(2,0)"
+      ],
+      "answer": 3,
+      "explanation": "Chẵn thì chia đôi, lẻ thì trừ 1 – O(log n). Kết quả 1024 (đã chạy thử).",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "hiểu",
+      "question": "Hàm isPalindrome trên slide thuộc loại đệ quy nào?",
+      "options": [
+        "Tuyến tính",
+        "Nhị phân",
+        "Phi tuyến",
+        "Hỗ tương"
+      ],
+      "answer": 0,
+      "explanation": "Mỗi lần chỉ gọi đệ quy một lần.",
+      "pages": [
+        28,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "hiểu",
+      "question": "Đệ quy phi tuyến khác đệ quy nhị phân ở điểm nào?",
+      "options": [
+        "Không có base case",
+        "Lời gọi đệ quy nằm trong vòng lặp",
+        "Gọi đúng 2 lần",
+        "Dùng 2 hàm"
+      ],
+      "answer": 1,
+      "explanation": "Phi tuyến: lời gọi bên trong vòng lặp.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "vận dụng",
+      "question": "Với THN(n, from, to, temp), dòng thiếu ở giữa là gì?",
+      "code": {
+        "language": "cpp",
+        "code": "if (n > 0) {\n  THN(n - 1, from, temp, to);\n  move(from, to);\n  /* ??? */\n}"
+      },
+      "options": [
+        "THN(n - 1, from, to, temp);",
+        "THN(n - 1, to, temp, from);",
+        "THN(n - 1, temp, to, from);",
+        "THN(n, temp, to, from);"
+      ],
+      "answer": 2,
+      "explanation": "Chuyển n-1 đĩa từ cọc trung gian về đích, dùng from làm trung gian.",
+      "pages": [
+        36,
+        37
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "vận dụng",
+      "question": "Tháp Hà Nội với 3 đĩa cần bao nhiêu lần chuyển?",
+      "options": [
+        "3",
+        "6",
+        "8",
+        "7"
+      ],
+      "answer": 3,
+      "explanation": "2³ - 1 = 7 (đã chạy thử).",
+      "pages": [
+        36
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-09",
+      "level": "vận dụng",
+      "question": "Với X, Y hỗ tương trên slide, X(4) và Y(4) bằng?",
+      "options": [
+        "11 và 30",
+        "5 và 6",
+        "41 và 330",
+        "8 và 12"
+      ],
+      "answer": 0,
+      "explanation": "X: 1, 2, 3, 5, 11; Y: 1, 1, 2, 6, 30.",
+      "pages": [
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "vận dụng",
+      "question": "Hai bản fibo trên slide cho fibo(10) lần lượt bằng?",
+      "code": {
+        "language": "cpp",
+        "code": "// tr.43\nint fibo(int n) { if (n < 2) return 1; return fibo(n-1) + fibo(n-2); }\n// tr.44 (có nhớ)\nint fibo(int n) { if (n <= 2) return 1; ... }"
+      },
+      "options": [
+        "55 và 55",
+        "89 và 55",
+        "89 và 89",
+        "55 và 89"
+      ],
+      "answer": 1,
+      "explanation": "Base case khác nhau: bản 43 có fibo(0) = fibo(1) = 1 nên lệch một chỉ số (đã chạy thử).",
+      "pages": [
+        43,
+        44
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-11",
+      "level": "hiểu",
+      "question": "Đệ quy có nhớ giảm độ phức tạp Fibonacci từ … xuống …?",
+      "options": [
+        "O(n²) → O(n)",
+        "O(n) → O(log n)",
+        "O(2ⁿ) → O(n)",
+        "O(2ⁿ) → O(log n)"
+      ],
+      "answer": 2,
+      "explanation": "Mỗi n tính một lần.",
+      "pages": [
+        43,
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "hiểu",
+      "question": "Trong n-Queens, điều kiện `fabs(j - a[i]) == (k - i)` kiểm tra?",
+      "options": [
+        "Cùng hàng",
+        "Cùng cột",
+        "Vượt bàn cờ",
+        "Cùng đường chéo"
+      ],
+      "answer": 3,
+      "explanation": "Hiệu cột bằng hiệu hàng nghĩa là cùng đường chéo.",
+      "pages": [
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "vận dụng",
+      "question": "Với n = 4, lời giải đầu tiên chương trình n-Queens in ra là?",
+      "options": [
+        "2 4 1 3",
+        "1 3 2 4",
+        "3 1 4 2",
+        "1 2 3 4"
+      ],
+      "answer": 0,
+      "explanation": "Thử cột tăng dần; lời giải đầu là 2 4 1 3 (đã chạy thử).",
+      "pages": [
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "vận dụng",
+      "question": "Hàm USCLN đệ quy trên slide 56 có lỗi gì?",
+      "code": {
+        "language": "cpp",
+        "code": "int USCLN(int m, int n) {\n  if (n == 0) return m;\n  else USCLN(n, m % n);\n}"
+      },
+      "options": [
+        "Sai base case",
+        "Thiếu return trước lời gọi đệ quy",
+        "m % n phải là n % m",
+        "Không có lỗi"
+      ],
+      "answer": 1,
+      "explanation": "Thiếu return nên nhánh else không trả giá trị (undefined behavior).",
+      "pages": [
+        56
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-15",
+      "level": "vận dụng",
+      "question": "Sơ đồ fact(3) trên slide 57 ghi 'fact(2) = 3*fact(1)'. Đúng phải là?",
+      "options": [
+        "fact(2) = 1*fact(1)",
+        "fact(2) = 3*fact(2)",
+        "fact(2) = 2*fact(1)",
+        "Slide đúng"
+      ],
+      "answer": 2,
+      "explanation": "fact(n) = n * fact(n-1).",
+      "pages": [
+        57
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-16",
+      "level": "hiểu",
+      "question": "Vì sao khử đệ quy dùng stack?",
+      "options": [
+        "Stack nhanh hơn mảng",
+        "Vì compiler yêu cầu",
+        "Để tránh vòng lặp",
+        "Lời gọi cuối hoàn tất đầu tiên – cần LIFO"
+      ],
+      "answer": 3,
+      "explanation": "Last In First Out.",
+      "pages": [
+        59
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-17",
+      "level": "vận dụng",
+      "question": "iter_binary(13) in ra?",
+      "options": [
+        "1101",
+        "1011",
+        "13",
+        "0111"
+      ],
+      "answer": 0,
+      "explanation": "Push 13, 6, 3, 1 rồi pop in 1 1 0 1 (đã chạy thử).",
+      "pages": [
+        62
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-18",
+      "level": "nhớ",
+      "question": "Theo slide, khi nào nên khử đệ quy?",
+      "options": [
+        "Luôn luôn",
+        "Khi profiling/bằng chứng cho thấy cần thiết",
+        "Khi hàm dài hơn 10 dòng",
+        "Không bao giờ"
+      ],
+      "answer": 1,
+      "explanation": "Khử đệ quy có thể làm code khó bảo trì.",
+      "pages": [
+        50
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Trình bày khái niệm đệ quy, cấu trúc hàm đệ quy và 3 điều kiện cần. Viết hàm lũy thừa đệ quy O(log n) và trace power(5, 3).",
+      "hints": "- Khái niệm [tr. 4](#p4); cấu trúc [tr. 8](#p8)–[tr. 9](#p9).\n- 3 điều kiện [tr. 12](#p12).\n- Trace [tr. 14](#p14)–[tr. 17](#p17); O(log n) [tr. 18](#p18).",
+      "pages": [
+        4,
+        8,
+        9,
+        12,
+        13,
+        17,
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Phân loại đệ quy và cho ví dụ từng loại (tuyến tính, nhị phân, phi tuyến, hỗ tương). Trình bày lời giải tháp Hà Nội.",
+      "hints": "- Phân loại [tr. 26](#p26).\n- fact, palindrome [tr. 27](#p27)–[tr. 29](#p29); fibo [tr. 30](#p30).\n- THN [tr. 31](#p31)–[tr. 37](#p37); phi tuyến [tr. 38](#p38)–[tr. 39](#p39); hỗ tương [tr. 40](#p40)–[tr. 41](#p41).",
+      "pages": [
+        26,
+        27,
+        30,
+        36,
+        38,
+        40,
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "Trình bày đệ quy có nhớ và đệ quy quay lui. Viết Fibonacci có nhớ và giải bài n-Queens bằng quay lui.",
+      "hints": "- Memoization [tr. 43](#p43)–[tr. 44](#p44).\n- Mẫu Try(i) [tr. 45](#p45).\n- n-Queens [tr. 46](#p46)–[tr. 47](#p47).",
+      "pages": [
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "Nêu ưu nhược điểm của đệ quy. Trình bày các phương pháp khử đệ quy (vòng lặp, đệ quy đuôi, stack) với ví dụ USCLN và đổi số sang nhị phân.",
+      "hints": "- Ưu/nhược [tr. 49](#p49)–[tr. 50](#p50).\n- Vòng lặp [tr. 51](#p51)–[tr. 52](#p52).\n- Đệ quy đuôi [tr. 53](#p53)–[tr. 56](#p56).\n- Stack [tr. 59](#p59)–[tr. 62](#p62); nhị phân [tr. 63](#p63)–[tr. 66](#p66).",
+      "pages": [
+        49,
+        50,
+        51,
+        55,
+        56,
+        60,
+        61,
+        62
+      ],
+      "source": "slide"
+    }
+  ]
+}

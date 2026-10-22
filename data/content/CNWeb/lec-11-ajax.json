@@ -1,0 +1,596 @@
+{
+  "version": 1,
+  "subject": "CNWeb",
+  "lesson": "lec-11-ajax",
+  "title": "Bài 11 – AJAX",
+  "summary": "## 1. Ứng dụng web truyền thống và hạn chế\n- Đặc điểm [tr. 4](#p4):\n  - Tương tác kiểu **\"Click, wait, and refresh\"**: mọi sự kiện, gửi dữ liệu hay điều hướng đều phải **tải lại trang** từ server và người dùng phải chờ.\n  - Mô hình request/response **đồng bộ (synchronous)**.\n  - **Browser luôn là bên khởi tạo** request.\n- Hệ quả [tr. 5](#p5):\n  - Phản hồi chậm.\n  - **Mất ngữ cảnh thao tác** khi trang refresh.\n  - Tải server và băng thông lớn.\n  - Không có giao tiếp hai chiều thời gian thực, server không tự đẩy cập nhật.\n  - Đây là lý do các công nghệ **Rich Internet Application (RIA)** ra đời.\n\n## 2. Web 2.0 và RIA\n- Định nghĩa của Tim O'Reilly [tr. 7](#p7): Web 2.0 là **\"network as platform\"**.\n  - Phần mềm là dịch vụ được cập nhật liên tục, càng nhiều người dùng càng tốt hơn.\n  - Kết hợp (remix) dữ liệu từ nhiều nguồn.\n  - Có **\"architecture of participation\"** tạo hiệu ứng mạng.\n  - Vượt khỏi mô hình \"trang\" của Web 1.0 để mang lại trải nghiệm phong phú.\n- Web 2.0 khác ở chỗ: cá nhân hoá, hướng người dùng, dễ dùng, đưa người dùng tới đúng thông tin cần [tr. 8](#p8).\n- Công nghệ RIA [tr. 9](#p9):\n  - Macromedia Flash, Java Web Start.\n  - **DHTML** (JavaScript + DOM + CSS). DHTML **không có giao tiếp bất đồng bộ** nên vẫn phải refresh cả trang.\n  - **AJAX**.\n- **Browser wars** [tr. 10](#p10)–[tr. 11](#p11):\n  - Cuộc chiến đầu tiên cuối thập niên 90 giữa IE và Netscape Navigator.\n  - Sau đó tới Firefox, Chrome, Safari, Opera.\n  - Hệ quả: ngôn ngữ script và cách cài đặt trên các browser **đa dạng, khác nhau**.\n\n## 3. Lịch sử AJAX [tr. 12](#p12)\n- Thập niên 199x: Java applet đã tải nội dung bất đồng bộ.\n- 1996: IE thêm thẻ **IFrame**.\n- 1999: Microsoft tạo **XMLHTTP ActiveX** trong IE5, tiền thân của **XMLHttpRequest**.\n- Kỹ thuật này nổi tiếng nhờ **Gmail (2004)** và **Google Maps (2005)**. Thuật ngữ **\"Ajax\" ra đời năm 2005**.\n\n## 4. AJAX là gì?\n- **AJAX = Asynchronous JavaScript and XML**. AJAX **không phải ngôn ngữ lập trình mới** mà là **kỹ thuật** tạo ứng dụng web tốt hơn, nhanh hơn, tương tác hơn [tr. 13](#p13).\n- JavaScript giao tiếp trực tiếp với server qua object **XMLHttpRequest**. Nhờ vậy trao đổi dữ liệu **không cần tải lại trang** và chỉ xin **từng phần nhỏ dữ liệu** thay vì cả trang [tr. 13](#p13).\n- AJAX dựa trên các chuẩn web: **JavaScript, XML, HTML, CSS, DOM**. Các chuẩn này được mọi browser lớn hỗ trợ nên ứng dụng AJAX **độc lập browser và nền tảng** [tr. 14](#p14).\n- **DOM** [tr. 15](#p15)–[tr. 16](#p16):\n  - Mô hình object chuẩn, độc lập nền tảng và ngôn ngữ, biểu diễn tài liệu HTML/XML.\n  - Cung cấp API để truy vấn, duyệt và sửa tài liệu.\n  - Ví dụ: bảng HTML được biểu diễn thành cây TABLE → TBODY → TR → TD.\n\n## 5. Kiến trúc AJAX\n- Thêm một lớp trung gian là **Ajax engine** giữa người dùng và server. Lớp này xoá kiểu tương tác \"start-stop-start-stop\" [tr. 17](#p17).\n  - Đầu phiên, browser **tải Ajax engine** (viết bằng JS) thay vì tải một trang.\n  - Engine lo cả **render giao diện** lẫn **giao tiếp với server** thay cho người dùng.\n- **Giao tiếp bất đồng bộ** [tr. 18](#p18):\n  - Tương tác của người dùng diễn ra **độc lập** với giao tiếp server.\n  - Hành động lẽ ra sinh HTTP request giờ là **lời gọi JavaScript tới engine**.\n  - Khi cần dữ liệu, engine gửi request **bất đồng bộ** qua `XMLHttpRequest`.\n- *Bổ sung*: ngày nay dữ liệu thường là **JSON** thay vì XML, và API hiện đại là `fetch()`. Nguyên lý vẫn như cũ.",
+  "keyConcepts": [
+    {
+      "term": "Click, wait, and refresh",
+      "definition": "Kiểu tương tác web truyền thống: mọi thao tác đều tải lại trang và người dùng phải chờ.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Synchronous request/response",
+      "definition": "Mô hình giao tiếp đồng bộ, browser luôn khởi tạo request và chờ response.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Hạn chế ứng dụng web truyền thống",
+      "definition": "Chậm, mất ngữ cảnh khi refresh, tốn server/băng thông, không có cập nhật thời gian thực từ server.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Rich Internet Application (RIA)",
+      "definition": "Nhóm công nghệ mang trải nghiệm phong phú như ứng dụng desktop: Flash, Java Web Start, DHTML, AJAX.",
+      "pages": [
+        5,
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Web 2.0",
+      "definition": "\"Network as platform\" (Tim O'Reilly): dịch vụ cập nhật liên tục, remix dữ liệu, architecture of participation, trải nghiệm phong phú.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "DHTML",
+      "definition": "JavaScript + DOM + CSS; trang động nhưng không giao tiếp bất đồng bộ nên vẫn cần refresh toàn trang.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Browser wars",
+      "definition": "Cạnh tranh thị phần trình duyệt (IE vs Netscape, sau là Firefox, Chrome…), dẫn tới khác biệt script giữa browser.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "XMLHTTP / XMLHttpRequest",
+      "definition": "Đối tượng (bắt nguồn từ ActiveX của IE5, 1999) cho JS gửi HTTP request tới server không cần tải lại trang.",
+      "pages": [
+        12,
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "AJAX",
+      "definition": "Asynchronous JavaScript and XML – kỹ thuật (không phải ngôn ngữ) trao đổi dữ liệu bất đồng bộ với server.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Chuẩn web dùng trong AJAX",
+      "definition": "JavaScript, XML, HTML, CSS, DOM – được mọi browser lớn hỗ trợ.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "DOM",
+      "definition": "Mô hình object độc lập nền tảng/ngôn ngữ biểu diễn HTML/XML; API để truy vấn, duyệt, sửa tài liệu.",
+      "pages": [
+        15,
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Ajax engine",
+      "definition": "Lớp JS trung gian giữa người dùng và server, lo render giao diện và giao tiếp server thay người dùng.",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Asynchronous communication",
+      "definition": "Tương tác của người dùng diễn ra độc lập với việc trao đổi dữ liệu với server.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "fetch() và JSON",
+      "definition": "API hiện đại thay XMLHttpRequest; JSON là định dạng dữ liệu phổ biến hơn XML hiện nay.",
+      "pages": [
+        18
+      ],
+      "source": "bổ sung"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Gửi request AJAX bằng XMLHttpRequest",
+      "language": "javascript",
+      "code": "function loadDoc() {\n  var xhttp = new XMLHttpRequest();\n  xhttp.onreadystatechange = function () {\n    if (this.readyState == 4 && this.status == 200) {\n      document.getElementById(\"demo\").innerHTML = this.responseText;\n    }\n  };\n  xhttp.open(\"GET\", \"ajax_info.txt\", true);   // true = bất đồng bộ\n  xhttp.send();\n}",
+      "explanation": "Minh hoạ kỹ thuật AJAX trên slide: JS gọi server qua XMLHttpRequest, khi có kết quả thì cập nhật một phần trang qua DOM, không reload.",
+      "parts": [
+        {
+          "lines": "2",
+          "note": "Tạo đối tượng XMLHttpRequest."
+        },
+        {
+          "lines": "3-7",
+          "note": "Callback chạy khi trạng thái đổi; readyState 4 + status 200 = đã nhận xong, thành công."
+        },
+        {
+          "lines": "6",
+          "note": "Cập nhật DOM, chỉ một phần trang thay đổi."
+        },
+        {
+          "lines": "8",
+          "note": "Tham số thứ ba true → request bất đồng bộ."
+        },
+        {
+          "lines": "9",
+          "note": "Gửi request."
+        }
+      ],
+      "pages": [
+        13,
+        18
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "title": "Cùng chức năng với fetch()",
+      "language": "javascript",
+      "code": "async function loadDoc() {\n  const res = await fetch(\"ajax_info.txt\");\n  if (res.ok) {\n    document.getElementById(\"demo\").innerHTML = await res.text();\n  }\n}",
+      "explanation": "Cách viết hiện đại dựa trên Promise; ý tưởng AJAX không đổi.",
+      "parts": [
+        {
+          "lines": "2",
+          "note": "fetch trả Promise; await chờ mà không chặn giao diện."
+        },
+        {
+          "lines": "3-5",
+          "note": "Kiểm tra thành công rồi cập nhật DOM."
+        }
+      ],
+      "pages": [
+        13
+      ],
+      "source": "bổ sung"
+    }
+  ],
+  "figures": [
+    {
+      "page": 6,
+      "caption": "Các ứng dụng Web 2.0"
+    },
+    {
+      "page": 9,
+      "caption": "Công nghệ Rich Internet Application"
+    },
+    {
+      "page": 16,
+      "caption": "Biểu diễn DOM của một bảng HTML"
+    },
+    {
+      "page": 17,
+      "caption": "Kiến trúc AJAX với Ajax engine"
+    },
+    {
+      "page": 18,
+      "caption": "Giao tiếp đồng bộ vs bất đồng bộ"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "Mô tả kiểu tương tác của web truyền thống?",
+      "back": "\"Click, wait, and refresh\" – mọi thao tác tải lại trang, người dùng phải chờ.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "Ai khởi tạo request trong web truyền thống?",
+      "back": "Luôn là browser.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "4 hạn chế của ứng dụng web truyền thống?",
+      "back": "Chậm; mất ngữ cảnh khi refresh; tốn tải server/băng thông; không có cập nhật thời gian thực từ server.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "RIA là viết tắt của gì?",
+      "back": "Rich Internet Application.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "Ai đưa ra định nghĩa Web 2.0 trên slide?",
+      "back": "Tim O'Reilly.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "\"Architecture of participation\" thuộc khái niệm nào?",
+      "back": "Web 2.0 – tạo hiệu ứng mạng nhờ người dùng tham gia đóng góp.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "Kể 4 công nghệ RIA.",
+      "back": "Macromedia Flash, Java Web Start, DHTML, AJAX.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Vì sao DHTML chưa đủ?",
+      "back": "Không có giao tiếp bất đồng bộ – vẫn cần refresh toàn trang.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "Hệ quả của browser wars với lập trình web?",
+      "back": "Ngôn ngữ/script giữa các browser đa dạng, khác nhau.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "Microsoft tạo XMLHTTP ActiveX năm nào, trong browser nào?",
+      "back": "1999, Internet Explorer 5.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Ứng dụng nào làm AJAX nổi tiếng?",
+      "back": "Gmail (2004) và Google Maps (2005).",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "Thuật ngữ Ajax ra đời năm nào?",
+      "back": "2005.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "AJAX là viết tắt của gì?",
+      "back": "Asynchronous JavaScript and XML.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "AJAX có phải ngôn ngữ lập trình không?",
+      "back": "Không – là kỹ thuật kết hợp các chuẩn web.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Đối tượng JS dùng trong AJAX để trao đổi với server?",
+      "back": "XMLHttpRequest.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "5 chuẩn web AJAX dựa vào?",
+      "back": "JavaScript, XML, HTML, CSS, DOM.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "Ajax engine đảm nhận 2 việc gì?",
+      "back": "Render giao diện người dùng và giao tiếp với server thay người dùng.",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Trong AJAX, hành động người dùng chuyển thành gì?",
+      "back": "Lời gọi JavaScript tới Ajax engine thay vì HTTP request trực tiếp.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "AJAX là viết tắt của?",
+      "options": [
+        "Advanced Java and XML",
+        "Asynchronous JavaScript and XML",
+        "Asynchronous JSON and XHTML",
+        "Application JavaScript API Extension"
+      ],
+      "answer": 1,
+      "explanation": "AJAX = Asynchronous JavaScript and XML.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "hiểu",
+      "question": "Phát biểu nào đúng về AJAX?",
+      "options": [
+        "AJAX là ngôn ngữ lập trình mới của Google",
+        "AJAX là kỹ thuật cho phép trang trao đổi dữ liệu với server mà không tải lại toàn trang",
+        "AJAX chỉ chạy trên Internet Explorer",
+        "AJAX thay thế hoàn toàn HTTP"
+      ],
+      "answer": 1,
+      "explanation": "AJAX is not a new programming language, but a technique…",
+      "pages": [
+        13,
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "hiểu",
+      "question": "Hạn chế nào KHÔNG phải của ứng dụng web truyền thống theo slide?",
+      "options": [
+        "Mất ngữ cảnh thao tác khi refresh",
+        "Tải server và băng thông lớn",
+        "Không thể hiển thị hình ảnh",
+        "Thiếu cập nhật thời gian thực do server khởi tạo"
+      ],
+      "answer": 2,
+      "explanation": "4 hạn chế: chậm, mất ngữ cảnh, tốn server/băng thông, thiếu giao tiếp hai chiều thời gian thực.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "hiểu",
+      "question": "Vì sao DHTML chưa giải quyết được vấn đề refresh trang?",
+      "options": [
+        "Không hỗ trợ CSS",
+        "Không có giao tiếp bất đồng bộ với server",
+        "Chỉ chạy trên Flash",
+        "Không thao tác được DOM"
+      ],
+      "answer": 1,
+      "explanation": "DHTML: No asynchronous communication → full page refresh still required.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "nhớ",
+      "question": "Đối tượng JavaScript cốt lõi để AJAX giao tiếp với server?",
+      "options": [
+        "XMLHttpRequest",
+        "document.write",
+        "IFrame",
+        "ActiveXScript"
+      ],
+      "answer": 0,
+      "explanation": "With AJAX, your JavaScript can communicate directly with the server using XMLHttpRequest.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "nhớ",
+      "question": "Thuật ngữ \"Ajax\" xuất hiện năm nào?",
+      "options": [
+        "1996",
+        "1999",
+        "2004",
+        "2005"
+      ],
+      "answer": 3,
+      "explanation": "IFrame 1996, XMLHTTP 1999, Gmail 2004, thuật ngữ Ajax 2005.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "hiểu",
+      "question": "Vai trò của Ajax engine trong kiến trúc AJAX?",
+      "options": [
+        "Thay thế web server",
+        "Lớp trung gian ở browser lo render giao diện và giao tiếp server thay người dùng",
+        "Cơ sở dữ liệu phía client",
+        "Trình biên dịch JavaScript"
+      ],
+      "answer": 1,
+      "explanation": "AJAX engine is responsible for both rendering the interface and communicating with the server on the user's behalf.",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "vận dụng",
+      "question": "Người dùng gõ vào ô tìm kiếm và danh sách gợi ý hiện ra ngay, trang không tải lại. Kỹ thuật nào đang được dùng?",
+      "options": [
+        "Form submit truyền thống",
+        "Frames",
+        "AJAX",
+        "Server-side include"
+      ],
+      "answer": 2,
+      "explanation": "Request nhỏ bất đồng bộ lấy dữ liệu gợi ý và cập nhật một phần trang qua DOM.",
+      "pages": [
+        13,
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "hiểu",
+      "question": "Vì sao ứng dụng AJAX được xem là độc lập browser và nền tảng?",
+      "options": [
+        "Vì AJAX chỉ dùng Flash",
+        "Vì dựa trên các chuẩn web (JS, XML, HTML, CSS, DOM) được mọi browser lớn hỗ trợ",
+        "Vì AJAX chạy trên server",
+        "Vì AJAX không dùng JavaScript"
+      ],
+      "answer": 1,
+      "explanation": "The web standards used in AJAX are well defined and supported by all major browsers.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "vận dụng",
+      "question": "Trong đoạn code, tham số `true` của open() có ý nghĩa gì?",
+      "code": {
+        "language": "javascript",
+        "code": "xhttp.open(\"GET\", \"ajax_info.txt\", true);"
+      },
+      "options": [
+        "Bật cache",
+        "Yêu cầu bất đồng bộ – script tiếp tục chạy, không chờ response",
+        "Gửi bằng HTTPS",
+        "Bỏ qua lỗi"
+      ],
+      "answer": 1,
+      "explanation": "Tham số async = true là cốt lõi của chữ Asynchronous trong AJAX.",
+      "pages": [
+        18
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-11",
+      "level": "hiểu",
+      "question": "Theo định nghĩa của Tim O'Reilly, Web 2.0 KHÔNG bao gồm đặc điểm nào?",
+      "options": [
+        "Network as platform",
+        "Phần mềm là dịch vụ cập nhật liên tục",
+        "Architecture of participation",
+        "Mọi tương tác phải tải lại toàn trang"
+      ],
+      "answer": 3,
+      "explanation": "Web 2.0 vượt khỏi \"page metaphor\" của Web 1.0 để mang trải nghiệm phong phú.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Phân tích các đặc điểm và hạn chế của ứng dụng web truyền thống. AJAX giải quyết những hạn chế đó như thế nào?",
+      "hints": "- Click-wait-refresh, đồng bộ, browser khởi tạo [tr. 4](#p4).\n- 4 hạn chế [tr. 5](#p5).\n- AJAX: XMLHttpRequest, bất đồng bộ, lấy dữ liệu nhỏ, không reload, giữ ngữ cảnh, giảm băng thông [tr. 13](#p13), [tr. 18](#p18).",
+      "pages": [
+        4,
+        5,
+        13,
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Trình bày kiến trúc ứng dụng AJAX và so sánh mô hình giao tiếp đồng bộ với bất đồng bộ (có thể vẽ sơ đồ).",
+      "hints": "- Ajax engine trung gian, tải đầu phiên, render + giao tiếp [tr. 17](#p17).\n- Hành động người dùng → JS call → engine; request bất đồng bộ qua XMLHttpRequest [tr. 18](#p18).\n- So sánh với chu trình start-stop của web truyền thống [tr. 4](#p4).",
+      "pages": [
+        4,
+        17,
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "AJAX là gì, dựa trên những chuẩn web nào? Trình bày lịch sử hình thành và viết đoạn JavaScript minh hoạ việc lấy dữ liệu từ server rồi cập nhật một phần trang.",
+      "hints": "- Định nghĩa, không phải ngôn ngữ [tr. 13](#p13); JS, XML, HTML, CSS, DOM [tr. 14](#p14).\n- Lịch sử: applet, IFrame 1996, XMLHTTP 1999, Gmail 2004, Maps 2005, thuật ngữ 2005 [tr. 12](#p12).\n- Code XMLHttpRequest: open(GET, url, true), onreadystatechange, readyState 4 & status 200, innerHTML (bổ sung).",
+      "pages": [
+        12,
+        13,
+        14
+      ],
+      "source": "slide"
+    }
+  ]
+}

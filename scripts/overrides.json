@@ -1,0 +1,92 @@
+{
+  "subjects": {
+    "CNWeb": {
+      "name": "Công nghệ Web",
+      "short": "CNWeb"
+    },
+    "HPT": {
+      "name": "Hệ phân tán",
+      "short": "HPT"
+    },
+    "IoT": {
+      "name": "IoT và ứng dụng",
+      "short": "IoT"
+    },
+    "KTLT": {
+      "name": "Kỹ thuật lập trình",
+      "short": "KTLT"
+    }
+  },
+  "titles": {
+    "CNWeb/Lec 1-Introduction.pptx.pdf": "Bài 1 – Giới thiệu Web Technologies",
+    "CNWeb/Lec 04-Javascript.pptx.pdf": "Bài 4 – JavaScript",
+    "CNWeb/Lec 6 -Web development Java.pptx.pdf": "Bài 6 – Web development với Java",
+    "CNWeb/Lec 7-ReactJS.pptx.pdf": "Bài 7.1 – ReactJS",
+    "CNWeb/Lec 7.2-Nodejs.pptx.pdf": "Bài 7.2 – Node.js",
+    "CNWeb/Lec 8 - DOM.pptx.pdf": "Bài 8 – DOM (Document Object Model)",
+    "CNWeb/Lec 9-XML.pptx.pdf": "Bài 9 – XML, DTD và XML Schema",
+    "CNWeb/Lec 5.2 PHP-Advanced.pptx.pdf": "Bài 5.2 – PHP nâng cao",
+    "HPT/01-tongquan-kientruc_4.5m.pdf": "Chương 1 – Tổng quan & kiến trúc",
+    "HPT/02-tientrinh-traodoithongtin_4.2m.pdf": "Chương 2 – Tiến trình & trao đổi thông tin",
+    "HPT/03-dinhdanh_2.7m.pdf": "Chương 3 – Định danh (Naming)",
+    "HPT/04-dongbohoa-vie_9.1m.pdf": "Chương 4 – Đồng bộ hoá (Synchronization)",
+    "HPT/05-nhanban-nhatquan_3.4m.pdf": "Chương 5 – Nhân bản & nhất quán (Replication & Consistency)",
+    "HPT/06-tinhchiuloi-vie_2.7m.pdf": "Chương 6 – Tính chịu lỗi (Fault tolerance)",
+    "HPT/07-cloudcomputing-eng_4.9m.pdf": "Chương 7 – Cloud computing",
+    "KTLT/Lec1._KTLT.pdf": "Bài 1 – Tổng quan Kỹ thuật lập trình",
+    "KTLT/Lec2._Quan_ly_bo_nho.pdf": "Bài 2 – Quản lý bộ nhớ",
+    "KTLT/Lec3._Ham.pdf": "Bài 3 – Hàm",
+    "KTLT/Lec4._Efficient_code.pdf": "Bài 4 – Efficient code",
+    "KTLT/Lec5._Programming_style.pdf": "Bài 5 – Programming style",
+    "KTLT/Lec6._De_quy.pdf": "Bài 6 – Đệ quy",
+    "KTLT/Lec7._Data_structures.pdf": "Bài 7 – Data structures",
+    "KTLT/Lec8._Bay_loi_va_lap_trinh_phong_ngua.pdf": "Bài 8 – Bẫy lỗi & lập trình phòng ngừa",
+    "KTLT/Lec9._Go_loi__kiem_thu_va_tinh_chinh_ma_nguon.pdf": "Bài 9 – Gỡ lỗi, kiểm thử & tinh chỉnh mã nguồn"
+  },
+  "splits": {
+    "IoT/it4735_iot_va_ung_dung_v2025_16.1m.pdf": [
+      {
+        "id": "c1-tong-quan",
+        "title": "Chương 1 – Tổng quan về IoT",
+        "start": 1,
+        "end": 60
+      },
+      {
+        "id": "c2a-cam-bien-chuan-truyen-thong",
+        "title": "Chương 2a – Cảm biến, thiết bị & chuẩn truyền thông",
+        "start": 61,
+        "end": 91
+      },
+      {
+        "id": "c2b-giao-thuc-cloud",
+        "title": "Chương 2b – Giao thức ứng dụng IoT (MQTT…) & IoT Cloud Platform",
+        "start": 92,
+        "end": 190
+      },
+      {
+        "id": "c3a-lap-trinh-thiet-bi",
+        "title": "Chương 3a – Lập trình cho thiết bị IoT",
+        "start": 191,
+        "end": 240
+      },
+      {
+        "id": "c3b-web-api-platform",
+        "title": "Chương 3b – Web API & lập trình với IoT Platform",
+        "start": 241,
+        "end": 291
+      },
+      {
+        "id": "c4-bao-mat",
+        "title": "Chương 4 – An toàn và bảo mật IoT",
+        "start": 292,
+        "end": 314
+      },
+      {
+        "id": "c5-thiet-ke-he-thong",
+        "title": "Chương 5 – Thiết kế và xây dựng hệ thống IoT",
+        "start": 315,
+        "end": 349
+      }
+    ]
+  }
+}

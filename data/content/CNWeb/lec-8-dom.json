@@ -1,0 +1,1266 @@
+{
+  "version": 1,
+  "subject": "CNWeb",
+  "lesson": "lec-8-dom",
+  "title": "Bài 8 – DOM (Document Object Model)",
+  "summary": "## 1. DOM là gì?\n- **DOM** là chuẩn của **W3C**: giao diện **trung lập về nền tảng và ngôn ngữ**, cho phép chương trình/script truy cập và cập nhật động nội dung, cấu trúc, style của tài liệu [tr. 4](#p4).\n- DOM chia 3 phần: **Core DOM** (mọi loại tài liệu), **XML DOM**, **HTML DOM** [tr. 4](#p4).\n- **HTML DOM** định nghĩa [tr. 5](#p5):\n  - Các element HTML là **object**.\n  - **Property** của mọi element.\n  - **Method** để truy cập element.\n  - **Event** của mọi element.\n  - Tóm lại: HTML DOM là chuẩn để get, change, add, delete element HTML.\n- Khi tải trang, browser tạo DOM dạng **cây object** [tr. 6](#p6). Nhờ cây này, JavaScript có thể [tr. 7](#p7):\n  - Đổi mọi element, attribute và CSS.\n  - Xoá hoặc thêm element và attribute.\n  - Phản ứng với event và tạo event mới.\n\n## 2. Method, property, document\n- **Method** là hành động (vd thêm/xoá element). **Property** là giá trị get/set được (vd nội dung). Ví dụ: `getElementById` là method, `innerHTML` là property [tr. 10](#p10)–[tr. 12](#p12).\n- Object **document** đại diện trang web và sở hữu mọi object khác. Muốn truy cập element thì bắt đầu từ `document` [tr. 14](#p14).\n- Tìm element [tr. 15](#p15), [tr. 20](#p20)–[tr. 25](#p25):\n  - `getElementById(id)`.\n  - `getElementsByTagName(name)`.\n  - `getElementsByClassName(name)`.\n  - `querySelectorAll(\"p.intro\")` (theo CSS selector).\n  - Theo collection: `document.forms[\"frm1\"].elements[i].value`.\n- Đổi element [tr. 16](#p16): `element.innerHTML = …`, `element.attribute = …`, `element.style.property = …`, `element.setAttribute(attr, value)`.\n- Thêm/xoá [tr. 17](#p17): `createElement`, `removeChild`, `appendChild`, `replaceChild`, `document.write`.\n- Các collection có từ HTML DOM Level 1 (1998) như `document.anchors`, `body`, `cookie`, `forms`… vẫn dùng được trong HTML5. Level 3 thêm `baseURI`, `doctype`, `documentElement`… [tr. 18](#p18).\n\n## 3. Thay đổi HTML và CSS\n- `document.write(Date())` ghi thẳng vào output stream [tr. 29](#p29).\n- `getElementById(id).innerHTML = \"…\"` đổi nội dung [tr. 30](#p30)–[tr. 31](#p31).\n- `getElementById(\"myImage\").src = \"landscape.jpg\"` đổi attribute [tr. 32](#p32).\n- `getElementById(id).style.color = \"blue\"` đổi CSS [tr. 35](#p35).\n- Kết hợp với event, vd `onclick=\"…style.visibility='hidden'\"` để ẩn/hiện [tr. 37](#p37)–[tr. 39](#p39).\n\n## 4. Animation [tr. 41](#p41)–[tr. 44](#p44)\n- Animation = **thay đổi style dần dần** qua timer. Timer interval nhỏ thì chuyển động trông liên tục.\n- Khung code: `id = setInterval(frame, 5)`. Trong `frame()`: xong thì `clearInterval(id)`, chưa xong thì đổi `style.top/left`.\n- Ví dụ: ô đỏ `position:absolute` trượt chéo 150px trong khung vàng `position:relative`.\n\n## 5. Events\n- Code chạy khi có event: click chuột, trang tải xong, ảnh tải xong, rê chuột, đổi input, submit form, gõ phím… [tr. 46](#p46).\n- Gán handler qua **event attribute** `onclick=\"…\"`. Trong đó `this` là chính element, vd `onclick=\"changeText(this)\"` [tr. 47](#p47)–[tr. 49](#p49).\n- Gán qua DOM: `document.getElementById(\"myBtn\").onclick = displayDate;` (gán tên hàm, không có `()`) [tr. 50](#p50).\n- `onload`/`onunload`: khi vào hoặc rời trang. Dùng để kiểm tra browser hoặc cookie, vd `navigator.cookieEnabled` [tr. 52](#p52)–[tr. 53](#p53).\n- `onchange`: hay dùng để validate. Ví dụ đổi input thành chữ hoa khi rời ô [tr. 54](#p54).\n- `onmouseover`/`onmouseout` [tr. 56](#p56).\n- Một cú click sinh lần lượt `onmousedown` → `onmouseup` → `onclick` [tr. 57](#p57)–[tr. 58](#p58).\n\n## 6. addEventListener [tr. 60](#p60)–[tr. 73](#p73)\n- `element.addEventListener(event, function, useCapture)`:\n  - Gắn handler **mà không ghi đè** handler cũ. Thêm được nhiều handler, kể cả nhiều handler cùng loại.\n  - Gắn được cho mọi DOM object, kể cả `window` (vd sự kiện `resize`) và XMLHttpRequest.\n  - Tách JS khỏi HTML markup.\n- Tên event **không có \"on\"** (`\"click\"`, `\"mouseover\"`). Handler có thể là hàm ẩn danh hoặc hàm có tên.\n- **Truyền tham số**: bọc trong hàm ẩn danh, `function(){ myFunction(p1, p2); }` [tr. 66](#p66).\n- **Event propagation** [tr. 68](#p68)–[tr. 71](#p71):\n  - **Bubbling**: element **trong cùng** xử lý trước, rồi ra ngoài (`<p>` trước, `<div>` sau).\n  - **Capturing**: element **ngoài cùng** xử lý trước.\n  - `useCapture` mặc định **false**, tức bubbling. `true` là capturing.\n- `removeEventListener(event, function)` gỡ handler đã gắn [tr. 72](#p72).\n\n## 7. DOM Navigation – node tree [tr. 75](#p75)–[tr. 89](#p89)\n- Mọi thứ trong tài liệu đều là **node**:\n  - Document node.\n  - Element node.\n  - **Text node** (chữ bên trong element).\n  - Attribute node (deprecated).\n  - Comment node.\n- Quan hệ giữa các node: **root** (không có parent), mỗi node có đúng 1 parent, có thể nhiều children, **siblings** là các node cùng parent. Ví dụ `<html>` là root, `<head>` là first child, `<body>` là last child [tr. 77](#p77)–[tr. 79](#p79).\n- Property điều hướng: `parentNode`, `childNodes[n]`, `firstChild`, `lastChild`, `nextSibling`, `previousSibling` [tr. 80](#p80).\n- **Lỗi hay gặp**: nghĩ element node chứa text. Thực tế `<title>` chứa một **text node**.\n  - `innerHTML` tương đương `firstChild.nodeValue` hoặc `childNodes[0].nodeValue` [tr. 81](#p81)–[tr. 83](#p83).\n- `document.body` là phần body. `document.documentElement` là toàn bộ tài liệu [tr. 84](#p84).\n- `nodeName` (read-only) [tr. 86](#p86):\n  - Element node: tên tag (viết HOA, vd `H1`).\n  - Text node: `#text`. Document node: `#document`.\n- `nodeValue` [tr. 87](#p87): element → `null`, text node → nội dung chữ, attribute → giá trị.\n- `nodeType` [tr. 88](#p88): ELEMENT 1, ATTRIBUTE 2, TEXT 3, COMMENT 8, DOCUMENT 9, DOCUMENT_TYPE 10.\n\n## 8. Tạo, chèn, xoá, thay element [tr. 92](#p92)–[tr. 97](#p97)\n- Tạo phần tử mới:\n  1. `createElement(\"p\")`.\n  2. `createTextNode(\"…\")`.\n  3. `para.appendChild(node)`.\n  4. `parent.appendChild(para)`. Phần tử thêm vào thành **con cuối**.\n- `parent.insertBefore(new, child)` chèn trước một con.\n- `elmnt.remove()`. Với browser cũ: `parent.removeChild(child)`.\n- `parent.replaceChild(new, old)` thay phần tử.\n\n## 9. HTMLCollection và NodeList [tr. 99](#p99)–[tr. 108](#p108)\n- `getElementsByTagName` trả **HTMLCollection**: danh sách giống mảng, truy cập bằng index, có `length`.\n- `querySelectorAll` và `childNodes` trả **NodeList**.\n- Khác nhau: HTMLCollection truy cập được theo **name, id hoặc index**. NodeList **chỉ theo index**. Chỉ NodeList chứa được text node và attribute node.\n- Cả hai **không phải mảng thật**, nhưng duyệt được bằng vòng `for` với `length`.\n\n## 10. BOM – Browser Object Model [tr. 110](#p110)–[tr. 126](#p126)\n- BOM **không có chuẩn chính thức**, nhưng các browser hiện đại cài đặt gần giống nhau.\n- **window** đại diện cửa sổ browser:\n  - Biến global là property của window, hàm global là method của window. `document` cũng thuộc `window`.\n  - Kích thước: `window.innerHeight`, `innerWidth` (không gồm toolbar/scrollbar). IE cũ dùng `clientHeight`/`clientWidth`.\n  - Method: `open`, `close`, `moveTo`, `resizeTo`.\n- `screen`: width, height, availWidth, availHeight, colorDepth, pixelDepth.\n- `location`: `href`, `hostname`, `pathname`, `protocol`, `assign()`.\n- `history`: `back()`, `forward()`. Bị giới hạn để bảo vệ quyền riêng tư.\n- `navigator`: `appName`, `appCodeName`, `platform`.\n- **Popup box**:\n  - `alert`.\n  - `confirm`: OK trả true, Cancel trả false.\n  - `prompt(text, default)`: trả giá trị nhập vào, Cancel trả **null**.\n- **Timing**:\n  - `setTimeout(f, ms)` chạy một lần. `setInterval(f, ms)` chạy lặp.\n  - Dừng bằng `clearTimeout` hoặc `clearInterval`. Ví dụ: đồng hồ cập nhật mỗi 1000ms.\n\n## 11. jQuery [tr. 128](#p128)–[tr. 131](#p131)\n- jQuery do **John Resig** tạo năm **2006**. Mục đích: xử lý khác biệt giữa các browser và đơn giản hoá thao tác DOM, event, animation, Ajax. jQuery là thư viện JS phổ biến nhất suốt hơn 10 năm.\n- `$(document).ready(function(){ $(\"#id02\").remove(); })`.\n- `$(\"#02\").parent().prop(\"nodeName\")`.\n- Bài tập [tr. 133](#p133)–[tr. 143](#p143): highlight từ dài, thay ký tự bằng emoji, validate required, đếm link, danh sách sách, checkbox, oẳn tù tì, bật/tắt bóng đèn khi giữ chuột…",
+  "keyConcepts": [
+    {
+      "term": "DOM",
+      "definition": "Chuẩn W3C – giao diện trung lập nền tảng/ngôn ngữ để script truy cập, cập nhật nội dung, cấu trúc, style tài liệu.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Core / XML / HTML DOM",
+      "definition": "Ba phần của chuẩn W3C DOM: mô hình chung, cho XML, cho HTML.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "HTML DOM",
+      "definition": "Định nghĩa element HTML là object cùng property, method, event của chúng.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "DOM tree",
+      "definition": "Browser dựng cây object từ trang khi tải; JS dùng cây này để thay đổi trang động.",
+      "pages": [
+        6,
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Method vs property",
+      "definition": "Method là hành động (getElementById); property là giá trị get/set (innerHTML).",
+      "pages": [
+        11,
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "document object",
+      "definition": "Đại diện trang web, sở hữu mọi object khác; điểm bắt đầu truy cập element.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "getElementById / ByTagName / ByClassName",
+      "definition": "Tìm element theo id; theo tên tag; theo class (hai cái sau trả về collection).",
+      "pages": [
+        15,
+        21,
+        22,
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "querySelectorAll",
+      "definition": "Tìm mọi element khớp CSS selector, trả về NodeList.",
+      "pages": [
+        24,
+        103
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "innerHTML",
+      "definition": "Property đọc/ghi nội dung HTML của element.",
+      "pages": [
+        12,
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "element.style.property",
+      "definition": "Đổi CSS inline của element bằng JS, vd style.color = 'blue'.",
+      "pages": [
+        35
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "setInterval / clearInterval",
+      "definition": "Gọi hàm lặp theo chu kỳ ms; dừng bằng clearInterval – nền tảng của animation.",
+      "pages": [
+        41,
+        125
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Event attribute",
+      "definition": "Thuộc tính HTML như onclick=\"...\" gán code chạy khi có sự kiện; this = element.",
+      "pages": [
+        46,
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "onload / onunload",
+      "definition": "Sự kiện khi người dùng vào/rời trang; kiểm tra browser, cookie.",
+      "pages": [
+        52,
+        53
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "onchange",
+      "definition": "Sự kiện khi nội dung input thay đổi (khi rời ô); thường dùng để validate.",
+      "pages": [
+        54
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Thứ tự mousedown–mouseup–click",
+      "definition": "Nhấn chuột: onmousedown → thả: onmouseup → hoàn tất: onclick.",
+      "pages": [
+        57
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "addEventListener",
+      "definition": "Gắn handler không ghi đè handler cũ; nhiều handler cùng loại; dùng cho mọi DOM object; tách JS khỏi HTML.",
+      "pages": [
+        60,
+        61
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Event bubbling",
+      "definition": "Sự kiện xử lý từ element trong cùng ra ngoài; mặc định của addEventListener (useCapture = false).",
+      "pages": [
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Event capturing",
+      "definition": "Sự kiện xử lý từ element ngoài cùng vào trong (useCapture = true).",
+      "pages": [
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "removeEventListener",
+      "definition": "Gỡ handler đã gắn bằng addEventListener (cần cùng tham chiếu hàm).",
+      "pages": [
+        72
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Node types",
+      "definition": "Document, element, text, attribute (deprecated), comment.",
+      "pages": [
+        75
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "parent / child / sibling",
+      "definition": "Quan hệ trong cây node; root không có parent; siblings cùng parent.",
+      "pages": [
+        77
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Navigation properties",
+      "definition": "parentNode, childNodes[n], firstChild, lastChild, nextSibling, previousSibling.",
+      "pages": [
+        80
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Text node",
+      "definition": "Node chứa chữ bên trong element; element node không trực tiếp chứa text.",
+      "pages": [
+        81
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "nodeName / nodeValue / nodeType",
+      "definition": "Tên node (tag viết hoa, #text, #document); giá trị (null với element); kiểu (1 element, 3 text, 8 comment, 9 document).",
+      "pages": [
+        86,
+        87,
+        88
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "createElement / createTextNode / appendChild",
+      "definition": "Tạo element, tạo text node, gắn node làm con cuối.",
+      "pages": [
+        92,
+        93
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "insertBefore / remove / removeChild / replaceChild",
+      "definition": "Chèn trước một con; xoá chính nó; xoá con qua cha; thay con.",
+      "pages": [
+        94,
+        95,
+        96,
+        97
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "HTMLCollection",
+      "definition": "Danh sách element giống mảng (getElementsByTagName); truy cập bằng name, id hoặc index.",
+      "pages": [
+        99,
+        108
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "NodeList",
+      "definition": "Danh sách node (querySelectorAll, childNodes); chỉ truy cập bằng index; chứa được text node.",
+      "pages": [
+        103,
+        108
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "BOM",
+      "definition": "Browser Object Model – không có chuẩn chính thức; window, screen, location, history, navigator.",
+      "pages": [
+        110
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "window object",
+      "definition": "Đại diện cửa sổ browser; biến/hàm global là property/method của window; chứa document.",
+      "pages": [
+        111
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "location",
+      "definition": "Lấy URL hiện tại (href, hostname, pathname, protocol) và chuyển trang (assign).",
+      "pages": [
+        116
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "alert / confirm / prompt",
+      "definition": "Hộp thoại: thông báo; xác nhận (true/false); nhập liệu (giá trị hoặc null).",
+      "pages": [
+        120,
+        121,
+        123
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "setTimeout",
+      "definition": "Chạy hàm một lần sau số ms; huỷ bằng clearTimeout.",
+      "pages": [
+        125
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "jQuery",
+      "definition": "Thư viện JS (John Resig, 2006) đơn giản hoá DOM, event, animation, Ajax và xử lý khác biệt browser.",
+      "pages": [
+        128
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Tìm element và đổi nội dung",
+      "language": "html",
+      "code": "<p id=\"intro\">Hello World!</p>\n<p id=\"demo\"></p>\n<script>\n  var myElement = document.getElementById(\"intro\");\n  document.getElementById(\"demo\").innerHTML =\n      \"The text from the intro paragraph is \" + myElement.innerHTML;\n\n  var x = document.getElementsByTagName(\"p\");   // HTMLCollection\n  var y = document.querySelectorAll(\"p.intro\"); // NodeList\n</script>",
+      "explanation": "getElementById trả một element; getElementsByTagName/ByClassName/querySelectorAll trả danh sách.",
+      "parts": [
+        {
+          "lines": "4-6",
+          "note": "Đọc innerHTML của #intro và ghi vào #demo."
+        },
+        {
+          "lines": "8",
+          "note": "Mọi thẻ p, truy cập x[0], x.length."
+        },
+        {
+          "lines": "9",
+          "note": "Mọi p có class intro – dùng CSS selector."
+        }
+      ],
+      "pages": [
+        21,
+        22,
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Duyệt phần tử của form",
+      "language": "javascript",
+      "code": "function myFunction() {\n    var x = document.forms[\"frm1\"];\n    var text = \"\";\n    var i;\n    for (i = 0; i < x.length; i++) {\n        text += x.elements[i].value + \"<br>\";\n    }\n    document.getElementById(\"demo\").innerHTML = text;\n}",
+      "explanation": "document.forms là collection các form; mỗi form có elements chứa các input. Với form trên slide, kết quả: Donald, Duck, Submit.",
+      "parts": [
+        {
+          "lines": "2",
+          "note": "Lấy form theo id trong collection forms."
+        },
+        {
+          "lines": "5-7",
+          "note": "Duyệt mọi element, nối value."
+        },
+        {
+          "lines": "8",
+          "note": "Ghi kết quả vào #demo."
+        }
+      ],
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Animation bằng setInterval",
+      "language": "javascript",
+      "code": "var id = null;\nfunction myMove() {\n    var elem = document.getElementById(\"animate\");\n    var pos = 0;\n    clearInterval(id);\n    id = setInterval(frame, 5);\n    function frame() {\n        if (pos == 150) {\n            clearInterval(id);\n        } else {\n            pos++;\n            elem.style.top = pos + \"px\";\n            elem.style.left = pos + \"px\";\n        }\n    }\n}",
+      "explanation": "Mỗi 5ms tăng vị trí 1px cho tới 150px; khung chứa position:relative, ô đỏ position:absolute.",
+      "parts": [
+        {
+          "lines": "5",
+          "note": "Dừng animation cũ nếu bấm lại nút."
+        },
+        {
+          "lines": "6",
+          "note": "Gọi frame mỗi 5 ms."
+        },
+        {
+          "lines": "8-9",
+          "note": "Đủ 150px thì dừng timer."
+        },
+        {
+          "lines": "11-13",
+          "note": "Đổi top/left để ô di chuyển chéo."
+        }
+      ],
+      "pages": [
+        41,
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Ba cách gán event handler",
+      "language": "html",
+      "code": "<h1 onclick=\"changeText(this)\">Click on this text!</h1>\n<button id=\"myBtn\">Try it</button>\n<script>\n  function changeText(id) { id.innerHTML = \"Ooops!\"; }\n\n  document.getElementById(\"myBtn\").onclick = displayDate;\n\n  document.getElementById(\"myBtn\").addEventListener(\"click\", function () {\n      myFunction(5, 7);\n  });\n  function displayDate() { document.getElementById(\"demo\").innerHTML = Date(); }\n  function myFunction(a, b) { document.getElementById(\"demo\").innerHTML = a * b; }\n</script>",
+      "explanation": "Event attribute; gán property onclick (chỉ một handler); addEventListener (nhiều handler, truyền tham số qua hàm ẩn danh).",
+      "parts": [
+        {
+          "lines": "1",
+          "note": "Event attribute – this là chính thẻ h1."
+        },
+        {
+          "lines": "6",
+          "note": "Gán tên hàm (không có ()) – gán lại sẽ ghi đè."
+        },
+        {
+          "lines": "8-10",
+          "note": "addEventListener: tên event không có 'on'; bọc hàm ẩn danh để truyền tham số."
+        }
+      ],
+      "pages": [
+        48,
+        50,
+        66
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Bubbling vs capturing",
+      "language": "javascript",
+      "code": "// <div id=\"myDiv1\"><p id=\"myP1\">Click me!</p></div>\ndocument.getElementById(\"myP1\").addEventListener(\"click\", function () {\n    console.log(\"You clicked the white element!\");\n}, false);\ndocument.getElementById(\"myDiv1\").addEventListener(\"click\", function () {\n    console.log(\"You clicked the orange element!\");\n}, false);\n// click vào p: in \"white\" rồi \"orange\" (bubbling)\n// nếu cả hai dùng true (capturing): in \"orange\" rồi \"white\"",
+      "explanation": "Tham số thứ ba quyết định thứ tự xử lý khi click vào phần tử con nằm trong phần tử cha. (Slide dùng alert; ở đây đổi sang console.log.)",
+      "parts": [
+        {
+          "lines": "2-4",
+          "note": "Handler của p, useCapture=false."
+        },
+        {
+          "lines": "5-7",
+          "note": "Handler của div cha."
+        },
+        {
+          "lines": "8-9",
+          "note": "Bubbling: trong → ngoài; capturing: ngoài → trong."
+        }
+      ],
+      "pages": [
+        68,
+        69
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Tạo và chèn phần tử mới",
+      "language": "javascript",
+      "code": "var para = document.createElement(\"p\");\nvar node = document.createTextNode(\"This is new.\");\npara.appendChild(node);\n\nvar element = document.getElementById(\"div1\");\nelement.appendChild(para);              // thêm vào cuối div1\n\nvar child = document.getElementById(\"p1\");\nelement.insertBefore(para, child);      // chuyển para lên trước p1\n\nelement.replaceChild(document.createElement(\"hr\"), child); // thay p1",
+      "explanation": "Tạo element, tạo text node, gắn vào nhau, rồi gắn vào cây. insertBefore với node đã có trong cây sẽ di chuyển node đó.",
+      "parts": [
+        {
+          "lines": "1-3",
+          "note": "Element p chứa text node."
+        },
+        {
+          "lines": "5-6",
+          "note": "appendChild: thành con cuối."
+        },
+        {
+          "lines": "8-9",
+          "note": "insertBefore(new, existing)."
+        },
+        {
+          "lines": "11",
+          "note": "replaceChild(new, old)."
+        }
+      ],
+      "pages": [
+        92,
+        94,
+        97
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Kích thước cửa sổ trên mọi browser",
+      "language": "javascript",
+      "code": "var w = window.innerWidth\n     || document.documentElement.clientWidth\n     || document.body.clientWidth;\nvar h = window.innerHeight\n     || document.documentElement.clientHeight\n     || document.body.clientHeight;\ndocument.getElementById(\"demo\").innerHTML =\n    \"Browser inner window width: \" + w + \", height: \" + h + \".\";",
+      "explanation": "Toán tử || lấy giá trị khả dụng đầu tiên – innerWidth cho browser hiện đại, clientWidth cho IE 5–8.",
+      "parts": [
+        {
+          "lines": "1-3",
+          "note": "Chiều rộng viewport, không gồm toolbar/scrollbar."
+        },
+        {
+          "lines": "4-6",
+          "note": "Tương tự cho chiều cao."
+        }
+      ],
+      "pages": [
+        112,
+        113
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "confirm, prompt và đồng hồ setInterval",
+      "language": "javascript",
+      "code": "if (confirm(\"Press a button!\")) txt = \"You pressed OK!\";\nelse txt = \"You pressed Cancel!\";\n\nvar person = prompt(\"Please enter your name:\", \"Harry Potter\");\nif (person == null || person == \"\") txt = \"User cancelled the prompt.\";\nelse txt = \"Hello \" + person + \"! How are you today?\";\n\nvar myVar = setInterval(myTimer, 1000);\nfunction myTimer() {\n    document.getElementById(\"demo\").innerHTML = new Date().toLocaleTimeString();\n}\n// <button onclick=\"clearInterval(myVar)\">Stop time</button>",
+      "explanation": "confirm trả boolean; prompt trả chuỗi nhập hoặc null khi Cancel; setInterval cập nhật đồng hồ mỗi giây.",
+      "parts": [
+        {
+          "lines": "1-2",
+          "note": "OK → true, Cancel → false."
+        },
+        {
+          "lines": "4-6",
+          "note": "Xử lý cả trường hợp Cancel (null) và chuỗi rỗng."
+        },
+        {
+          "lines": "8-11",
+          "note": "Chạy myTimer mỗi 1000 ms; dừng bằng clearInterval."
+        }
+      ],
+      "pages": [
+        122,
+        124,
+        126
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "jQuery cơ bản",
+      "language": "javascript",
+      "code": "$(document).ready(function () {\n    $(\"#id02\").remove();\n    var myParent = $(\"#02\").parent();\n    $(\"#demo\").text(myParent.prop(\"nodeName\"));   // BODY\n});",
+      "explanation": "Chờ DOM sẵn sàng rồi xoá phần tử, lấy phần tử cha và in tên node của cha.",
+      "parts": [
+        {
+          "lines": "1",
+          "note": "Chạy khi DOM đã tải xong."
+        },
+        {
+          "lines": "2",
+          "note": "Xoá phần tử #id02."
+        },
+        {
+          "lines": "3-4",
+          "note": "parent() lấy cha; prop('nodeName') trả tên tag viết hoa."
+        }
+      ],
+      "pages": [
+        129,
+        130
+      ],
+      "source": "slide"
+    }
+  ],
+  "figures": [
+    {
+      "page": 6,
+      "caption": "Cây HTML DOM"
+    },
+    {
+      "page": 17,
+      "caption": "Bảng method thêm/xoá element"
+    },
+    {
+      "page": 68,
+      "caption": "Event bubbling vs capturing"
+    },
+    {
+      "page": 76,
+      "caption": "Cây node và quan hệ parent/child/sibling"
+    },
+    {
+      "page": 88,
+      "caption": "Bảng nodeType"
+    },
+    {
+      "page": 108,
+      "caption": "So sánh HTMLCollection và NodeList"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "DOM là chuẩn của tổ chức nào?",
+      "back": "W3C.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "3 phần của chuẩn W3C DOM?",
+      "back": "Core DOM, XML DOM, HTML DOM.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "HTML DOM định nghĩa 4 thứ gì?",
+      "back": "Element là object; property; method; event của element HTML.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "Trong `document.getElementById(\"demo\").innerHTML`, đâu là method, đâu là property?",
+      "back": "getElementById là method; innerHTML là property.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "Object nào là chủ sở hữu mọi object trong trang?",
+      "back": "document.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Tìm mọi `<p class=\"intro\">`?",
+      "back": "`document.querySelectorAll(\"p.intro\")`",
+      "pages": [
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "Đổi src của ảnh có id myImage?",
+      "back": "`document.getElementById(\"myImage\").src = \"landscape.jpg\";`",
+      "pages": [
+        32
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Đổi màu chữ bằng DOM?",
+      "back": "`element.style.color = \"blue\";`",
+      "pages": [
+        35
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "Nguyên lý animation bằng JS?",
+      "back": "Đổi style dần dần theo timer (setInterval), dừng bằng clearInterval.",
+      "pages": [
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "Trong `onclick=\"changeText(this)\"`, this là gì?",
+      "back": "Chính element phát sinh sự kiện.",
+      "pages": [
+        48
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Gán handler bằng property onclick: viết `= displayDate` hay `= displayDate()`?",
+      "back": "`= displayDate` (tham chiếu hàm); có () sẽ gọi ngay và gán kết quả.",
+      "pages": [
+        50
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "onload thường dùng để làm gì?",
+      "back": "Kiểm tra browser/phiên bản, xử lý cookie khi trang tải xong.",
+      "pages": [
+        52
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "Thứ tự sự kiện của một cú click?",
+      "back": "onmousedown → onmouseup → onclick.",
+      "pages": [
+        57
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "Cú pháp addEventListener?",
+      "back": "`element.addEventListener(event, function, useCapture)`",
+      "pages": [
+        61
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Ưu điểm của addEventListener so với onclick?",
+      "back": "Không ghi đè handler cũ, thêm nhiều handler, dùng cho mọi DOM object, tách JS khỏi HTML, điều khiển bubbling.",
+      "pages": [
+        60
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Tên event trong addEventListener có \"on\" không?",
+      "back": "Không – \"click\", \"mouseover\", \"resize\".",
+      "pages": [
+        61,
+        65
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "Truyền tham số cho handler addEventListener?",
+      "back": "Bọc trong hàm ẩn danh: `function(){ myFunction(p1, p2); }`.",
+      "pages": [
+        66
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Bubbling vs capturing?",
+      "back": "Bubbling: trong → ngoài; capturing: ngoài → trong.",
+      "pages": [
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "Giá trị mặc định của useCapture?",
+      "back": "false (bubbling).",
+      "pages": [
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "5 loại node theo W3C?",
+      "back": "Document, element, text, attribute (deprecated), comment.",
+      "pages": [
+        75
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "Root node của tài liệu HTML?",
+      "back": "<html> (không có parent).",
+      "pages": [
+        78
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "6 property điều hướng node?",
+      "back": "parentNode, childNodes[n], firstChild, lastChild, nextSibling, previousSibling.",
+      "pages": [
+        80
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "Element `<title>` có chứa text trực tiếp không?",
+      "back": "Không – chứa một text node; lấy bằng innerHTML hoặc firstChild.nodeValue.",
+      "pages": [
+        81,
+        82
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "nodeName của text node và document node?",
+      "back": "#text và #document.",
+      "pages": [
+        86
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-25",
+      "front": "nodeValue của element node?",
+      "back": "null.",
+      "pages": [
+        87
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-26",
+      "front": "nodeType của element, text, comment, document?",
+      "back": "1, 3, 8, 9.",
+      "pages": [
+        88
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-27",
+      "front": "Các bước thêm một đoạn văn mới?",
+      "back": "createElement → createTextNode → appendChild(text) → parent.appendChild(element).",
+      "pages": [
+        93
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-28",
+      "front": "HTMLCollection khác NodeList?",
+      "back": "HTMLCollection truy cập theo name/id/index; NodeList chỉ theo index và chứa được text node.",
+      "pages": [
+        108
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-29",
+      "front": "BOM có chuẩn chính thức không?",
+      "back": "Không.",
+      "pages": [
+        110
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-30",
+      "front": "prompt trả gì khi bấm Cancel?",
+      "back": "null.",
+      "pages": [
+        123
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "DOM là chuẩn do tổ chức nào định nghĩa?",
+      "options": [
+        "ECMA",
+        "IETF",
+        "W3C",
+        "WHATWG"
+      ],
+      "answer": 2,
+      "explanation": "The DOM is a W3C (World Wide Web Consortium) standard.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "hiểu",
+      "question": "Trong `document.getElementById(\"demo\").innerHTML = \"Hi\"`, phát biểu nào đúng?",
+      "options": [
+        "innerHTML là method",
+        "getElementById là property",
+        "getElementById là method, innerHTML là property",
+        "Cả hai là event"
+      ],
+      "answer": 2,
+      "explanation": "Method là hành động, property là giá trị get/set.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "vận dụng",
+      "question": "Đoạn sau hiển thị gì trong #demo?",
+      "code": {
+        "language": "html",
+        "code": "<p>Hello World!</p>\n<p>Hello Norway!</p>\n<p id=\"demo\"></p>\n<script>\nvar c = document.getElementsByTagName(\"p\");\ndocument.getElementById(\"demo\").innerHTML = c.length + \" - \" + c[1].innerHTML;\n</script>"
+      },
+      "options": [
+        "2 - Hello World!",
+        "3 - Hello Norway!",
+        "2 - Hello Norway!",
+        "3 - Hello World!"
+      ],
+      "answer": 1,
+      "explanation": "Có 3 thẻ p (kể cả #demo); c[1] là \"Hello Norway!\".",
+      "pages": [
+        100,
+        101
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "vận dụng",
+      "question": "Muốn ẩn đoạn văn #p1 khi bấm nút, dùng?",
+      "options": [
+        "onclick=\"document.getElementById('p1').style.visibility='hidden'\"",
+        "onclick=\"p1.hide()\"",
+        "onclick=\"document.p1.visible=false\"",
+        "onclick=\"style('p1','none')\""
+      ],
+      "answer": 0,
+      "explanation": "Đổi thuộc tính CSS visibility qua style.",
+      "pages": [
+        39
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "vận dụng",
+      "question": "Trong code animation, điều gì xảy ra nếu bỏ dòng `clearInterval(id)` khi pos == 150?",
+      "code": {
+        "language": "javascript",
+        "code": "function frame() {\n  if (pos == 150) {\n    clearInterval(id);\n  } else {\n    pos++;\n    elem.style.top = pos + 'px';\n  }\n}"
+      },
+      "options": [
+        "Ô di chuyển mãi không dừng",
+        "Ô dừng nhưng timer vẫn gọi frame() mỗi 5ms (lãng phí)",
+        "Lỗi cú pháp",
+        "Ô quay về vị trí 0"
+      ],
+      "answer": 1,
+      "explanation": "Khi pos == 150 nhánh else không chạy nên ô đứng yên, nhưng timer vẫn tiếp tục gọi frame vô ích.",
+      "pages": [
+        41,
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "hiểu",
+      "question": "Khi người dùng click một div, thứ tự sự kiện nào đúng?",
+      "options": [
+        "onclick → onmousedown → onmouseup",
+        "onmouseup → onmousedown → onclick",
+        "onmousedown → onmouseup → onclick",
+        "onmousedown → onclick → onmouseup"
+      ],
+      "answer": 2,
+      "explanation": "mousedown khi nhấn, mouseup khi thả, click khi hoàn tất.",
+      "pages": [
+        57
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "vận dụng",
+      "question": "Lỗi trong đoạn sau là gì?",
+      "code": {
+        "language": "javascript",
+        "code": "document.getElementById(\"myBtn\").onclick = displayDate();\nfunction displayDate() {\n  document.getElementById(\"demo\").innerHTML = Date();\n}"
+      },
+      "options": [
+        "displayDate được gọi ngay khi gán (do có ()), onclick nhận giá trị undefined",
+        "Phải viết onClick",
+        "Date() không tồn tại",
+        "Không có lỗi"
+      ],
+      "answer": 0,
+      "explanation": "Slide gán `= displayDate` (không có ngoặc) để truyền tham chiếu hàm.",
+      "pages": [
+        50
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "hiểu",
+      "question": "Ưu điểm của addEventListener so với gán `element.onclick = f`?",
+      "options": [
+        "Chạy nhanh hơn",
+        "Thêm được nhiều handler cùng loại mà không ghi đè",
+        "Không cần hàm",
+        "Chỉ dùng được cho window"
+      ],
+      "answer": 1,
+      "explanation": "addEventListener attaches an event handler without overwriting existing event handlers.",
+      "pages": [
+        60
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "vận dụng",
+      "question": "Cú pháp nào đúng?",
+      "options": [
+        "element.addEventListener(\"onclick\", f)",
+        "element.addEventListener(\"click\", f())",
+        "element.addEventListener(\"click\", f)",
+        "element.addEventListener(f, \"click\")"
+      ],
+      "answer": 2,
+      "explanation": "Tham số 1: tên event không có 'on'; tham số 2: tham chiếu hàm.",
+      "pages": [
+        61,
+        63
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "vận dụng",
+      "question": "Cho `<div id=\"d\"><p id=\"p\">x</p></div>`, cả hai gắn handler click với useCapture = true. Click vào p, handler nào chạy trước?",
+      "options": [
+        "Handler của p",
+        "Handler của div",
+        "Chỉ handler của p chạy",
+        "Ngẫu nhiên"
+      ],
+      "answer": 1,
+      "explanation": "Capturing: phần tử ngoài cùng xử lý trước.",
+      "pages": [
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-11",
+      "level": "nhớ",
+      "question": "Giá trị mặc định của tham số useCapture?",
+      "options": [
+        "true",
+        "false",
+        "null",
+        "\"bubble\""
+      ],
+      "answer": 1,
+      "explanation": "Default false → bubbling.",
+      "pages": [
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "vận dụng",
+      "question": "Với `<title id=\"demo\">DOM Tutorial</title>`, biểu thức nào trả \"DOM Tutorial\"?",
+      "options": [
+        "document.getElementById(\"demo\").nodeValue",
+        "document.getElementById(\"demo\").firstChild.nodeValue",
+        "document.getElementById(\"demo\").nodeName",
+        "document.getElementById(\"demo\").childNodes"
+      ],
+      "answer": 1,
+      "explanation": "Element node có nodeValue = null; text nằm ở text node con đầu tiên.",
+      "pages": [
+        81,
+        82,
+        87
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "vận dụng",
+      "question": "`document.getElementById(\"id01\").nodeName` với `<h1 id=\"id01\">` trả gì?",
+      "options": [
+        "h1",
+        "H1",
+        "#text",
+        "1"
+      ],
+      "answer": 1,
+      "explanation": "nodeName của element node là tên tag (dạng chữ hoa trong HTML DOM).",
+      "pages": [
+        86
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "nhớ",
+      "question": "nodeType của text node là?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "9"
+      ],
+      "answer": 2,
+      "explanation": "ELEMENT 1, ATTRIBUTE 2, TEXT 3, COMMENT 8, DOCUMENT 9.",
+      "pages": [
+        88
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-15",
+      "level": "hiểu",
+      "question": "Sau `parent.appendChild(para)`, para nằm ở đâu?",
+      "options": [
+        "Con đầu tiên của parent",
+        "Con cuối cùng của parent",
+        "Ngay trước parent",
+        "Thay thế parent"
+      ],
+      "answer": 1,
+      "explanation": "appendChild appended the new element as the last child; dùng insertBefore để chèn chỗ khác.",
+      "pages": [
+        94
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-16",
+      "level": "hiểu",
+      "question": "Điểm khác biệt giữa HTMLCollection và NodeList theo slide?",
+      "options": [
+        "NodeList có length, HTMLCollection không",
+        "HTMLCollection truy cập được bằng name/id, NodeList chỉ bằng index",
+        "HTMLCollection chứa text node",
+        "NodeList là mảng thật"
+      ],
+      "answer": 1,
+      "explanation": "Only NodeList can contain attribute and text nodes; HTMLCollection items accessible by name, id or index.",
+      "pages": [
+        108
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-17",
+      "level": "vận dụng",
+      "question": "`prompt(\"Your name?\", \"Harry\")` – người dùng bấm Cancel. Giá trị trả về?",
+      "options": [
+        "\"Harry\"",
+        "\"\"",
+        "false",
+        "null"
+      ],
+      "answer": 3,
+      "explanation": "If the user clicks Cancel the box returns null.",
+      "pages": [
+        123
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-18",
+      "level": "hiểu",
+      "question": "Khác nhau giữa setTimeout và setInterval?",
+      "options": [
+        "setTimeout chạy một lần sau delay; setInterval lặp lại liên tục",
+        "setInterval chỉ chạy một lần",
+        "setTimeout nhận giây, setInterval nhận ms",
+        "Không khác"
+      ],
+      "answer": 0,
+      "explanation": "setInterval: same as setTimeout() but repeats the execution continuously.",
+      "pages": [
+        125
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-19",
+      "level": "nhớ",
+      "question": "Thuộc tính nào trả về tên miền của trang hiện tại?",
+      "options": [
+        "location.href",
+        "location.pathname",
+        "location.hostname",
+        "location.protocol"
+      ],
+      "answer": 2,
+      "explanation": "hostname: domain name of the web host.",
+      "pages": [
+        116
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-20",
+      "level": "nhớ",
+      "question": "jQuery được tạo năm nào, bởi ai?",
+      "options": [
+        "2006, John Resig",
+        "1995, Brendan Eich",
+        "2009, Ryan Dahl",
+        "2011, Jordan Walke"
+      ],
+      "answer": 0,
+      "explanation": "jQuery was created in 2006 by John Resig.",
+      "pages": [
+        128
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "DOM là gì? Trình bày cấu trúc cây DOM của một trang HTML và các cách tìm phần tử HTML bằng JavaScript (id, tag name, class name, CSS selector, collection). Cho ví dụ.",
+      "hints": "- Định nghĩa W3C, Core/XML/HTML DOM [tr. 4](#p4)–[tr. 5](#p5).\n- Cây object khi tải trang [tr. 6](#p6); node types, quan hệ [tr. 75](#p75)–[tr. 79](#p79).\n- 5 cách tìm phần tử [tr. 20](#p20)–[tr. 25](#p25).",
+      "pages": [
+        4,
+        6,
+        20,
+        24,
+        75,
+        77
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "So sánh các cách gán xử lý sự kiện: event attribute, gán property onclick, addEventListener. Giải thích event bubbling và capturing, cho ví dụ div chứa p.",
+      "hints": "- onclick=\"...\", this [tr. 47](#p47)–[tr. 49](#p49); `elem.onclick = f` [tr. 50](#p50).\n- addEventListener: không ghi đè, nhiều handler, window, tách HTML [tr. 60](#p60)–[tr. 66](#p66).\n- Bubbling/capturing, useCapture mặc định false [tr. 68](#p68)–[tr. 69](#p69); removeEventListener [tr. 72](#p72).",
+      "pages": [
+        47,
+        50,
+        60,
+        68,
+        72
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "Viết đoạn JavaScript: khi bấm nút \"Thêm\", lấy nội dung ô input #item và thêm một `<li>` mới vào cuối danh sách `<ul id=\"list\">`; bấm vào một `<li>` thì xoá chính nó.",
+      "hints": "- `addEventListener('click', ...)` cho nút [tr. 61](#p61).\n- `var li = document.createElement('li'); li.appendChild(document.createTextNode(input.value)); list.appendChild(li);` [tr. 92](#p92)–[tr. 93](#p93).\n- `li.addEventListener('click', function(){ this.remove(); })` hoặc `list.removeChild(li)` [tr. 95](#p95)–[tr. 96](#p96).\n- (Mở rộng) dùng event delegation nhờ bubbling trên ul [tr. 68](#p68).",
+      "pages": [
+        61,
+        92,
+        93,
+        95,
+        96,
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "Trình bày các thuộc tính điều hướng node, nodeName, nodeValue, nodeType. Giải thích lỗi phổ biến \"element node chứa text\".",
+      "hints": "- parentNode, childNodes, firstChild, lastChild, nextSibling, previousSibling [tr. 80](#p80).\n- Text node, innerHTML ≡ firstChild.nodeValue [tr. 81](#p81)–[tr. 83](#p83).\n- nodeName, nodeValue, nodeType và bảng giá trị [tr. 86](#p86)–[tr. 88](#p88).",
+      "pages": [
+        80,
+        81,
+        82,
+        86,
+        87,
+        88
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-05",
+      "question": "Browser Object Model (BOM) là gì? Trình bày các đối tượng window, screen, location, history, navigator, các hộp thoại và timing events.",
+      "hints": "- Không có chuẩn chính thức [tr. 110](#p110); window là global [tr. 111](#p111); innerWidth/Height [tr. 112](#p112).\n- screen [tr. 115](#p115), location [tr. 116](#p116), history [tr. 117](#p117), navigator [tr. 119](#p119).\n- alert/confirm/prompt [tr. 120](#p120)–[tr. 124](#p124); setTimeout/setInterval [tr. 125](#p125)–[tr. 126](#p126).",
+      "pages": [
+        110,
+        111,
+        116,
+        121,
+        123,
+        125
+      ],
+      "source": "slide"
+    }
+  ]
+}

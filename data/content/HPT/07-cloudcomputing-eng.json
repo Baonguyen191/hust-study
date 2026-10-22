@@ -1,0 +1,739 @@
+{
+  "version": 1,
+  "subject": "HPT",
+  "lesson": "07-cloudcomputing-eng",
+  "title": "Chương 7 – Cloud computing",
+  "summary": "## 1. Giới thiệu\n- Công nghệ xử lý và lưu trữ phát triển nhanh, cùng thành công của Internet, khiến tài nguyên tính toán **rẻ hơn, mạnh hơn, phổ biến hơn**. Từ đó hình thành mô hình **cloud computing**: tài nguyên (CPU, lưu trữ) được cung cấp như **tiện ích (utility)**, thuê và trả **theo nhu cầu (on-demand)** qua Internet [tr. 5](#p5).\n- Vai trò nhà cung cấp tách thành **infrastructure provider** và **service provider** [tr. 6](#p6). Đặc điểm hấp dẫn:\n  - Không cần đầu tư ban đầu.\n  - Giảm chi phí vận hành.\n  - **Co giãn cao**, truy cập dễ.\n  - Giảm rủi ro kinh doanh và chi phí bảo trì.\n- **Định nghĩa NIST** [tr. 7](#p7): mô hình cho phép truy cập mạng thuận tiện, theo nhu cầu, tới **pool tài nguyên cấu hình được** dùng chung (mạng, server, lưu trữ, ứng dụng, dịch vụ). Tài nguyên được cấp phát và thu hồi **nhanh**, với **ít công sức quản lý** hoặc tương tác với nhà cung cấp.\n  - Cloud **không phải công nghệ mới** mà là **mô hình vận hành mới** kết hợp các công nghệ có sẵn.\n- Công nghệ liên quan [tr. 8](#p8): Grid computing, Utility computing, **Virtualization**, Autonomic computing.\n- Đặc trưng [tr. 9](#p9):\n  - **Multi-tenancy**: nhiều khách hàng dùng chung hạ tầng.\n  - Shared resource pooling.\n  - Geo-distribution và truy cập mạng mọi nơi.\n  - Service oriented.\n  - **Dynamic resource provisioning**.\n  - Self-organizing.\n  - **Utility-based pricing** (trả theo mức dùng).\n\n## 2. Kiến trúc cloud\n- **Mô hình phân tầng** [tr. 11](#p11)–[tr. 15](#p15):\n  - **Hardware layer**: tài nguyên vật lý trong **data center** gồm server trong rack, switch, router, nguồn điện, làm mát. Vấn đề: cấu hình phần cứng, chịu lỗi, quản lý lưu lượng, điện và làm mát.\n  - **Infrastructure layer** (lớp ảo hoá): chia tài nguyên vật lý thành pool tính toán/lưu trữ bằng **Xen, KVM, VMware**. Đây là thành phần thiết yếu, cho phép gán tài nguyên động.\n  - **Platform layer**: hệ điều hành và framework ứng dụng, giúp triển khai mà không phải làm việc trực tiếp với VM, vd **Google App Engine**.\n  - **Application layer**: ứng dụng cloud tận dụng **auto-scaling** để tăng hiệu năng, sẵn sàng, giảm chi phí.\n  - Các tầng **liên kết lỏng**, kiến trúc module hoá.\n- **Mô hình kinh doanh** [tr. 16](#p16): mỗi tầng là dịch vụ cho tầng trên. Có 3 loại **SaaS, PaaS, IaaS**.\n  - PaaS: Google App Engine, Windows Azure, Force.com.\n  - Lưu ý: slide **đảo ví dụ SaaS và IaaS**. *Bổ sung*: **IaaS** mới là Amazon EC2, GoGrid, Flexiscale. **SaaS** là Salesforce.com, Rackspace (phần ứng dụng), SAP Business ByDesign.\n- **Các loại cloud** [tr. 17](#p17)–[tr. 21](#p21). Khi chọn cần cân nhắc chi phí, độ tin cậy, bảo mật.\n  - **Public cloud**: tài nguyên cung cấp cho công chúng. Không cần đầu tư ban đầu, rủi ro chuyển sang nhà cung cấp. Nhược: **thiếu kiểm soát chi tiết** dữ liệu, mạng, bảo mật.\n  - **Private cloud** (internal): dành riêng một tổ chức, tổ chức tự xây hoặc thuê ngoài. **Kiểm soát cao nhất** về hiệu năng, tin cậy, bảo mật. Nhược: giống server farm truyền thống, vẫn tốn chi phí ban đầu.\n  - **Hybrid cloud**: một phần chạy private, phần còn lại chạy public. Linh hoạt nhất: dữ liệu được kiểm soát chặt mà vẫn co giãn theo nhu cầu. Khó ở chỗ phải **chia phần hợp lý** giữa hai bên.\n  - **Virtual Private Cloud**: chạy trên public cloud, dùng **VPN** để tự thiết kế topology và luật firewall.\n\n## 3. Công nghệ và sản phẩm\n- **Thiết kế data center** [tr. 23](#p23): mục tiêu là băng thông cao đồng đều, **di chuyển VM tự do**, khả năng phục hồi (resiliency), co giãn, tương thích ngược.\n- **Hệ thống file phân tán**: **GFS** (Google File System), **HDFS** (Hadoop). **Framework ứng dụng phân tán**: **Google MapReduce**, **Hadoop MapReduce** [tr. 24](#p24).\n- Sản phẩm thương mại: **Amazon EC2**, **Microsoft Windows Azure**, **Google App Engine** [tr. 25](#p25).\n\n## 4. Thách thức\n- **Automated service provisioning** [tr. 27](#p27)–[tr. 28](#p28):\n  - Cấp/thu hồi tài nguyên tự động để đáp ứng **SLO**. Khó vì phải ánh xạ yêu cầu QoS sang tài nguyên mức thấp (CPU, lưu trữ, mạng) và phải quyết định **online**.\n  - Quy trình 3 bước:\n    1. Xây **mô hình hiệu năng** dự đoán số instance cần thiết.\n    2. **Dự đoán nhu cầu** tương lai theo chu kỳ.\n    3. **Tự động cấp phát**.\n  - Kỹ thuật: lý thuyết hàng đợi, lý thuyết điều khiển, học máy thống kê. Điều khiển **proactive** và **reactive**.\n- **VM migration** [tr. 29](#p29): di chuyển VM để cân bằng tải và **tránh hotspot**. Xen và VMware hỗ trợ **live migration** với downtime chỉ **10 ms – 1 s**.\n- **Server consolidation** [tr. 30](#p30): dùng live migration gom VM từ nhiều server dùng ít lên một server, các server còn lại chuyển sang chế độ **tiết kiệm năng lượng**. Mục tiêu là tối đa hiệu suất và giảm điện năng.\n- **Quản lý năng lượng** [tr. 31](#p31): phần cứng tiết kiệm điện (giảm tốc CPU, tắt bớt thành phần), lập lịch theo năng lượng, consolidation. Thách thức là **cân bằng giữa tiết kiệm năng lượng và hiệu năng**.\n- Thách thức khác [tr. 32](#p32): quản lý và phân tích lưu lượng, **bảo mật dữ liệu**, framework phần mềm, công nghệ lưu trữ và quản lý dữ liệu, kiến trúc cloud mới.",
+  "keyConcepts": [
+    {
+      "term": "Cloud computing",
+      "definition": "Mô hình cung cấp tài nguyên tính toán như tiện ích, thuê/trả theo nhu cầu qua Internet.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Định nghĩa NIST",
+      "definition": "Truy cập mạng thuận tiện, theo nhu cầu tới pool tài nguyên cấu hình được, cấp phát/thu hồi nhanh với ít công sức quản lý.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Infrastructure provider vs service provider",
+      "definition": "Nhà cung cấp hạ tầng (cho thuê tài nguyên) và nhà cung cấp dịch vụ (thuê hạ tầng để phục vụ người dùng).",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Công nghệ liên quan",
+      "definition": "Grid computing, utility computing, virtualization, autonomic computing.",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Multi-tenancy",
+      "definition": "Nhiều khách hàng dùng chung hạ tầng của nhà cung cấp.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Dynamic resource provisioning",
+      "definition": "Cấp phát/thu hồi tài nguyên động theo nhu cầu.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Utility-based pricing",
+      "definition": "Tính phí theo mức sử dụng thực tế.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Hardware layer",
+      "definition": "Quản lý tài nguyên vật lý trong data center: server, rack, switch, router, điện, làm mát.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Infrastructure (virtualization) layer",
+      "definition": "Tạo pool tài nguyên bằng ảo hoá (Xen, KVM, VMware); cho phép gán tài nguyên động.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Platform layer",
+      "definition": "Hệ điều hành và framework giúp triển khai ứng dụng mà không cần thao tác trực tiếp với VM (vd Google App Engine).",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Application layer",
+      "definition": "Ứng dụng cloud tận dụng auto-scaling để tăng hiệu năng, sẵn sàng, giảm chi phí.",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "IaaS / PaaS / SaaS",
+      "definition": "Hạ tầng (VM, lưu trữ: Amazon EC2) / nền tảng (Google App Engine, Azure) / phần mềm (Salesforce) như dịch vụ.",
+      "pages": [
+        16
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "term": "Public cloud",
+      "definition": "Tài nguyên cung cấp cho công chúng; không đầu tư ban đầu; thiếu kiểm soát chi tiết.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Private cloud",
+      "definition": "Dành riêng một tổ chức; kiểm soát cao nhất; vẫn tốn chi phí ban đầu.",
+      "pages": [
+        19
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Hybrid cloud",
+      "definition": "Kết hợp private và public; linh hoạt, cần chia phần hợp lý giữa hai bên.",
+      "pages": [
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Virtual Private Cloud",
+      "definition": "Nền tảng trên public cloud dùng VPN để tự thiết kế topology và luật firewall.",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Mục tiêu thiết kế data center",
+      "definition": "Băng thông cao đồng đều, di chuyển VM tự do, resiliency, co giãn, tương thích ngược.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "GFS / HDFS",
+      "definition": "Hệ thống file phân tán của Google / Hadoop.",
+      "pages": [
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "MapReduce",
+      "definition": "Framework xử lý dữ liệu phân tán của Google, bản mã nguồn mở Hadoop MapReduce.",
+      "pages": [
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "SLO",
+      "definition": "Service Level Objective – mục tiêu chất lượng dịch vụ cần đáp ứng khi cấp phát tài nguyên.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Automated service provisioning",
+      "definition": "Tự động cấp phát: mô hình hiệu năng → dự đoán nhu cầu → cấp phát; proactive/reactive.",
+      "pages": [
+        27,
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Live VM migration",
+      "definition": "Di chuyển VM khi đang chạy với downtime 10 ms – 1 s (Xen, VMware) để cân bằng tải, tránh hotspot.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Server consolidation",
+      "definition": "Gom VM từ nhiều server dùng ít lên ít server hơn, phần còn lại tiết kiệm năng lượng.",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Energy management",
+      "definition": "Phần cứng tiết kiệm điện, lập lịch theo năng lượng, consolidation; cân bằng với hiệu năng.",
+      "pages": [
+        31
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [],
+  "figures": [
+    {
+      "page": 11,
+      "caption": "Kiến trúc phân tầng của cloud"
+    },
+    {
+      "page": 16,
+      "caption": "Mô hình kinh doanh SaaS/PaaS/IaaS"
+    },
+    {
+      "page": 23,
+      "caption": "Kiến trúc data center"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "Định nghĩa cloud computing theo NIST?",
+      "back": "Mô hình truy cập mạng thuận tiện, theo nhu cầu tới pool tài nguyên cấu hình được dùng chung, cấp phát/thu hồi nhanh với ít công sức quản lý.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "Cloud có phải công nghệ mới không?",
+      "back": "Không – là mô hình vận hành mới kết hợp các công nghệ có sẵn.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "5 lợi ích hấp dẫn của cloud?",
+      "back": "Không đầu tư ban đầu, giảm chi phí vận hành, co giãn cao, truy cập dễ, giảm rủi ro và chi phí bảo trì.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "4 công nghệ liên quan tới cloud?",
+      "back": "Grid, utility computing, virtualization, autonomic computing.",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "Multi-tenancy là gì?",
+      "back": "Nhiều khách hàng dùng chung hạ tầng.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Kể 4 đặc trưng của cloud.",
+      "back": "Multi-tenancy, shared resource pooling, dynamic provisioning, utility-based pricing (còn geo-distribution, service oriented, self-organizing).",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "4 tầng kiến trúc cloud?",
+      "back": "Hardware, infrastructure (virtualization), platform, application.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Công nghệ ảo hoá ở infrastructure layer?",
+      "back": "Xen, KVM, VMware.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "Ví dụ platform layer?",
+      "back": "Google App Engine.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "3 mô hình dịch vụ cloud?",
+      "back": "SaaS, PaaS, IaaS.",
+      "pages": [
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Amazon EC2 thuộc mô hình nào?",
+      "back": "IaaS (slide xếp nhầm vào SaaS).",
+      "pages": [
+        16
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "fc-12",
+      "front": "Salesforce.com thuộc mô hình nào?",
+      "back": "SaaS (slide xếp nhầm vào IaaS).",
+      "pages": [
+        16
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "fc-13",
+      "front": "Ví dụ PaaS?",
+      "back": "Google App Engine, Microsoft Windows Azure, Force.com.",
+      "pages": [
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "4 loại cloud?",
+      "back": "Public, private, hybrid, virtual private cloud.",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Nhược điểm public cloud?",
+      "back": "Thiếu kiểm soát chi tiết về dữ liệu, mạng, bảo mật.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Nhược điểm private cloud?",
+      "back": "Giống server farm truyền thống, vẫn phải đầu tư ban đầu.",
+      "pages": [
+        19
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "Khó khăn của hybrid cloud?",
+      "back": "Xác định cách chia phần hợp lý giữa private và public.",
+      "pages": [
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Virtual Private Cloud dùng công nghệ gì?",
+      "back": "VPN trên nền public cloud.",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "Hệ thống file phân tán trên cloud?",
+      "back": "GFS và HDFS.",
+      "pages": [
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "3 sản phẩm cloud thương mại trên slide?",
+      "back": "Amazon EC2, Microsoft Windows Azure, Google App Engine.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "3 bước cấp phát tài nguyên động?",
+      "back": "Xây mô hình hiệu năng; dự đoán nhu cầu; tự động cấp phát.",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "Downtime của live migration (Xen/VMware)?",
+      "back": "Khoảng 10 ms – 1 s.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "Lợi ích chính của VM migration?",
+      "back": "Cân bằng tải, tránh hotspot.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "Server consolidation là gì?",
+      "back": "Gom VM lên ít server hơn, tắt/giảm năng lượng các server còn lại.",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-25",
+      "front": "Thách thức chính của quản lý năng lượng?",
+      "back": "Cân bằng giữa tiết kiệm năng lượng và hiệu năng ứng dụng.",
+      "pages": [
+        31
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "Theo NIST, đặc điểm nào thuộc định nghĩa cloud computing?",
+      "options": [
+        "Truy cập theo nhu cầu tới pool tài nguyên cấu hình được, cấp phát/thu hồi nhanh với ít công sức quản lý",
+        "Tài nguyên dành riêng cố định cho từng người dùng",
+        "Bắt buộc mua phần cứng trước",
+        "Chỉ cung cấp lưu trữ"
+      ],
+      "answer": 0,
+      "explanation": "Định nghĩa NIST trên slide tr. 7.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "hiểu",
+      "question": "Phát biểu nào đúng về cloud computing theo slide?",
+      "options": [
+        "Là công nghệ hoàn toàn mới",
+        "Là mô hình vận hành mới kết hợp các công nghệ có sẵn",
+        "Chỉ dành cho Google",
+        "Thay thế hoàn toàn data center"
+      ],
+      "answer": 1,
+      "explanation": "Cloud Computing is not a new technology, but rather a new operations model.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "nhớ",
+      "question": "Đặc trưng \"nhiều khách hàng dùng chung hạ tầng\" gọi là?",
+      "options": [
+        "Self-organizing",
+        "Geo-distribution",
+        "Multi-tenancy",
+        "Utility pricing"
+      ],
+      "answer": 2,
+      "explanation": "Multi-tenancy.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "hiểu",
+      "question": "Tầng nào chịu trách nhiệm tạo pool tài nguyên bằng Xen/KVM/VMware?",
+      "options": [
+        "Hardware layer",
+        "Application layer",
+        "Platform layer",
+        "Infrastructure layer"
+      ],
+      "answer": 3,
+      "explanation": "Infrastructure layer = virtualization layer.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "vận dụng",
+      "question": "Một startup thuê máy ảo, tự cài hệ điều hành, database và ứng dụng. Họ đang dùng mô hình nào?",
+      "options": [
+        "IaaS",
+        "PaaS",
+        "SaaS",
+        "On-premise"
+      ],
+      "answer": 0,
+      "explanation": "Thuê hạ tầng (VM) và tự quản lý phần mềm phía trên là IaaS (vd Amazon EC2).",
+      "pages": [
+        16
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-06",
+      "level": "vận dụng",
+      "question": "Lập trình viên chỉ upload code, nền tảng tự lo runtime, scale, không quản lý VM. Mô hình nào?",
+      "options": [
+        "IaaS",
+        "PaaS",
+        "SaaS",
+        "Private cloud"
+      ],
+      "answer": 1,
+      "explanation": "Platform layer/PaaS giảm gánh nặng triển khai trực tiếp vào VM (vd Google App Engine).",
+      "pages": [
+        14,
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "hiểu",
+      "question": "Slide xếp Amazon EC2 vào SaaS và Salesforce.com vào IaaS. Nhận định nào đúng?",
+      "options": [
+        "Slide đúng",
+        "Cả hai là PaaS",
+        "Hai ví dụ bị đảo: EC2 là IaaS, Salesforce là SaaS",
+        "Cả hai là private cloud"
+      ],
+      "answer": 2,
+      "explanation": "EC2 cho thuê máy ảo (IaaS); Salesforce cung cấp phần mềm CRM (SaaS).",
+      "pages": [
+        16
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-08",
+      "level": "hiểu",
+      "question": "Loại cloud nào cho mức kiểm soát cao nhất về hiệu năng, độ tin cậy và bảo mật?",
+      "options": [
+        "Public",
+        "Virtual Private Cloud",
+        "Hybrid",
+        "Private"
+      ],
+      "answer": 3,
+      "explanation": "Private clouds offer the highest degree of control.",
+      "pages": [
+        19
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "vận dụng",
+      "question": "Ngân hàng giữ dữ liệu khách hàng ở hạ tầng riêng nhưng thuê thêm máy chủ public khi lưu lượng tăng đột biến cuối năm. Đây là?",
+      "options": [
+        "Hybrid cloud",
+        "Private cloud",
+        "Public cloud",
+        "Grid computing"
+      ],
+      "answer": 0,
+      "explanation": "Hybrid: một phần chạy private, phần còn lại public; kiểm soát dữ liệu chặt mà vẫn co giãn.",
+      "pages": [
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "hiểu",
+      "question": "Virtual Private Cloud khác private cloud ở điểm nào?",
+      "options": [
+        "Chạy trên hạ tầng riêng của tổ chức",
+        "Chạy trên public cloud và dùng VPN để tự định nghĩa topology, firewall",
+        "Không có bảo mật",
+        "Chỉ dùng cho IoT"
+      ],
+      "answer": 1,
+      "explanation": "VPC: platform running on top of public clouds, leveraging VPN.",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-11",
+      "level": "nhớ",
+      "question": "Cặp nào là hệ thống file phân tán trên cloud?",
+      "options": [
+        "MapReduce và Hadoop",
+        "Xen và KVM",
+        "GFS và HDFS",
+        "EC2 và Azure"
+      ],
+      "answer": 2,
+      "explanation": "Distributed file system: GFS, HDFS; framework: MapReduce.",
+      "pages": [
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "hiểu",
+      "question": "Vì sao automated service provisioning khó?",
+      "options": [
+        "Vì không có tài nguyên",
+        "Vì VM không di chuyển được",
+        "Vì không thể dự đoán nhu cầu",
+        "Vì phải ánh xạ SLO (QoS) sang tài nguyên mức thấp và ra quyết định online"
+      ],
+      "answer": 3,
+      "explanation": "Khó xác định ánh xạ SLO → CPU, storage, network; quyết định phải online.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "vận dụng",
+      "question": "Đêm khuya tải thấp, nhà cung cấp gom VM từ 10 server lên 3 server và tắt 7 server còn lại. Đây là kỹ thuật?",
+      "options": [
+        "Server consolidation",
+        "Load balancing",
+        "Auto-scaling",
+        "Multi-tenancy"
+      ],
+      "answer": 0,
+      "explanation": "Server consolidation dùng live migration để gom VM và đưa server còn lại về trạng thái tiết kiệm năng lượng.",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "nhớ",
+      "question": "Live migration của Xen/VMware có downtime khoảng?",
+      "options": [
+        "1–10 phút",
+        "10 ms – 1 s",
+        "Không có downtime",
+        "1 giờ"
+      ],
+      "answer": 1,
+      "explanation": "Extremely short downtimes (10ms–1s).",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Trình bày định nghĩa cloud computing theo NIST, các đặc trưng và lợi ích của cloud. Vì sao nói cloud là một mô hình vận hành mới chứ không phải công nghệ mới?",
+      "hints": "- Bối cảnh và lợi ích [tr. 5](#p5)–[tr. 6](#p6).\n- Định nghĩa NIST [tr. 7](#p7).\n- Công nghệ liên quan [tr. 8](#p8); 7 đặc trưng [tr. 9](#p9).",
+      "pages": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Trình bày kiến trúc phân tầng của cloud và mô hình kinh doanh IaaS/PaaS/SaaS, cho ví dụ đúng của từng mô hình.",
+      "hints": "- Hardware, infrastructure, platform, application [tr. 11](#p11)–[tr. 15](#p15).\n- Mỗi tầng là dịch vụ cho tầng trên [tr. 16](#p16); ví dụ: IaaS – EC2; PaaS – App Engine, Azure; SaaS – Salesforce (slide đảo IaaS/SaaS).",
+      "pages": [
+        11,
+        13,
+        14,
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "So sánh public, private, hybrid cloud và virtual private cloud. Một doanh nghiệp tài chính nên chọn loại nào? Giải thích.",
+      "hints": "- Public: không đầu tư, thiếu kiểm soát [tr. 18](#p18); private: kiểm soát cao, tốn chi phí [tr. 19](#p19); hybrid: linh hoạt, khó chia phần [tr. 20](#p20); VPC: VPN trên public [tr. 21](#p21).\n- Tài chính: dữ liệu nhạy cảm → private/hybrid.",
+      "pages": [
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "Phân tích các thách thức của cloud computing: automated service provisioning, VM migration, server consolidation, quản lý năng lượng.",
+      "hints": "- Provisioning: SLO, 3 bước, kỹ thuật [tr. 27](#p27)–[tr. 28](#p28).\n- Live migration 10 ms–1 s, tránh hotspot [tr. 29](#p29).\n- Consolidation [tr. 30](#p30); năng lượng, trade-off [tr. 31](#p31); thách thức khác [tr. 32](#p32).",
+      "pages": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "source": "slide"
+    }
+  ]
+}

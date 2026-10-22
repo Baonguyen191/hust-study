@@ -1,0 +1,825 @@
+{
+  "generatedAt": "2026-10-21T18:34:48+00:00",
+  "subjects": [
+    {
+      "id": "CNWeb",
+      "name": "Công nghệ Web",
+      "short": "CNWeb",
+      "lessons": [
+        {
+          "id": "lec-1-introduction",
+          "title": "Bài 1 – Giới thiệu Web Technologies",
+          "group": null,
+          "pdf": "CNWeb/Lec 1-Introduction.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 48,
+          "pageCount": 48,
+          "pdfPageCount": 48,
+          "raw": "data/raw/CNWeb/lec-1-introduction.json",
+          "content": "data/content/CNWeb/lec-1-introduction.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 23,
+            "codeExamples": 1,
+            "flashcards": 24,
+            "quiz": 16,
+            "examQuestions": 4
+          },
+          "lowTextPages": 7,
+          "order": 1
+        },
+        {
+          "id": "lec-2-html",
+          "title": "Bài 2 – HTML",
+          "group": null,
+          "pdf": "CNWeb/Lec 2-HTML.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 45,
+          "pageCount": 45,
+          "pdfPageCount": 45,
+          "raw": "data/raw/CNWeb/lec-2-html.json",
+          "content": "data/content/CNWeb/lec-2-html.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 26,
+            "codeExamples": 7,
+            "flashcards": 27,
+            "quiz": 17,
+            "examQuestions": 4
+          },
+          "lowTextPages": 1,
+          "order": 2
+        },
+        {
+          "id": "lec-3-css",
+          "title": "Bài 3 – CSS",
+          "group": null,
+          "pdf": "CNWeb/Lec 3-CSS.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 36,
+          "pageCount": 36,
+          "pdfPageCount": 36,
+          "raw": "data/raw/CNWeb/lec-3-css.json",
+          "content": "data/content/CNWeb/lec-3-css.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 23,
+            "codeExamples": 6,
+            "flashcards": 24,
+            "quiz": 16,
+            "examQuestions": 4
+          },
+          "lowTextPages": 6,
+          "order": 3
+        },
+        {
+          "id": "lec-04-javascript",
+          "title": "Bài 4 – JavaScript",
+          "group": null,
+          "pdf": "CNWeb/Lec 04-Javascript.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 46,
+          "pageCount": 46,
+          "pdfPageCount": 46,
+          "raw": "data/raw/CNWeb/lec-04-javascript.json",
+          "content": "data/content/CNWeb/lec-04-javascript.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 28,
+            "codeExamples": 8,
+            "flashcards": 29,
+            "quiz": 17,
+            "examQuestions": 4
+          },
+          "lowTextPages": 2,
+          "order": 4
+        },
+        {
+          "id": "lec-5-1-php",
+          "title": "Bài 5.1 – PHP",
+          "group": null,
+          "pdf": "CNWeb/Lec 5.1-PHP.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 28,
+          "pageCount": 28,
+          "pdfPageCount": 28,
+          "raw": "data/raw/CNWeb/lec-5-1-php.json",
+          "content": "data/content/CNWeb/lec-5-1-php.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 27,
+            "codeExamples": 8,
+            "flashcards": 28,
+            "quiz": 18,
+            "examQuestions": 4
+          },
+          "lowTextPages": 2,
+          "order": 5
+        },
+        {
+          "id": "lec-5-2-php-advanced",
+          "title": "Bài 5.2 – PHP nâng cao",
+          "group": null,
+          "pdf": "CNWeb/Lec 5.2 PHP-Advanced.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 21,
+          "pageCount": 21,
+          "pdfPageCount": 21,
+          "raw": "data/raw/CNWeb/lec-5-2-php-advanced.json",
+          "content": "data/content/CNWeb/lec-5-2-php-advanced.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 24,
+            "codeExamples": 4,
+            "flashcards": 24,
+            "quiz": 16,
+            "examQuestions": 4
+          },
+          "lowTextPages": 2,
+          "order": 6
+        },
+        {
+          "id": "lec-6-web-development-java",
+          "title": "Bài 6 – Web development với Java",
+          "group": null,
+          "pdf": "CNWeb/Lec 6 -Web development Java.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 70,
+          "pageCount": 70,
+          "pdfPageCount": 70,
+          "raw": "data/raw/CNWeb/lec-6-web-development-java.json",
+          "content": "data/content/CNWeb/lec-6-web-development-java.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 31,
+            "codeExamples": 6,
+            "flashcards": 30,
+            "quiz": 17,
+            "examQuestions": 5
+          },
+          "lowTextPages": 5,
+          "order": 7
+        },
+        {
+          "id": "lec-7-reactjs",
+          "title": "Bài 7.1 – ReactJS",
+          "group": null,
+          "pdf": "CNWeb/Lec 7-ReactJS.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 33,
+          "pageCount": 33,
+          "pdfPageCount": 33,
+          "raw": "data/raw/CNWeb/lec-7-reactjs.json",
+          "content": "data/content/CNWeb/lec-7-reactjs.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 18,
+            "codeExamples": 6,
+            "flashcards": 26,
+            "quiz": 15,
+            "examQuestions": 4
+          },
+          "lowTextPages": 9,
+          "order": 8
+        },
+        {
+          "id": "lec-7-2-nodejs",
+          "title": "Bài 7.2 – Node.js",
+          "group": null,
+          "pdf": "CNWeb/Lec 7.2-Nodejs.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 17,
+          "pageCount": 17,
+          "pdfPageCount": 17,
+          "raw": "data/raw/CNWeb/lec-7-2-nodejs.json",
+          "content": "data/content/CNWeb/lec-7-2-nodejs.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 14,
+            "codeExamples": 3,
+            "flashcards": 17,
+            "quiz": 12,
+            "examQuestions": 3
+          },
+          "lowTextPages": 4,
+          "order": 9
+        },
+        {
+          "id": "lec-8-dom",
+          "title": "Bài 8 – DOM (Document Object Model)",
+          "group": null,
+          "pdf": "CNWeb/Lec 8 - DOM.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 144,
+          "pageCount": 144,
+          "pdfPageCount": 144,
+          "raw": "data/raw/CNWeb/lec-8-dom.json",
+          "content": "data/content/CNWeb/lec-8-dom.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 34,
+            "codeExamples": 9,
+            "flashcards": 30,
+            "quiz": 20,
+            "examQuestions": 5
+          },
+          "lowTextPages": 5,
+          "order": 10
+        },
+        {
+          "id": "lec-9-xml",
+          "title": "Bài 9 – XML, DTD và XML Schema",
+          "group": null,
+          "pdf": "CNWeb/Lec 9-XML.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 148,
+          "pageCount": 148,
+          "pdfPageCount": 148,
+          "raw": "data/raw/CNWeb/lec-9-xml.json",
+          "content": "data/content/CNWeb/lec-9-xml.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 30,
+            "codeExamples": 6,
+            "flashcards": 29,
+            "quiz": 18,
+            "examQuestions": 5
+          },
+          "lowTextPages": 6,
+          "order": 11
+        },
+        {
+          "id": "lec-11-ajax",
+          "title": "Bài 11 – AJAX",
+          "group": null,
+          "pdf": "CNWeb/Lec 11-AJAX.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 19,
+          "pageCount": 19,
+          "pdfPageCount": 19,
+          "raw": "data/raw/CNWeb/lec-11-ajax.json",
+          "content": "data/content/CNWeb/lec-11-ajax.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 14,
+            "codeExamples": 2,
+            "flashcards": 18,
+            "quiz": 11,
+            "examQuestions": 3
+          },
+          "lowTextPages": 5,
+          "order": 12
+        },
+        {
+          "id": "lec-12-web-security",
+          "title": "Bài 12 – Web Security",
+          "group": null,
+          "pdf": "CNWeb/Lec 12 - Web Security.pptx.pdf",
+          "pageStart": 1,
+          "pageEnd": 40,
+          "pageCount": 40,
+          "pdfPageCount": 40,
+          "raw": "data/raw/CNWeb/lec-12-web-security.json",
+          "content": "data/content/CNWeb/lec-12-web-security.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 24,
+            "codeExamples": 3,
+            "flashcards": 24,
+            "quiz": 15,
+            "examQuestions": 5
+          },
+          "lowTextPages": 9,
+          "order": 13
+        }
+      ]
+    },
+    {
+      "id": "HPT",
+      "name": "Hệ phân tán",
+      "short": "HPT",
+      "lessons": [
+        {
+          "id": "01-tongquan-kientruc",
+          "title": "Chương 1 – Tổng quan & kiến trúc",
+          "group": null,
+          "pdf": "HPT/01-tongquan-kientruc_4.5m.pdf",
+          "pageStart": 1,
+          "pageEnd": 67,
+          "pageCount": 67,
+          "pdfPageCount": 67,
+          "raw": "data/raw/HPT/01-tongquan-kientruc.json",
+          "content": "data/content/HPT/01-tongquan-kientruc.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 37,
+            "codeExamples": 0,
+            "flashcards": 29,
+            "quiz": 18,
+            "examQuestions": 5
+          },
+          "lowTextPages": 1,
+          "order": 1
+        },
+        {
+          "id": "02-tientrinh-traodoithongtin",
+          "title": "Chương 2 – Tiến trình & trao đổi thông tin",
+          "group": null,
+          "pdf": "HPT/02-tientrinh-traodoithongtin_4.2m.pdf",
+          "pageStart": 1,
+          "pageEnd": 118,
+          "pageCount": 118,
+          "pdfPageCount": 118,
+          "raw": "data/raw/HPT/02-tientrinh-traodoithongtin.json",
+          "content": "data/content/HPT/02-tientrinh-traodoithongtin.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 39,
+            "codeExamples": 3,
+            "flashcards": 30,
+            "quiz": 20,
+            "examQuestions": 5
+          },
+          "lowTextPages": 18,
+          "order": 2
+        },
+        {
+          "id": "03-dinhdanh",
+          "title": "Chương 3 – Định danh (Naming)",
+          "group": null,
+          "pdf": "HPT/03-dinhdanh_2.7m.pdf",
+          "pageStart": 1,
+          "pageEnd": 82,
+          "pageCount": 82,
+          "pdfPageCount": 82,
+          "raw": "data/raw/HPT/03-dinhdanh.json",
+          "content": "data/content/HPT/03-dinhdanh.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 29,
+            "codeExamples": 2,
+            "flashcards": 29,
+            "quiz": 18,
+            "examQuestions": 5
+          },
+          "lowTextPages": 28,
+          "order": 3
+        },
+        {
+          "id": "04-dongbohoa-vie",
+          "title": "Chương 4 – Đồng bộ hoá (Synchronization)",
+          "group": null,
+          "pdf": "HPT/04-dongbohoa-vie_9.1m.pdf",
+          "pageStart": 1,
+          "pageEnd": 53,
+          "pageCount": 53,
+          "pdfPageCount": 53,
+          "raw": "data/raw/HPT/04-dongbohoa-vie.json",
+          "content": "data/content/HPT/04-dongbohoa-vie.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 23,
+            "codeExamples": 3,
+            "flashcards": 28,
+            "quiz": 17,
+            "examQuestions": 5
+          },
+          "lowTextPages": 20,
+          "order": 4
+        },
+        {
+          "id": "05-nhanban-nhatquan",
+          "title": "Chương 5 – Nhân bản & nhất quán (Replication & Consistency)",
+          "group": null,
+          "pdf": "HPT/05-nhanban-nhatquan_3.4m.pdf",
+          "pageStart": 1,
+          "pageEnd": 74,
+          "pageCount": 74,
+          "pdfPageCount": 74,
+          "raw": "data/raw/HPT/05-nhanban-nhatquan.json",
+          "content": "data/content/HPT/05-nhanban-nhatquan.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 27,
+            "codeExamples": 0,
+            "flashcards": 28,
+            "quiz": 17,
+            "examQuestions": 5
+          },
+          "lowTextPages": 18,
+          "order": 5
+        },
+        {
+          "id": "06-tinhchiuloi-vie",
+          "title": "Chương 6 – Tính chịu lỗi (Fault tolerance)",
+          "group": null,
+          "pdf": "HPT/06-tinhchiuloi-vie_2.7m.pdf",
+          "pageStart": 1,
+          "pageEnd": 47,
+          "pageCount": 47,
+          "pdfPageCount": 47,
+          "raw": "data/raw/HPT/06-tinhchiuloi-vie.json",
+          "content": "data/content/HPT/06-tinhchiuloi-vie.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 36,
+            "codeExamples": 2,
+            "flashcards": 30,
+            "quiz": 18,
+            "examQuestions": 5
+          },
+          "lowTextPages": 3,
+          "order": 6
+        },
+        {
+          "id": "07-cloudcomputing-eng",
+          "title": "Chương 7 – Cloud computing",
+          "group": null,
+          "pdf": "HPT/07-cloudcomputing-eng_4.9m.pdf",
+          "pageStart": 1,
+          "pageEnd": 33,
+          "pageCount": 33,
+          "pdfPageCount": 33,
+          "raw": "data/raw/HPT/07-cloudcomputing-eng.json",
+          "content": "data/content/HPT/07-cloudcomputing-eng.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 24,
+            "codeExamples": 0,
+            "flashcards": 25,
+            "quiz": 14,
+            "examQuestions": 4
+          },
+          "lowTextPages": 7,
+          "order": 7
+        }
+      ]
+    },
+    {
+      "id": "IoT",
+      "name": "IoT và ứng dụng",
+      "short": "IoT",
+      "lessons": [
+        {
+          "id": "c1-tong-quan",
+          "title": "Chương 1 – Tổng quan về IoT",
+          "group": null,
+          "pdf": "IoT/it4735_iot_va_ung_dung_v2025_16.1m.pdf",
+          "pageStart": 1,
+          "pageEnd": 60,
+          "pageCount": 60,
+          "pdfPageCount": 349,
+          "raw": "data/raw/IoT/c1-tong-quan.json",
+          "content": "data/content/IoT/c1-tong-quan.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 25,
+            "codeExamples": 0,
+            "flashcards": 26,
+            "quiz": 15,
+            "examQuestions": 4
+          },
+          "lowTextPages": 9,
+          "order": 1
+        },
+        {
+          "id": "c2a-cam-bien-chuan-truyen-thong",
+          "title": "Chương 2a – Cảm biến, thiết bị & chuẩn truyền thông",
+          "group": null,
+          "pdf": "IoT/it4735_iot_va_ung_dung_v2025_16.1m.pdf",
+          "pageStart": 61,
+          "pageEnd": 91,
+          "pageCount": 31,
+          "pdfPageCount": 349,
+          "raw": "data/raw/IoT/c2a-cam-bien-chuan-truyen-thong.json",
+          "content": "data/content/IoT/c2a-cam-bien-chuan-truyen-thong.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 23,
+            "codeExamples": 1,
+            "flashcards": 22,
+            "quiz": 13,
+            "examQuestions": 3
+          },
+          "lowTextPages": 0,
+          "order": 2
+        },
+        {
+          "id": "c2b-giao-thuc-cloud",
+          "title": "Chương 2b – Giao thức ứng dụng IoT (MQTT…) & IoT Cloud Platform",
+          "group": null,
+          "pdf": "IoT/it4735_iot_va_ung_dung_v2025_16.1m.pdf",
+          "pageStart": 92,
+          "pageEnd": 190,
+          "pageCount": 99,
+          "pdfPageCount": 349,
+          "raw": "data/raw/IoT/c2b-giao-thuc-cloud.json",
+          "content": "data/content/IoT/c2b-giao-thuc-cloud.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 23,
+            "codeExamples": 5,
+            "flashcards": 26,
+            "quiz": 15,
+            "examQuestions": 4
+          },
+          "lowTextPages": 19,
+          "order": 3
+        },
+        {
+          "id": "c3a-lap-trinh-thiet-bi",
+          "title": "Chương 3a – Lập trình cho thiết bị IoT",
+          "group": null,
+          "pdf": "IoT/it4735_iot_va_ung_dung_v2025_16.1m.pdf",
+          "pageStart": 191,
+          "pageEnd": 240,
+          "pageCount": 50,
+          "pdfPageCount": 349,
+          "raw": "data/raw/IoT/c3a-lap-trinh-thiet-bi.json",
+          "content": "data/content/IoT/c3a-lap-trinh-thiet-bi.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 20,
+            "codeExamples": 5,
+            "flashcards": 24,
+            "quiz": 13,
+            "examQuestions": 4
+          },
+          "lowTextPages": 8,
+          "order": 4
+        },
+        {
+          "id": "c3b-web-api-platform",
+          "title": "Chương 3b – Web API & lập trình với IoT Platform",
+          "group": null,
+          "pdf": "IoT/it4735_iot_va_ung_dung_v2025_16.1m.pdf",
+          "pageStart": 241,
+          "pageEnd": 291,
+          "pageCount": 51,
+          "pdfPageCount": 349,
+          "raw": "data/raw/IoT/c3b-web-api-platform.json",
+          "content": "data/content/IoT/c3b-web-api-platform.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 22,
+            "codeExamples": 4,
+            "flashcards": 24,
+            "quiz": 13,
+            "examQuestions": 3
+          },
+          "lowTextPages": 2,
+          "order": 5
+        },
+        {
+          "id": "c4-bao-mat",
+          "title": "Chương 4 – An toàn và bảo mật IoT",
+          "group": null,
+          "pdf": "IoT/it4735_iot_va_ung_dung_v2025_16.1m.pdf",
+          "pageStart": 292,
+          "pageEnd": 314,
+          "pageCount": 23,
+          "pdfPageCount": 349,
+          "raw": "data/raw/IoT/c4-bao-mat.json",
+          "content": "data/content/IoT/c4-bao-mat.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 22,
+            "codeExamples": 0,
+            "flashcards": 17,
+            "quiz": 12,
+            "examQuestions": 3
+          },
+          "lowTextPages": 9,
+          "order": 6
+        },
+        {
+          "id": "c5-thiet-ke-he-thong",
+          "title": "Chương 5 – Thiết kế và xây dựng hệ thống IoT",
+          "group": null,
+          "pdf": "IoT/it4735_iot_va_ung_dung_v2025_16.1m.pdf",
+          "pageStart": 315,
+          "pageEnd": 349,
+          "pageCount": 35,
+          "pdfPageCount": 349,
+          "raw": "data/raw/IoT/c5-thiet-ke-he-thong.json",
+          "content": "data/content/IoT/c5-thiet-ke-he-thong.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 13,
+            "codeExamples": 2,
+            "flashcards": 16,
+            "quiz": 10,
+            "examQuestions": 3
+          },
+          "lowTextPages": 5,
+          "order": 7
+        }
+      ]
+    },
+    {
+      "id": "KTLT",
+      "name": "Kỹ thuật lập trình",
+      "short": "KTLT",
+      "lessons": [
+        {
+          "id": "lec1-ktlt",
+          "title": "Bài 1 – Tổng quan Kỹ thuật lập trình",
+          "group": null,
+          "pdf": "KTLT/Lec1._KTLT.pdf",
+          "pageStart": 1,
+          "pageEnd": 49,
+          "pageCount": 49,
+          "pdfPageCount": 49,
+          "raw": "data/raw/KTLT/lec1-ktlt.json",
+          "content": "data/content/KTLT/lec1-ktlt.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 28,
+            "codeExamples": 1,
+            "flashcards": 27,
+            "quiz": 16,
+            "examQuestions": 4
+          },
+          "lowTextPages": 49,
+          "order": 1
+        },
+        {
+          "id": "lec2-quan-ly-bo-nho",
+          "title": "Bài 2 – Quản lý bộ nhớ",
+          "group": null,
+          "pdf": "KTLT/Lec2._Quan_ly_bo_nho.pdf",
+          "pageStart": 1,
+          "pageEnd": 32,
+          "pageCount": 32,
+          "pdfPageCount": 32,
+          "raw": "data/raw/KTLT/lec2-quan-ly-bo-nho.json",
+          "content": "data/content/KTLT/lec2-quan-ly-bo-nho.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 21,
+            "codeExamples": 5,
+            "flashcards": 21,
+            "quiz": 16,
+            "examQuestions": 4
+          },
+          "lowTextPages": 32,
+          "order": 2
+        },
+        {
+          "id": "lec3-ham",
+          "title": "Bài 3 – Hàm",
+          "group": null,
+          "pdf": "KTLT/Lec3._Ham.pdf",
+          "pageStart": 1,
+          "pageEnd": 44,
+          "pageCount": 44,
+          "pdfPageCount": 44,
+          "raw": "data/raw/KTLT/lec3-ham.json",
+          "content": "data/content/KTLT/lec3-ham.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 19,
+            "codeExamples": 5,
+            "flashcards": 24,
+            "quiz": 16,
+            "examQuestions": 4
+          },
+          "lowTextPages": 44,
+          "order": 3
+        },
+        {
+          "id": "lec4-efficient-code",
+          "title": "Bài 4 – Efficient code",
+          "group": null,
+          "pdf": "KTLT/Lec4._Efficient_code.pdf",
+          "pageStart": 1,
+          "pageEnd": 51,
+          "pageCount": 51,
+          "pdfPageCount": 51,
+          "raw": "data/raw/KTLT/lec4-efficient-code.json",
+          "content": "data/content/KTLT/lec4-efficient-code.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 23,
+            "codeExamples": 7,
+            "flashcards": 26,
+            "quiz": 18,
+            "examQuestions": 4
+          },
+          "lowTextPages": 51,
+          "order": 4
+        },
+        {
+          "id": "lec5-programming-style",
+          "title": "Bài 5 – Programming style",
+          "group": null,
+          "pdf": "KTLT/Lec5._Programming_style.pdf",
+          "pageStart": 1,
+          "pageEnd": 52,
+          "pageCount": 52,
+          "pdfPageCount": 52,
+          "raw": "data/raw/KTLT/lec5-programming-style.json",
+          "content": "data/content/KTLT/lec5-programming-style.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 20,
+            "codeExamples": 5,
+            "flashcards": 27,
+            "quiz": 17,
+            "examQuestions": 4
+          },
+          "lowTextPages": 52,
+          "order": 5
+        },
+        {
+          "id": "lec6-de-quy",
+          "title": "Bài 6 – Đệ quy",
+          "group": null,
+          "pdf": "KTLT/Lec6._De_quy.pdf",
+          "pageStart": 1,
+          "pageEnd": 67,
+          "pageCount": 67,
+          "pdfPageCount": 67,
+          "raw": "data/raw/KTLT/lec6-de-quy.json",
+          "content": "data/content/KTLT/lec6-de-quy.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 20,
+            "codeExamples": 8,
+            "flashcards": 25,
+            "quiz": 18,
+            "examQuestions": 4
+          },
+          "lowTextPages": 67,
+          "order": 6
+        },
+        {
+          "id": "lec7-data-structures",
+          "title": "Bài 7 – Data structures",
+          "group": null,
+          "pdf": "KTLT/Lec7._Data_structures.pdf",
+          "pageStart": 1,
+          "pageEnd": 63,
+          "pageCount": 63,
+          "pdfPageCount": 63,
+          "raw": "data/raw/KTLT/lec7-data-structures.json",
+          "content": "data/content/KTLT/lec7-data-structures.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 24,
+            "codeExamples": 8,
+            "flashcards": 27,
+            "quiz": 18,
+            "examQuestions": 4
+          },
+          "lowTextPages": 63,
+          "order": 7
+        },
+        {
+          "id": "lec8-bay-loi-va-lap-trinh-phong-ngua",
+          "title": "Bài 8 – Bẫy lỗi & lập trình phòng ngừa",
+          "group": null,
+          "pdf": "KTLT/Lec8._Bay_loi_va_lap_trinh_phong_ngua.pdf",
+          "pageStart": 1,
+          "pageEnd": 51,
+          "pageCount": 51,
+          "pdfPageCount": 51,
+          "raw": "data/raw/KTLT/lec8-bay-loi-va-lap-trinh-phong-ngua.json",
+          "content": "data/content/KTLT/lec8-bay-loi-va-lap-trinh-phong-ngua.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 20,
+            "codeExamples": 5,
+            "flashcards": 27,
+            "quiz": 18,
+            "examQuestions": 4
+          },
+          "lowTextPages": 51,
+          "order": 8
+        },
+        {
+          "id": "lec9-go-loi-kiem-thu-va-tinh-chinh-ma-nguon",
+          "title": "Bài 9 – Gỡ lỗi, kiểm thử & tinh chỉnh mã nguồn",
+          "group": null,
+          "pdf": "KTLT/Lec9._Go_loi__kiem_thu_va_tinh_chinh_ma_nguon.pdf",
+          "pageStart": 1,
+          "pageEnd": 76,
+          "pageCount": 76,
+          "pdfPageCount": 76,
+          "raw": "data/raw/KTLT/lec9-go-loi-kiem-thu-va-tinh-chinh-ma-nguon.json",
+          "content": "data/content/KTLT/lec9-go-loi-kiem-thu-va-tinh-chinh-ma-nguon.json",
+          "hasContent": true,
+          "counts": {
+            "keyConcepts": 28,
+            "codeExamples": 6,
+            "flashcards": 29,
+            "quiz": 20,
+            "examQuestions": 4
+          },
+          "lowTextPages": 76,
+          "order": 9
+        }
+      ]
+    }
+  ]
+}

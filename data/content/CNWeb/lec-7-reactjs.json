@@ -1,0 +1,877 @@
+{
+  "version": 1,
+  "subject": "CNWeb",
+  "lesson": "lec-7-reactjs",
+  "title": "Bài 7.1 – ReactJS",
+  "summary": "## 1. Tổng quan ReactJS [tr. 4](#p4)\n- **React** (React.js, ReactJS) là **thư viện JavaScript front-end** mã nguồn mở để xây dựng giao diện và UI component. React do Facebook cùng cộng đồng duy trì.\n- Jordan Walke (Facebook) tạo React. Prototype đầu tiên tên **FaxJS**.\n- Các mốc:\n  - Dùng trên News Feed năm 2011, trên Instagram năm 2012.\n  - React 16.0 ra mắt 26/9/2017. React 16.8 ra mắt 16/2/2019.\n  - React 17 RC công bố 10/8/2020. Đây là bản lớn đầu tiên không đổi API cho developer.\n\n## 2. Virtual DOM\n- **DOM** là giao diện độc lập nền tảng và ngôn ngữ, coi tài liệu HTML/XML là **cây**, mỗi node là một object. DOM method cho phép sửa cấu trúc, style và nội dung [tr. 6](#p6).\n- **Virtual DOM** là bản sao \"nhẹ\" của DOM thật. Mỗi object trong DOM có một object tương ứng trong Virtual DOM. Thao tác DOM thật chậm. Thao tác Virtual DOM nhanh vì không vẽ gì lên màn hình [tr. 6](#p6).\n- Cơ chế [tr. 7](#p7)–[tr. 8](#p8):\n  1. Khi có thay đổi, Virtual DOM được cập nhật.\n  2. React giữ **2 bản Virtual DOM**: bản trước và bản sau cập nhật.\n  3. React so sánh hai bản để tìm chỗ thay đổi. Bước này gọi là **diffing**.\n  4. React chỉ cập nhật đúng các object thay đổi lên DOM thật.\n  - Tóm tắt: State change → Compute Diff → Re-render. Cách làm này tăng hiệu năng rõ rệt.\n\n## 3. JSX\n- **JSX = JavaScript + XML**: phần mở rộng cú pháp JS, trông giống HTML, dùng để mô tả cách component render. JSX **không bắt buộc** [tr. 10](#p10).\n- Ưu điểm [tr. 10](#p10):\n  - Nhanh hơn vì được tối ưu khi biên dịch sang JS.\n  - Type-safe: phần lớn lỗi bắt được lúc biên dịch.\n  - Viết template dễ với người đã biết HTML.\n- Quy tắc JSX:\n  - Trả về nhiều element thì phải **bọc trong một element cha** (vd `<div>`) [tr. 12](#p12).\n  - Dùng được custom attribute như `data-myattribute` [tr. 13](#p13).\n  - Biểu thức JavaScript đặt trong **`{}`**, vd `<h1>{1+1}</h1>` hiển thị 2 [tr. 14](#p14).\n  - Style inline là **object**, thuộc tính viết camelCase: `{fontSize: 100, color: '#FF0000'}`. React khuyến nghị inline style [tr. 15](#p15).\n\n## 4. Components\n- UI chia thành component lồng nhau: Root (App) chứa Header, SideNav, Main Content, Footer [tr. 17](#p17).\n- Component là đoạn code **độc lập, tái sử dụng**. Component giống hàm JS nhưng hoạt động tách biệt và trả về HTML [tr. 18](#p18).\n- **Function component**: hàm trả về JSX, vd `function Car() { return <h2>Hi, I am also a Car!</h2>; }` [tr. 19](#p19).\n- **Class component**: class ES6 `extends React.Component` và có `render()` [tr. 20](#p20).\n- So sánh theo slide [tr. 21](#p21):\n  - Function component là hàm nhận `props`, trả React element, **không có render()**. Slide gọi là \"stateless\", không dùng được lifecycle method.\n  - Class component phải có `render()`. Slide gọi là \"stateful\", có logic, state và lifecycle (vd `componentDidMount`).\n  - *Bổ sung*: từ React 16.8 có **Hooks** (`useState`, `useEffect`…), nên function component cũng có state và side-effect. Phân biệt trên là theo cách hiểu cũ.\n- **props** [tr. 22](#p22)–[tr. 23](#p23):\n  - Dữ liệu truyền vào component qua **attribute**. Đây là cách duy nhất để đưa dữ liệu vào, ngoài Redux.\n  - Props **bất biến (immutable)**.\n  - Component cha (container) định nghĩa dữ liệu, component con nhận qua props. Đọc bằng `this.props.headerProp`.\n  - Ví dụ `ReactDOM.render` trên slide thiếu dấu phẩy giữa element và `document.getElementById('app')`.\n- **state** [tr. 24](#p24)–[tr. 25](#p25):\n  - Là dữ liệu **riêng (private)** của component, bên ngoài không đọc được.\n  - State đổi thì component **re-render**.\n  - Khởi tạo trong constructor: `super(props); this.state = {brand: \"Ford\"};`.\n\n## 5. Component Lifecycle\n- Lifecycle method cho phép làm việc khi component được tạo, cập nhật hoặc huỷ, và quyết định có cần update không [tr. 27](#p27).\n- **Mounting** (đưa element vào DOM), theo thứ tự [tr. 28](#p28):\n  1. `constructor()`\n  2. `getDerivedStateFromProps()`\n  3. `render()`\n  4. `componentDidMount()`\n  - Chỉ `render()` là bắt buộc.\n- **Updating** (khi state hoặc props đổi), theo thứ tự [tr. 29](#p29):\n  1. `getDerivedStateFromProps()`\n  2. `shouldComponentUpdate()`\n  3. `render()`\n  4. `getSnapshotBeforeUpdate()`\n  5. `componentDidUpdate()`\n- **Unmounting** (gỡ khỏi DOM): chỉ có `componentWillUnmount()` [tr. 30](#p30).\n- Bước tiếp theo nên học: Flux/Redux, React Native [tr. 31](#p31).",
+  "keyConcepts": [
+    {
+      "term": "React",
+      "definition": "Thư viện JavaScript front-end mã nguồn mở xây dựng UI component, do Facebook duy trì; tạo bởi Jordan Walke (prototype FaxJS).",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "DOM",
+      "definition": "Giao diện độc lập nền tảng/ngôn ngữ biểu diễn tài liệu HTML/XML dạng cây object.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Virtual DOM",
+      "definition": "Bản sao nhẹ của DOM thật trong bộ nhớ; thao tác nhanh vì không vẽ lên màn hình.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Diffing",
+      "definition": "So sánh Virtual DOM trước và sau cập nhật để tìm phần thay đổi, chỉ cập nhật phần đó lên DOM thật.",
+      "pages": [
+        7,
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "JSX",
+      "definition": "JavaScript XML – cú pháp mở rộng giống HTML để mô tả render; không bắt buộc; được tối ưu khi biên dịch, type-safe.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Một element gốc trong JSX",
+      "definition": "Muốn trả nhiều element phải bọc trong một container element.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Biểu thức trong JSX",
+      "definition": "Đặt trong ngoặc nhọn {}, vd {1+1}.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Inline style trong React",
+      "definition": "Truyền object với key camelCase (fontSize, color) cho thuộc tính style.",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Component",
+      "definition": "Đoạn code độc lập, tái sử dụng, trả về giao diện; có function component và class component.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Function component",
+      "definition": "Hàm JS nhận props và trả JSX; không có render().",
+      "pages": [
+        19,
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Class component",
+      "definition": "Class ES6 kế thừa React.Component, bắt buộc có render(); dùng được state và lifecycle method.",
+      "pages": [
+        20,
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Hooks",
+      "definition": "Từ React 16.8, useState/useEffect… cho phép function component có state và xử lý side-effect.",
+      "pages": [
+        21
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "term": "props",
+      "definition": "Dữ liệu truyền vào component qua attribute; bất biến; cha truyền xuống con.",
+      "pages": [
+        22,
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "state",
+      "definition": "Dữ liệu riêng của component; thay đổi state làm component re-render; không đọc được từ ngoài.",
+      "pages": [
+        24,
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Mounting",
+      "definition": "Đưa component vào DOM: constructor → getDerivedStateFromProps → render → componentDidMount.",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Updating",
+      "definition": "Khi state/props đổi: getDerivedStateFromProps → shouldComponentUpdate → render → getSnapshotBeforeUpdate → componentDidUpdate.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Unmounting",
+      "definition": "Gỡ component khỏi DOM; chỉ có componentWillUnmount().",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "shouldComponentUpdate",
+      "definition": "Lifecycle method cho phép quyết định có cần re-render khi state/props đổi.",
+      "pages": [
+        27,
+        29
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Class component trả JSX lồng nhau",
+      "language": "jsx",
+      "code": "import React from 'react';\nclass App extends React.Component {\n   render() {\n      return (\n         <div>\n            <h1>Header</h1>\n            <h2>Content</h2>\n            <p data-myattribute = \"somevalue\">This is the content!!!</p>\n         </div>\n      );\n   }\n}\nexport default App;",
+      "explanation": "render() trả về một cây JSX duy nhất bọc trong <div>; dùng được custom attribute.",
+      "parts": [
+        {
+          "lines": "2",
+          "note": "Class component kế thừa React.Component."
+        },
+        {
+          "lines": "3",
+          "note": "render() là bắt buộc."
+        },
+        {
+          "lines": "5-9",
+          "note": "Nhiều element phải nằm trong một element cha."
+        },
+        {
+          "lines": "8",
+          "note": "Custom attribute data-*."
+        }
+      ],
+      "pages": [
+        11,
+        12,
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Biểu thức và style trong JSX",
+      "language": "jsx",
+      "code": "class App extends React.Component {\n   render() {\n      var myStyle = {\n         fontSize: 100,\n         color: '#FF0000'\n      }\n      return (\n         <div>\n            <h1>{1+1}</h1>\n            <h1 style = {myStyle}>Header</h1>\n         </div>\n      );\n   }\n}",
+      "explanation": "Biểu thức JS đặt trong {}; style là một object với key camelCase.",
+      "parts": [
+        {
+          "lines": "3-6",
+          "note": "Object style: fontSize (không phải font-size), color."
+        },
+        {
+          "lines": "9",
+          "note": "Hiển thị 2."
+        },
+        {
+          "lines": "10",
+          "note": "Truyền object style bằng {}."
+        }
+      ],
+      "pages": [
+        14,
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Function component vs class component",
+      "language": "jsx",
+      "code": "function Car() {\n  return <h2>Hi, I am also a Car!</h2>;\n}\n\nclass Car2 extends React.Component {\n  render() {\n    return <h2>Hi, I am a Car!</h2>;\n  }\n}",
+      "explanation": "Hai cách khai báo component: hàm trả JSX trực tiếp, hoặc class có render().",
+      "parts": [
+        {
+          "lines": "1-3",
+          "note": "Function component – không có render()."
+        },
+        {
+          "lines": "5-9",
+          "note": "Class component – bắt buộc render()."
+        }
+      ],
+      "pages": [
+        19,
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Truyền props từ cha xuống",
+      "language": "jsx",
+      "code": "// App.jsx\nclass App extends React.Component {\n   render() {\n       return (\n          <div>\n              <h1>{this.props.headerProp}</h1>\n          </div>\n       );\n   }\n}\n\n// main.js\nReactDOM.render(\n    <App headerProp=\"Header from props\" />,\n    document.getElementById('app')\n);",
+      "explanation": "Props được truyền qua attribute và đọc bằng this.props. Slide gốc thiếu dấu phẩy sau `<App … />`, gây lỗi cú pháp.",
+      "parts": [
+        {
+          "lines": "6",
+          "note": "Đọc props trong class component."
+        },
+        {
+          "lines": "13-16",
+          "note": "Render App vào phần tử #app, truyền headerProp; có dấu phẩy ngăn hai đối số."
+        }
+      ],
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "State trong class component",
+      "language": "jsx",
+      "code": "class Car extends React.Component {\n  constructor(props) {\n    super(props);\n    this.state = {brand: \"Ford\"};\n  }\n  render() {\n    return (\n      <div>\n        <h1>My Car</h1>\n        <p>Brand: {this.state.brand}</p>\n      </div>\n    );\n  }\n}",
+      "explanation": "State khởi tạo trong constructor sau super(props); khi state đổi (qua setState) component render lại.",
+      "parts": [
+        {
+          "lines": "2-5",
+          "note": "Gọi super(props) rồi gán this.state."
+        },
+        {
+          "lines": "10",
+          "note": "Hiển thị giá trị state (dòng bổ sung để minh hoạ)."
+        }
+      ],
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "State với Hooks (bổ sung)",
+      "language": "jsx",
+      "code": "import { useState, useEffect } from 'react';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  useEffect(() => {\n    document.title = `Clicked ${count} times`;\n  }, [count]);\n  return <button onClick={() => setCount(count + 1)}>{count}</button>;\n}",
+      "explanation": "Kể từ React 16.8, function component có state (useState) và xử lý tương đương lifecycle (useEffect) – bổ sung cho nhận định cũ trên slide.",
+      "parts": [
+        {
+          "lines": "4",
+          "note": "useState trả về giá trị và hàm cập nhật."
+        },
+        {
+          "lines": "5-7",
+          "note": "useEffect chạy sau render khi count đổi (tương tự componentDidUpdate)."
+        },
+        {
+          "lines": "8",
+          "note": "setCount gây re-render."
+        }
+      ],
+      "pages": [
+        21
+      ],
+      "source": "bổ sung"
+    }
+  ],
+  "figures": [
+    {
+      "page": 8,
+      "caption": "Virtual DOM: State change → Compute Diff → Re-render"
+    },
+    {
+      "page": 17,
+      "caption": "Chia giao diện thành component"
+    },
+    {
+      "page": 21,
+      "caption": "So sánh function component và class component"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "React là framework hay thư viện? Dùng để làm gì?",
+      "back": "Thư viện JavaScript front-end mã nguồn mở để xây dựng UI component.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "Ai tạo React? Prototype tên gì?",
+      "back": "Jordan Walke (Facebook); FaxJS.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "React 16.8 ra mắt khi nào?",
+      "back": "16/2/2019.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "Virtual DOM là gì?",
+      "back": "Bản sao nhẹ của DOM thật; thao tác nhanh vì không vẽ lên màn hình.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "Diffing là gì?",
+      "back": "So sánh Virtual DOM trước và sau cập nhật để tìm thay đổi.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Sau khi diffing React làm gì?",
+      "back": "Chỉ cập nhật đúng các object thay đổi lên DOM thật.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "React giữ bao nhiêu bản Virtual DOM tại một thời điểm?",
+      "back": "Hai: bản đã cập nhật và bản trước cập nhật.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "JSX là viết tắt của gì?",
+      "back": "JavaScript XML.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "JSX có bắt buộc khi dùng React không?",
+      "back": "Không.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "3 ưu điểm của JSX?",
+      "back": "Nhanh (tối ưu khi biên dịch); type-safe (bắt lỗi lúc biên dịch); viết template dễ.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Trả về nhiều element trong JSX cần gì?",
+      "back": "Bọc trong một element cha.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "Chèn biểu thức JS vào JSX?",
+      "back": "Đặt trong ngoặc nhọn `{}`.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "Viết `font-size: 100px` trong inline style React?",
+      "back": "`{fontSize: 100}` (camelCase, object).",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "Hai loại component?",
+      "back": "Function component và class component.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Function component có render() không?",
+      "back": "Không – hàm trả JSX trực tiếp.",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Theo slide, loại component nào dùng được lifecycle method?",
+      "back": "Class component (vd componentDidMount).",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "props có thay đổi được trong component con không?",
+      "back": "Không – props bất biến.",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Đọc props trong class component?",
+      "back": "`this.props.ten`",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "State khác props thế nào?",
+      "back": "State là dữ liệu riêng, thay đổi được, gây re-render; props truyền từ ngoài vào, bất biến.",
+      "pages": [
+        22,
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "Khởi tạo state trong class component?",
+      "back": "Trong constructor: `super(props); this.state = {...};`",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "Thứ tự method khi mounting?",
+      "back": "constructor → getDerivedStateFromProps → render → componentDidMount.",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "Method bắt buộc trong lifecycle?",
+      "back": "render().",
+      "pages": [
+        28,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "Khi nào component update?",
+      "back": "Khi state hoặc props thay đổi.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "Method nào quyết định có re-render hay không?",
+      "back": "shouldComponentUpdate().",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-25",
+      "front": "Method duy nhất khi unmounting?",
+      "back": "componentWillUnmount().",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-26",
+      "front": "Hooks cho phép function component làm gì?",
+      "back": "Có state (useState) và side-effect/lifecycle (useEffect).",
+      "pages": [
+        21
+      ],
+      "source": "bổ sung"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "React là gì?",
+      "options": [
+        "Framework back-end của Java",
+        "Thư viện JavaScript front-end để xây dựng UI component",
+        "Hệ quản trị CSDL",
+        "Trình duyệt web"
+      ],
+      "answer": 1,
+      "explanation": "React is an open-source, front end, JavaScript library for building user interfaces or UI components.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "hiểu",
+      "question": "Vì sao Virtual DOM giúp React nhanh hơn?",
+      "options": [
+        "Vì Virtual DOM chạy trên GPU",
+        "Vì React không dùng DOM thật",
+        "Vì React so sánh (diff) hai bản Virtual DOM và chỉ cập nhật phần thay đổi lên DOM thật",
+        "Vì Virtual DOM được lưu ở server"
+      ],
+      "answer": 2,
+      "explanation": "Thao tác Virtual DOM nhanh (không vẽ lên màn hình); diffing giới hạn số thay đổi trên DOM thật.",
+      "pages": [
+        6,
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "nhớ",
+      "question": "Quy trình React xử lý thay đổi (theo hình tr. 8)?",
+      "options": [
+        "Re-render → State change → Compute Diff",
+        "State change → Compute Diff → Re-render",
+        "Compute Diff → State change → Re-render",
+        "State change → Re-render toàn bộ DOM"
+      ],
+      "answer": 1,
+      "explanation": "State change → Compute Diff → Re-render (chỉ phần thay đổi).",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "vận dụng",
+      "question": "Component sau có lỗi gì?",
+      "code": {
+        "language": "jsx",
+        "code": "render() {\n  return (\n    <h1>Header</h1>\n    <p>Content</p>\n  );\n}"
+      },
+      "options": [
+        "Thiếu export default",
+        "JSX trả về hai element liền nhau mà không bọc trong một element cha",
+        "Thẻ h1 không dùng được trong JSX",
+        "Phải dùng class thay vì className"
+      ],
+      "answer": 1,
+      "explanation": "If we want to return more elements, we need to wrap it with one container element.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "vận dụng",
+      "question": "`<h1>{2*3 + 1}</h1>` hiển thị gì?",
+      "options": [
+        "{2*3 + 1}",
+        "2*3 + 1",
+        "Lỗi cú pháp",
+        "7"
+      ],
+      "answer": 3,
+      "explanation": "Biểu thức trong {} được tính: 2*3+1 = 7.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "vận dụng",
+      "question": "Cách viết inline style nào đúng trong JSX?",
+      "options": [
+        "<h1 style=\"font-size:100px; color:red\">",
+        "<h1 style={{fontSize: 100, color: '#FF0000'}}>",
+        "<h1 style={font-size: 100}>",
+        "<h1 css={{fontSize: 100}}>"
+      ],
+      "answer": 1,
+      "explanation": "style nhận một object JS với key camelCase (ví dụ slide dùng biến myStyle).",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "hiểu",
+      "question": "Theo bảng so sánh trên slide, đâu là đặc điểm của class component?",
+      "options": [
+        "Không có render()",
+        "Là hàm thuần nhận props",
+        "Phải có render() và dùng được lifecycle method",
+        "Gọi là stateless component"
+      ],
+      "answer": 2,
+      "explanation": "Class component: must have render(), stateful, có lifecycle như componentDidMount.",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "hiểu",
+      "question": "Phát biểu nào đúng về props?",
+      "options": [
+        "Props là dữ liệu riêng do component tự tạo",
+        "Props bất biến, được truyền từ component cha qua attribute",
+        "Thay đổi props bằng this.props.x = 1",
+        "Props chỉ dùng được trong function component"
+      ],
+      "answer": 1,
+      "explanation": "Props is what you pass into the Component via attributes; props are immutable.",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "vận dụng",
+      "question": "Đoạn sau (theo slide) lỗi ở đâu?",
+      "code": {
+        "language": "jsx",
+        "code": "ReactDOM.render(\n    <App headerProp=\"Header from props\" />\n    document.getElementById('app')\n);"
+      },
+      "options": [
+        "Thiếu dấu phẩy ngăn cách hai đối số của ReactDOM.render",
+        "headerProp phải viết thường",
+        "getElementById không tồn tại",
+        "App phải viết thường"
+      ],
+      "answer": 0,
+      "explanation": "ReactDOM.render(element, container) – cần dấu phẩy sau element JSX.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "hiểu",
+      "question": "Điều gì xảy ra khi state của component thay đổi?",
+      "options": [
+        "Component bị unmount",
+        "Component re-render",
+        "Props của cha thay đổi theo",
+        "Không có gì"
+      ],
+      "answer": 1,
+      "explanation": "When state change ⇒ re-render component.",
+      "pages": [
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-11",
+      "level": "vận dụng",
+      "question": "Trong constructor của class component, cần gọi gì trước khi gán this.state?",
+      "code": {
+        "language": "jsx",
+        "code": "constructor(props) {\n  ???\n  this.state = {brand: \"Ford\"};\n}"
+      },
+      "options": [
+        "render()",
+        "this.setState()",
+        "componentDidMount()",
+        "super(props)"
+      ],
+      "answer": 3,
+      "explanation": "Phải gọi super(props) trước khi dùng this trong constructor lớp con.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "nhớ",
+      "question": "Thứ tự đúng các method khi mounting?",
+      "options": [
+        "render → constructor → componentDidMount",
+        "constructor → getDerivedStateFromProps → render → componentDidMount",
+        "constructor → render → shouldComponentUpdate",
+        "getSnapshotBeforeUpdate → render → componentDidMount"
+      ],
+      "answer": 1,
+      "explanation": "4 method mounting theo thứ tự slide.",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "hiểu",
+      "question": "Method nào chỉ có trong pha Updating, không có trong Mounting?",
+      "options": [
+        "render()",
+        "getDerivedStateFromProps()",
+        "shouldComponentUpdate()",
+        "constructor()"
+      ],
+      "answer": 2,
+      "explanation": "Updating: getDerivedStateFromProps, shouldComponentUpdate, render, getSnapshotBeforeUpdate, componentDidUpdate.",
+      "pages": [
+        28,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "nhớ",
+      "question": "Method nào được gọi khi component bị gỡ khỏi DOM?",
+      "options": [
+        "componentWillUnmount()",
+        "componentDidUnmount()",
+        "destroy()",
+        "componentDidUpdate()"
+      ],
+      "answer": 0,
+      "explanation": "React has only one built-in method for unmounting: componentWillUnmount().",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-15",
+      "level": "hiểu",
+      "question": "Phát biểu \"function component không thể có state\" hiện nay còn đúng không?",
+      "options": [
+        "Đúng, chỉ class component có state",
+        "Sai: từ React 16.8, Hooks (useState) cho function component có state",
+        "Đúng, function component chỉ nhận props",
+        "Sai vì function component có render()"
+      ],
+      "answer": 1,
+      "explanation": "Slide trình bày theo cách hiểu cũ; Hooks ra đời cùng React 16.8 (2/2019).",
+      "pages": [
+        4,
+        21
+      ],
+      "source": "bổ sung"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Virtual DOM là gì? Trình bày cơ chế cập nhật giao diện của React dựa trên Virtual DOM và giải thích vì sao cơ chế này cải thiện hiệu năng.",
+      "hints": "- DOM là cây object [tr. 6](#p6); Virtual DOM là bản sao nhẹ, thao tác nhanh.\n- 2 bản Virtual DOM, diffing, chỉ cập nhật phần đổi lên DOM thật [tr. 7](#p7).\n- Hình State change → Compute Diff → Re-render [tr. 8](#p8).",
+      "pages": [
+        6,
+        7,
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Trình bày JSX: khái niệm, ưu điểm và các quy tắc cơ bản (element gốc, attribute, biểu thức, style). Cho ví dụ.",
+      "hints": "- JSX = JS + XML, không bắt buộc, ưu điểm [tr. 10](#p10).\n- Một element bọc ngoài [tr. 12](#p12); data-attribute [tr. 13](#p13); {} cho biểu thức [tr. 14](#p14); style object camelCase [tr. 15](#p15).",
+      "pages": [
+        10,
+        12,
+        13,
+        14,
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "So sánh function component và class component; phân biệt props và state. Viết component `Counter` hiển thị số lần bấm nút.",
+      "hints": "- Bảng so sánh [tr. 21](#p21); ví dụ [tr. 19](#p19)–[tr. 20](#p20).\n- Props: truyền từ cha, bất biến [tr. 22](#p22)–[tr. 23](#p23); state: riêng, đổi → re-render [tr. 24](#p24)–[tr. 25](#p25).\n- Counter dạng class: `this.state = {count: 0}`, `onClick={() => this.setState({count: this.state.count + 1})}`; hoặc dạng hook useState (bổ sung).",
+      "pages": [
+        19,
+        20,
+        21,
+        22,
+        24,
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "Trình bày vòng đời (lifecycle) của một React component qua 3 giai đoạn Mounting, Updating, Unmounting, nêu thứ tự các method và ứng dụng của chúng.",
+      "hints": "- Ý nghĩa lifecycle [tr. 27](#p27).\n- Mounting: 4 method [tr. 28](#p28) – componentDidMount hay dùng để gọi API.\n- Updating: 5 method, shouldComponentUpdate để tối ưu [tr. 29](#p29).\n- Unmounting: componentWillUnmount để dọn dẹp (timer, listener) [tr. 30](#p30).",
+      "pages": [
+        27,
+        28,
+        29,
+        30
+      ],
+      "source": "slide"
+    }
+  ]
+}

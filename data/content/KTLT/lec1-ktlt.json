@@ -1,0 +1,890 @@
+{
+  "version": 1,
+  "subject": "KTLT",
+  "lesson": "lec1-ktlt",
+  "title": "Bài 1 – Tổng quan Kỹ thuật lập trình",
+  "summary": "## Giới thiệu học phần [tr. 2](#p2)–[tr. 4](#p4)\n- **Mục tiêu**: trang bị các kỹ thuật cơ bản nhất mà lập trình viên chuyên nghiệp cần nắm vững để viết **mã nguồn hiệu quả** và phát triển phần mềm chất lượng cao.\n- **Nội dung chính**: quản lý bộ nhớ, hàm, đệ quy, cấu trúc dữ liệu, viết mã hiệu quả, lập trình phòng ngừa, gỡ rối, tinh chỉnh mã, phong cách lập trình.\n- **Tài liệu**: Trần Đan Thư (2014); McConnell – *Code Complete*; Kernighan & Plauger – *The Elements of Programming Style*; Kernighan & Pike – *The Practice of Programming*; Josuttis – *The C++ Standard Library*.\n- **Đánh giá**:\n  - Quá trình **40%**: bài tập về nhà 10%, bài tập nhóm 30%, thi giữa kỳ 30%.\n  - Cuối kỳ **60%**.\n\n## 1. Tổng quan về lập trình\n- **Chương trình máy tính** là tập hợp lệnh chỉ dẫn máy thực hiện nhiệm vụ. **Ngôn ngữ lập trình** dùng để viết các lệnh đó [tr. 6](#p6).\n- **Hoạt động của chương trình** [tr. 7](#p7)–[tr. 8](#p8):\n  - Chương trình được nạp vào **bộ nhớ chính** dưới dạng dãy số nhị phân.\n  - Máy luôn ở một **trạng thái (state)**. Thành phần chính của trạng thái là **con trỏ lệnh (instruction pointer)**.\n  - Thứ tự thực hiện lệnh gọi là **luồng điều khiển (flow of control)**: bắt đầu → nhận lệnh → thực hiện lệnh → lặp lại → dừng.\n  - Mỗi chu trình: CPU nhận lệnh từ bộ nhớ. **PC (Program Counter)** giữ địa chỉ lệnh sẽ nhận. Lệnh được nạp vào **IR (Instruction Register)**. Sau khi nhận lệnh, **PC tự tăng** để trỏ tới lệnh kế tiếp.\n- **Ngôn ngữ lập trình** là hệ thống ký hiệu để giao tiếp với máy tính. Có hơn 1000 ngôn ngữ [tr. 9](#p9). **3 thành phần** [tr. 10](#p10):\n  - **Mô thức (paradigm)**: nguyên tắc chung để xây dựng chương trình.\n  - **Cú pháp (syntax)**: cấu trúc câu lệnh hợp lệ.\n  - **Ngữ nghĩa (semantics)**: ý nghĩa của chương trình, thành phần không thể thiếu.\n- **Các cấp ngôn ngữ** [tr. 11](#p11)–[tr. 13](#p13):\n  - **Mã máy (machine code)**: dãy bit.\n  - **Hợp ngữ (assembly)**: dùng ký hiệu và từ khoá (vd `lw`, `add`, `sw`, `bgtz`), phải qua **assembler** để thành mã máy.\n  - **Ngôn ngữ bậc cao**: hướng **vấn đề (problem-oriented)** thay vì hướng phần cứng, gần ngôn ngữ tự nhiên.\n- **Compiler vs interpreter** [tr. 14](#p14)–[tr. 15](#p15):\n  - **Trình biên dịch** dịch **toàn bộ** chương trình nguồn sang mã máy (object program) **trước khi** chạy.\n  - **Trình thông dịch** dịch và thực hiện **từng dòng lệnh** cùng lúc, không tạo ra chương trình mã máy.\n\n## 2. Các mô thức lập trình [tr. 17](#p17)–[tr. 24](#p24)\n- Các mô thức: imperative, functional, logical, object-oriented, visual, parallel, concurrent, distributed, service-oriented.\n- **Imperative (mệnh lệnh)**, \"first do this and next do that\". Thành phần:\n  - Lệnh khai báo (declarative statements).\n  - Lệnh gán (assignment).\n  - Lệnh điều khiển luồng (program flow control).\n  - Module: hàm và thủ tục.\n- **Functional (chức năng)**:\n  - Gồm cấu trúc dữ liệu, các hàm cơ sở, toán tử. Đặc trưng là **module hoá**.\n  - Chức năng là biểu diễn của một biểu thức. **Giá trị trả về không thể biến đổi**. Tính toán bằng cách **gọi hàm**.\n  - Ví dụ: tìm đường trên đồ thị bằng **Racket**.\n- **Logic**, \"answer a question via searching for a solution\":\n  - Dựa trên **tiên đề (axioms)**, **luật suy diễn (inference rules)** và **truy vấn (queries)**. Ý tưởng từ tự động kiểm chứng trong AI.\n  - Ví dụ: **Prolog** với `edge(a,b).` và `path(Start,Finish) :- ...`.\n- **Object-oriented**, \"send messages between objects\":\n  - Dữ liệu và thao tác được **đóng gói** trong đối tượng. Có cơ chế che giấu thông tin.\n  - Đối tượng thuộc **lớp**. Lớp đại diện khái niệm, đối tượng là thể hiện. Lớp có **kế thừa**.\n\n## 3. Ngôn ngữ C/C++ [tr. 26](#p26)–[tr. 35](#p35)\n- **C** ra đời thập niên 1970 cùng hệ điều hành Unix, tác giả **Dennis Ritchie**.\n  - Mục tiêu: hiệu quả, truy xuất phần cứng cấp thấp, có cấu trúc (thay cho hợp ngữ).\n  - C là ngôn ngữ **trung gian**: vừa cấp thấp (truy xuất bộ nhớ trực tiếp, cú pháp gọn) vừa cấp cao (không phụ thuộc phần cứng, có cấu trúc/hàm, kiểm tra kiểu).\n- **C++** ra đời năm **1979**, mở rộng từ C, tác giả **Bjarne Stroustrup**.\n  - Bổ sung: **OOP**, **template** (lập trình tổng quát), kiểu bool, khai báo biến ở bất kỳ đâu, kiểu mạnh, **định nghĩa chồng hàm**, namespace, xử lý ngoại lệ.\n- **Biên dịch** [tr. 28](#p28)–[tr. 29](#p29):\n  - Mã nguồn `file1.c`, `file2.c` → trình biên dịch → `file1.obj`, `file2.obj` → **trình liên kết** cùng thư viện → `a.exe`.\n  - Dịch riêng từng file giúp dễ quản lý, chỉ dịch lại file thay đổi nên giảm thời gian dịch và bảo trì.\n  - Compiler phổ biến: MS Visual C++, gcc, Intel C++…\n- **Vào ra C++** [tr. 31](#p31)–[tr. 34](#p34):\n  - `<iostream>` có cin, cout, cerr, clog. `<iomanip>` có setw, setprecision. `<fstream>` để làm việc với file.\n  - `cout <<`: toán tử **chèn luồng (insertion)**, `endl` xuống dòng.\n  - `cin >>`: toán tử **trích luồng (extraction)**. `cin >> ten >> tuoi;` tương đương `cin >> ten; cin >> tuoi;`.\n- IDE: Code::Blocks [tr. 35](#p35).\n\n## 4. Chu trình phát triển phần mềm (6 bước) [tr. 37](#p37)–[tr. 48](#p48)\n1. **Analyze Requirements** (phân tích yêu cầu): thiết lập requirements, gặp nhà phân tích và người dùng, xác định input/output/processing bằng **IPO chart**.\n2. **Design Solution** (thiết kế giải pháp), 2 hướng:\n   - **Structured (top-down) design**: chia nhỏ thành thủ tục, vẽ **hierarchy chart** (sơ đồ cấu trúc).\n   - **Object-oriented design**: đóng gói dữ liệu và thủ tục trong object, nhóm thành class, vẽ class diagram.\n   - Cấu trúc điều khiển:\n     - Rẽ nhánh: **if-then-else** (2 khả năng), **case** (≥ 3 khả năng).\n     - Lặp: **do-while** (lặp khi điều kiện **còn đúng**), **do-until** (lặp **cho tới khi** điều kiện đúng).\n3. **Validate Design** (kiểm tra thiết kế):\n   - Kiểm tra độ chính xác và **logic error**.\n   - **Desk check**: dùng **test data** chạy tay.\n   - **Structured walkthrough**: trình bày logic để nhóm duyệt.\n4. **Implement Design** (cài đặt): viết code theo **syntax**, thêm **comments**. **Extreme Programming (XP)**: code và test ngay sau khi xác định yêu cầu.\n5. **Test Solution** (kiểm thử): đảm bảo chạy đúng. **Debugging** sửa lỗi syntax và logic. Phát hành bản **beta** cho người dùng thử.\n6. **Document Solution** (tài liệu hoá): rà soát code để loại **dead code** (lệnh không bao giờ được gọi tới), hoàn thiện tài liệu.",
+  "keyConcepts": [
+    {
+      "term": "Chương trình máy tính",
+      "definition": "Tập hợp các lệnh chỉ dẫn máy tính thực hiện nhiệm vụ.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Luồng điều khiển (flow of control)",
+      "definition": "Thứ tự thực hiện các nhóm lệnh của chương trình.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "PC (Program Counter)",
+      "definition": "Thanh ghi giữ địa chỉ lệnh sẽ được nhận; tự tăng sau khi nhận lệnh.",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "IR (Instruction Register)",
+      "definition": "Thanh ghi chứa lệnh vừa được nạp từ bộ nhớ.",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "3 thành phần của NNLT",
+      "definition": "Mô thức (paradigm), cú pháp (syntax), ngữ nghĩa (semantics).",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Mã máy / hợp ngữ",
+      "definition": "Mã máy là dãy bit; hợp ngữ dùng ký hiệu, cần assembler chuyển thành mã máy.",
+      "pages": [
+        11,
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Ngôn ngữ bậc cao",
+      "definition": "Hướng vấn đề (problem-oriented), gần ngôn ngữ tự nhiên.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Compiler vs interpreter",
+      "definition": "Compiler dịch toàn bộ trước khi chạy, tạo mã máy; interpreter dịch và chạy từng dòng, không tạo mã máy.",
+      "pages": [
+        14,
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Imperative paradigm",
+      "definition": "\"First do this and next do that\": khai báo, gán, điều khiển luồng, module (hàm, thủ tục).",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Functional paradigm",
+      "definition": "Tính toán bằng gọi hàm, giá trị trả về không biến đổi, module hoá; vd Racket.",
+      "pages": [
+        19,
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Logic paradigm",
+      "definition": "Trả lời câu hỏi bằng tìm kiếm lời giải dựa trên axioms, inference rules, queries; vd Prolog.",
+      "pages": [
+        21,
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Object-oriented paradigm",
+      "definition": "Đối tượng đóng gói dữ liệu và thao tác, giao tiếp qua thông điệp; lớp, kế thừa, che giấu thông tin.",
+      "pages": [
+        23,
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Ngôn ngữ C",
+      "definition": "Ra đời 1970s cùng Unix (Dennis Ritchie); hiệu quả, truy xuất phần cứng, có cấu trúc – ngôn ngữ trung gian.",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Ngôn ngữ C++",
+      "definition": "1979, Bjarne Stroustrup mở rộng C: OOP, template, bool, overload, namespace, exception.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Trình liên kết (linker)",
+      "definition": "Ghép các file .obj và thư viện thành chương trình chạy được (.exe).",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Biên dịch riêng từng file",
+      "definition": "Dễ quản lý, chỉ dịch lại file thay đổi → giảm thời gian dịch và bảo trì.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "<iostream> / <iomanip> / <fstream>",
+      "definition": "Đối tượng cin, cout, cerr, clog; định dạng setw, setprecision; xử lý file.",
+      "pages": [
+        31
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Toán tử << và >>",
+      "definition": "<< chèn luồng (insertion) với cout; >> trích luồng (extraction) với cin; dùng nối tiếp được.",
+      "pages": [
+        32,
+        33,
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Chu trình phát triển phần mềm",
+      "definition": "6 bước: phân tích yêu cầu, thiết kế, kiểm tra thiết kế, cài đặt, kiểm thử, tài liệu hoá.",
+      "pages": [
+        37
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "IPO chart",
+      "definition": "Bảng xác định Input, Processing, Output của bài toán.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Top-down (structured) design",
+      "definition": "Chia hệ thống thành các thủ tục con, bắt đầu từ tổng thể rồi đến chi tiết; biểu diễn bằng hierarchy chart.",
+      "pages": [
+        39,
+        40
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Object-oriented design",
+      "definition": "Đóng gói dữ liệu và thủ tục trong object, nhóm thành class, vẽ class diagram.",
+      "pages": [
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "If-then-else vs case",
+      "definition": "If-then-else chọn giữa 2 khả năng; case chọn giữa 3 khả năng trở lên.",
+      "pages": [
+        42,
+        43
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Do-while vs do-until",
+      "definition": "Do-while lặp khi điều kiện còn đúng; do-until lặp cho đến khi điều kiện đúng.",
+      "pages": [
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Desk check / structured walkthrough",
+      "definition": "Kiểm tra thiết kế bằng chạy tay với test data / trình bày logic cho nhóm duyệt.",
+      "pages": [
+        45
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Extreme Programming (XP)",
+      "definition": "Code và test ngay sau khi xác định yêu cầu.",
+      "pages": [
+        46
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Debugging / beta",
+      "definition": "Tìm và sửa lỗi syntax, logic; phát hành bản beta cho người dùng thử.",
+      "pages": [
+        47
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Dead code",
+      "definition": "Các lệnh mà chương trình không bao giờ gọi tới – cần loại bỏ khi tài liệu hoá.",
+      "pages": [
+        48
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Xuất và nhập với cout, cin",
+      "language": "cpp",
+      "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    char str[] = \"Xin chao C++\";\n    cout << \"Gia tri cua str la: \" << str << endl;\n\n    char ten[50];\n    cout << \"Nhap ten cua ban (viet lien): \";\n    cin >> ten;\n    cout << \"Ten ban la: \" << ten << endl;\n}",
+      "explanation": "<< có thể dùng nhiều lần trong một lệnh; cin >> dừng đọc ở khoảng trắng nên tên phải viết liền.",
+      "parts": [
+        {
+          "lines": "1-2",
+          "note": "Header I/O và namespace std."
+        },
+        {
+          "lines": "6",
+          "note": "Chèn nhiều giá trị vào luồng ra, endl xuống dòng."
+        },
+        {
+          "lines": "10",
+          "note": "Trích một từ từ bàn phím vào mảng ten."
+        }
+      ],
+      "pages": [
+        32,
+        33
+      ],
+      "source": "slide"
+    }
+  ],
+  "figures": [
+    {
+      "page": 7,
+      "caption": "Lưu đồ hoạt động của chương trình"
+    },
+    {
+      "page": 8,
+      "caption": "PC và IR trước/sau khi nhận lệnh"
+    },
+    {
+      "page": 14,
+      "caption": "Quá trình biên dịch"
+    },
+    {
+      "page": 15,
+      "caption": "Thông dịch"
+    },
+    {
+      "page": 28,
+      "caption": "Biên dịch và liên kết chương trình C/C++"
+    },
+    {
+      "page": 37,
+      "caption": "Chu trình phát triển chương trình"
+    },
+    {
+      "page": 40,
+      "caption": "Hierarchy chart"
+    },
+    {
+      "page": 44,
+      "caption": "Do-while và do-until"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "Mục tiêu của học phần KTLT?",
+      "back": "Trang bị kỹ thuật cơ bản để viết mã nguồn hiệu quả, phát triển phần mềm chất lượng cao.",
+      "pages": [
+        2
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "Tỷ trọng điểm quá trình và cuối kỳ?",
+      "back": "Quá trình 40%, cuối kỳ 60%.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "PC và IR là gì?",
+      "back": "PC giữ địa chỉ lệnh sẽ nhận; IR chứa lệnh vừa nạp.",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "Sau khi nhận lệnh, PC thay đổi thế nào?",
+      "back": "Tự động tăng để trỏ sang lệnh kế tiếp.",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "3 thành phần của một ngôn ngữ lập trình?",
+      "back": "Mô thức, cú pháp, ngữ nghĩa.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Vì sao semantics không thể thiếu?",
+      "back": "Không có ngữ nghĩa, ngôn ngữ chỉ là các câu vô nghĩa.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "Hợp ngữ chạy được cần gì?",
+      "back": "Assembler chuyển thành mã máy.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Ngôn ngữ bậc cao khác hợp ngữ ở điểm nào?",
+      "back": "Hướng vấn đề thay vì hướng phần cứng; gần ngôn ngữ tự nhiên.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "Compiler khác interpreter?",
+      "back": "Compiler dịch toàn bộ trước khi chạy; interpreter dịch và chạy từng dòng, không tạo mã máy.",
+      "pages": [
+        14,
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "Khẩu hiệu của imperative paradigm?",
+      "back": "First do this and next do that.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Đặc trưng cơ bản của functional paradigm?",
+      "back": "Module hoá chương trình; giá trị trả về không thể biến đổi.",
+      "pages": [
+        19
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "Logic paradigm dựa trên những gì?",
+      "back": "Axioms, inference rules, queries (vd Prolog).",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "Ai tạo ra C, khi nào?",
+      "back": "Dennis Ritchie, thập niên 1970, cùng Unix.",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "Ai tạo ra C++, khi nào?",
+      "back": "Bjarne Stroustrup, 1979.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "C++ bổ sung gì so với C?",
+      "back": "OOP, template, bool, khai báo biến bất kỳ đâu, kiểu mạnh, overload, namespace, exception.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Vai trò trình liên kết?",
+      "back": "Ghép các file .obj và thư viện thành chương trình chạy (.exe).",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "Lợi ích của dịch từng file riêng rẽ?",
+      "back": "Dễ quản lý, chỉ sửa và dịch lại file liên quan → giảm thời gian bảo trì và dịch.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "<< và >> gọi là gì?",
+      "back": "Toán tử chèn luồng (insertion) và trích luồng (extraction).",
+      "pages": [
+        32,
+        33
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "6 bước phát triển chương trình?",
+      "back": "Phân tích yêu cầu, thiết kế, kiểm tra thiết kế, cài đặt, kiểm thử, tài liệu hoá.",
+      "pages": [
+        37
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "IPO chart dùng để làm gì?",
+      "back": "Xác định input, processing, output.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "Top-down design còn gọi là gì?",
+      "back": "Structured design.",
+      "pages": [
+        39
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "Hierarchy chart là gì?",
+      "back": "Sơ đồ phân cấp chức năng trực quan hoá các module, còn gọi là sơ đồ cấu trúc.",
+      "pages": [
+        40
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "Case control structure dùng khi nào?",
+      "back": "Khi có 3 khả năng trở lên.",
+      "pages": [
+        43
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "Do-while khác do-until?",
+      "back": "Do-while lặp khi điều kiện còn đúng; do-until lặp cho đến khi điều kiện đúng.",
+      "pages": [
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-25",
+      "front": "Desk check là gì?",
+      "back": "LTV dùng dữ liệu thử nghiệm để kiểm tra chương trình bằng tay.",
+      "pages": [
+        45
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-26",
+      "front": "Structured walkthrough là gì?",
+      "back": "LTV mô tả logic thuật toán để nhóm duyệt.",
+      "pages": [
+        45
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-27",
+      "front": "Dead code là gì?",
+      "back": "Lệnh mà chương trình không bao giờ gọi tới.",
+      "pages": [
+        48
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "Thanh ghi nào giữ địa chỉ của lệnh sẽ được nhận?",
+      "options": [
+        "PC",
+        "IR",
+        "ACC",
+        "SP"
+      ],
+      "answer": 0,
+      "explanation": "PC (Program Counter) giữ địa chỉ lệnh sẽ nhận; IR chứa lệnh.",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "hiểu",
+      "question": "Ngay sau khi CPU nhận lệnh i ở địa chỉ 302 (mỗi lệnh 1 ô), giá trị PC là?",
+      "options": [
+        "302",
+        "303",
+        "301",
+        "0"
+      ],
+      "answer": 1,
+      "explanation": "Sau khi lệnh được nhận vào, nội dung PC tự động tăng để trỏ sang lệnh kế tiếp (303).",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "nhớ",
+      "question": "Thành phần nào KHÔNG thuộc 3 thành phần căn bản của một NNLT?",
+      "options": [
+        "Mô thức",
+        "Cú pháp",
+        "Trình biên dịch",
+        "Ngữ nghĩa"
+      ],
+      "answer": 2,
+      "explanation": "3 thành phần: paradigm, syntax, semantics.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "hiểu",
+      "question": "Đặc điểm của trình thông dịch (interpreter)?",
+      "options": [
+        "Dịch toàn bộ chương trình ra file .exe trước khi chạy",
+        "Là trình liên kết",
+        "Chỉ dùng cho hợp ngữ",
+        "Dịch và thực hiện từng dòng lệnh, không tạo chương trình mã máy"
+      ],
+      "answer": 3,
+      "explanation": "Slide tr. 15.",
+      "pages": [
+        14,
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "hiểu",
+      "question": "Mô thức nào có đặc trưng \"giá trị trả về không thể biến đổi, tính toán bằng gọi hàm\"?",
+      "options": [
+        "Functional",
+        "Imperative",
+        "Logic",
+        "Object-oriented"
+      ],
+      "answer": 0,
+      "explanation": "Functional paradigm.",
+      "pages": [
+        19
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "vận dụng",
+      "question": "Đoạn sau thuộc mô thức lập trình nào?",
+      "code": {
+        "language": "prolog",
+        "code": "edge(a,b).\nedge(b,c).\npath(Start,Finish) :- edge(Start,Finish).\npath(Start,Finish) :- edge(Start,Next), path(Next,Finish)."
+      },
+      "options": [
+        "Imperative",
+        "Logic",
+        "Functional",
+        "Object-oriented"
+      ],
+      "answer": 1,
+      "explanation": "Prolog – sự kiện (axioms) và luật suy diễn.",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "nhớ",
+      "question": "Ngôn ngữ C++ do ai tạo ra và năm nào?",
+      "options": [
+        "Dennis Ritchie, 1972",
+        "James Gosling, 1995",
+        "Bjarne Stroustrup, 1979",
+        "Guido van Rossum, 1991"
+      ],
+      "answer": 2,
+      "explanation": "Ra đời năm 1979 bằng việc mở rộng C. Tác giả Bjarne Stroustrup.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "hiểu",
+      "question": "Vì sao nói C là ngôn ngữ \"trung gian\"?",
+      "options": [
+        "Vì chạy trên máy ảo",
+        "Vì chỉ dùng cho hệ điều hành",
+        "Vì dịch sang Java",
+        "Vì vừa có khả năng cấp thấp (truy xuất bộ nhớ trực tiếp) vừa có đặc điểm cấp cao (không phụ thuộc phần cứng, có cấu trúc)"
+      ],
+      "answer": 3,
+      "explanation": "Slide tr. 26.",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "hiểu",
+      "question": "Thành phần nào ghép file1.obj, file2.obj và thư viện thành a.exe?",
+      "options": [
+        "Trình liên kết",
+        "Trình biên dịch",
+        "Trình thông dịch",
+        "Assembler"
+      ],
+      "answer": 0,
+      "explanation": "Sơ đồ biên dịch: trình liên kết.",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "vận dụng",
+      "question": "Người dùng nhập \"Nguyen Van A\" cho đoạn code sau. Chương trình in ra gì?",
+      "code": {
+        "language": "cpp",
+        "code": "char ten[50];\ncin >> ten;\ncout << \"Ten ban la: \" << ten << endl;"
+      },
+      "options": [
+        "Ten ban la: Nguyen Van A",
+        "Ten ban la: Nguyen",
+        "Ten ban la: A",
+        "Lỗi biên dịch"
+      ],
+      "answer": 1,
+      "explanation": "cin >> dừng ở khoảng trắng – vì vậy slide yêu cầu \"viet lien\".",
+      "pages": [
+        33
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-11",
+      "level": "nhớ",
+      "question": "Công cụ nào ở bước Analyze Requirements xác định đầu vào, xử lý, đầu ra?",
+      "options": [
+        "Hierarchy chart",
+        "Class diagram",
+        "IPO chart",
+        "Flowchart"
+      ],
+      "answer": 2,
+      "explanation": "IPO chart – Input, Processing, Output.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "vận dụng",
+      "question": "Chọn món theo 5 loại thẻ thành viên (bạc, vàng, kim cương…). Cấu trúc điều khiển phù hợp?",
+      "options": [
+        "If-then-else",
+        "Do-while",
+        "Do-until",
+        "Case control structure"
+      ],
+      "answer": 3,
+      "explanation": "Case: dựa theo 3 hoặc nhiều hơn các khả năng.",
+      "pages": [
+        43
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "hiểu",
+      "question": "Khác biệt giữa do-while và do-until (theo slide)?",
+      "options": [
+        "Do-while lặp khi điều kiện còn đúng; do-until lặp đến khi điều kiện đúng",
+        "Không khác nhau",
+        "Do-until không lặp",
+        "Do-while chỉ chạy một lần"
+      ],
+      "answer": 0,
+      "explanation": "Slide tr. 44.",
+      "pages": [
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "hiểu",
+      "question": "\"Desk check\" thuộc bước nào của chu trình phát triển?",
+      "options": [
+        "Analyze Requirements",
+        "Validate Design",
+        "Implement Design",
+        "Document Solution"
+      ],
+      "answer": 1,
+      "explanation": "Step 3 – Validate Design: desk check với test data, structured walkthrough.",
+      "pages": [
+        45
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-15",
+      "level": "nhớ",
+      "question": "Ở bước Document Solution, cần loại bỏ gì?",
+      "options": [
+        "Comments",
+        "Test data",
+        "Dead code",
+        "Header file"
+      ],
+      "answer": 2,
+      "explanation": "Rà soát program code – loại bỏ dead code (lệnh mà CT không bao giờ gọi đến).",
+      "pages": [
+        48
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-16",
+      "level": "hiểu",
+      "question": "Extreme Programming (XP) có đặc điểm gì?",
+      "options": [
+        "Viết tài liệu trước khi code",
+        "Chỉ dùng hợp ngữ",
+        "Không cần test",
+        "Coding và testing ngay sau khi các yêu cầu được xác định"
+      ],
+      "answer": 3,
+      "explanation": "Step 4.",
+      "pages": [
+        46
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Trình bày hoạt động của chương trình máy tính (vai trò PC, IR, luồng điều khiển). So sánh mã máy, hợp ngữ và ngôn ngữ bậc cao; phân biệt trình biên dịch và trình thông dịch.",
+      "hints": "- Nạp vào bộ nhớ, trạng thái, con trỏ lệnh, flow of control [tr. 7](#p7).\n- Chu trình nhận lệnh, PC, IR [tr. 8](#p8).\n- Mã máy, hợp ngữ, bậc cao [tr. 11](#p11)–[tr. 13](#p13).\n- Compiler vs interpreter [tr. 14](#p14)–[tr. 15](#p15).",
+      "pages": [
+        7,
+        8,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Trình bày các mô thức lập trình imperative, functional, logic và object-oriented, mỗi mô thức nêu đặc trưng và một ví dụ ngôn ngữ.",
+      "hints": "- Danh sách mô thức [tr. 17](#p17).\n- Imperative: khai báo, gán, điều khiển, module [tr. 18](#p18).\n- Functional: module hoá, giá trị bất biến, Racket [tr. 19](#p19)–[tr. 20](#p20).\n- Logic: axioms, inference rules, Prolog [tr. 21](#p21)–[tr. 22](#p22).\n- OOP: đóng gói, lớp, kế thừa [tr. 23](#p23)–[tr. 24](#p24).",
+      "pages": [
+        18,
+        19,
+        21,
+        22,
+        23,
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "Trình bày lịch sử, mục tiêu của C và C++, quá trình biên dịch – liên kết chương trình C/C++ gồm nhiều file và lợi ích của việc biên dịch riêng từng file.",
+      "hints": "- C: Ritchie, Unix, trung gian [tr. 26](#p26); C++: Stroustrup 1979, OOP, template… [tr. 27](#p27).\n- Sơ đồ .c → .obj → linker + thư viện → .exe [tr. 28](#p28).\n- Lợi ích, tối ưu hoá, các compiler [tr. 29](#p29).",
+      "pages": [
+        26,
+        27,
+        28,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "Trình bày 6 bước của chu trình phát triển chương trình. Áp dụng cho bài toán tính lương (giờ thường, giờ làm thêm): lập IPO chart và hierarchy chart.",
+      "hints": "- 6 bước [tr. 37](#p37).\n- IPO chart lương: input giờ thường, giờ làm thêm, đơn giá; xử lý tính lương thường, làm thêm (×1,5), tổng; output gross pay [tr. 38](#p38).\n- Hierarchy chart Main → Initialization/Process/Wrap-up [tr. 40](#p40).\n- Validate, implement, test, document [tr. 45](#p45)–[tr. 48](#p48).",
+      "pages": [
+        37,
+        38,
+        40,
+        45,
+        47,
+        48
+      ],
+      "source": "slide"
+    }
+  ]
+}

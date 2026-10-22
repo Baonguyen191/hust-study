@@ -1,0 +1,1122 @@
+{
+  "version": 1,
+  "subject": "CNWeb",
+  "lesson": "lec-9-xml",
+  "title": "Bài 9 – XML, DTD và XML Schema",
+  "summary": "## 1. Giới thiệu XML\n- **XML (eXtensible Markup Language)** là ngôn ngữ đánh dấu cho phép **tự tạo thẻ riêng**. Văn bản XML có **dữ liệu tự mô tả** [tr. 4](#p4).\n  - XML dựa trên **SGML** giống HTML, và là tập con của SGML [tr. 4](#p4)–[tr. 5](#p5).\n  - Slide ghi \"Liên minh mạng toàn cầu W3Schools\". *Bổ sung*: thực ra XML do **W3C** đề xuất, W3Schools chỉ là trang hướng dẫn. Trang 5 cũng ghi W3C.\n- Mục đích chính: **đơn giản hoá việc chia sẻ dữ liệu** giữa các hệ thống khác nhau, nhất là qua Internet [tr. 5](#p5).\n- **HTML vs XML** [tr. 6](#p6):\n  - HTML để **trình bày, hiển thị** dữ liệu, chú trọng dữ liệu hiển thị ra sao.\n  - XML để **lưu trữ và truyền tải**, chú trọng **nội dung** dữ liệu. HTML hiển thị thông tin, XML mô tả thông tin.\n- Thẻ XML **không định nghĩa trước**, người tạo tự quy ước. Dữ liệu được mô tả bằng **DTD** hoặc **Schema** [tr. 7](#p7).\n- **Ưu điểm** [tr. 8](#p8):\n  - Dữ liệu độc lập: dạng text nên mọi chương trình đọc được.\n  - Dễ đọc, dễ phân tích, nên hay dùng để trao đổi dữ liệu.\n  - Dễ tạo.\n  - Dùng lưu cấu hình website và cho **RPC/web service**.\n- **Đặc điểm** [tr. 9](#p9)–[tr. 11](#p11):\n  - Thông tin dạng text, tổ chức theo **cấu trúc cây**, gồm element và thuộc tính.\n  - Dùng bộ ký tự Universal Character Set.\n  - XML **không biết ngữ nghĩa** của dữ liệu.\n  - Có cú pháp chung để **XML Parser** phân tích.\n- **Ứng dụng** [tr. 12](#p12)–[tr. 14](#p14):\n  - File cấu hình: `web.config` (ASP.NET), `web.xml`/`faces-config.xml` (JSP).\n  - **RSS** cung cấp tin tự động (vnExpress, tuoitre…).\n  - Thu thập dữ liệu từ các hệ thống con.\n\n## 2. Cú pháp XML\n- Đối tượng x thuộc loại X được biểu diễn bằng thẻ X, thuộc tính của x thành attribute [tr. 15](#p15)–[tr. 16](#p16).\n  - Phân số 4/5: `<PHAN_SO Tu_so=\"4\" Mau_so=\"5\"/>`.\n  - Dãy số: `<DAY_SO><SO Gia_tri=\"1\"/>…</DAY_SO>`.\n- Hai loại thẻ: **thẻ có nội dung** `<Ten>…</Ten>` và **thẻ rỗng** `<Ten/>`. Thuộc tính viết `ten=\"gia_tri\"` [tr. 17](#p17)–[tr. 18](#p18).\n- Thẻ phải **lồng nhau hoàn toàn**: cha chứa cả thẻ mở lẫn thẻ đóng của con. Viết `<A><B></A></B>` là **không hợp lệ** [tr. 19](#p19)–[tr. 20](#p20).\n- Phải có **duy nhất một thẻ gốc (root element)** [tr. 21](#p21).\n- Ba kiểu tài liệu [tr. 22](#p22):\n  - **Well-formed**: đúng cú pháp.\n  - **DTD-constrained**: có DTD mô tả cấu trúc.\n  - **Schema-constrained**: dùng XML Schema để kiểm tra hợp lệ.\n- Quy tắc **well-formed** [tr. 23](#p23):\n  - Đúng 1 root element.\n  - Mỗi thẻ mở có thẻ đóng. Tên thẻ **phân biệt hoa thường**.\n  - Đóng đúng thứ tự (mở sau đóng trước).\n  - Tên thẻ không nên có khoảng trắng, không nên bắt đầu bằng \"xml\".\n  - Thuộc tính theo cặp `ten=\"gia_tri\"`, giá trị trong nháy đơn hoặc nháy kép, không trùng tên thuộc tính.\n\n## 3. Nội dung phụ của tài liệu XML [tr. 24](#p24)–[tr. 36](#p36)\n- Nội dung chính là hệ thống thẻ biểu diễn thông tin. Nội dung phụ gồm: thẻ khai báo tham số, chỉ thị xử lý, ghi chú, CDATA, khai báo cấu trúc (DTD), khai báo thực thể.\n- **Thẻ khai báo tham số** `<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>`. Có 3 tham số:\n  - `version`: phiên bản XML.\n  - `encoding`: utf-8, utf-16…\n  - `standalone`: \"yes\" hoặc \"no\", mặc định **\"no\"**.\n- **Chỉ thị xử lý (processing instruction)** `<?Bo_xu_ly Du_lieu?>`, vd `<?xml-stylesheet type=\"text/css\" href=\"Dinh_dang.css\"?>`.\n- **Ghi chú**: slide viết `<-- … -->`. *Bổ sung*: cú pháp chuẩn là `<!-- … -->`.\n  - Không dùng chuỗi `--` bên trong ghi chú.\n  - Không đặt ghi chú bên trong thẻ hoặc trước dòng `<?xml?>`.\n- **CDATA** `<![CDATA[ … ]]>`: parser **không phân tích** nội dung bên trong. Nhờ vậy dùng được `<`, `>`… mà không cần escape [tr. 33](#p33), [tr. 35](#p35).\n- **PCDATA**: dữ liệu **được parser phân tích**. Không được chứa `<`, `&`… [tr. 34](#p34).\n- CDATA vẫn là một phần tài liệu, còn comment thì không. Trong CDATA không được có chuỗi `]]>` [tr. 36](#p36).\n\n## 4. Đặc tả cấu trúc: DTD vs XML Schema [tr. 37](#p37)–[tr. 46](#p46)\n- Có nhiều ngôn ngữ đặc tả (DTD, XML Schema, XML-Data, Schematron, RELAX NG). Hai ngôn ngữ thông dụng nhất là DTD và XML Schema.\n- **DTD**: ra đời sớm, đơn giản, dễ học. Chỉ đặc tả được **kiểu dữ liệu đơn giản**.\n- **XML Schema**: do W3C đề xuất, chỉ dùng cho XML, khó hơn, nhưng **đặc tả chi tiết kiểu dữ liệu**.\n- Đặc tả cấu trúc phục vụ 2 mục đích:\n  - **Người – người**: tài liệu thiết kế, quy ước nhóm.\n  - **Người – hệ thống**: phần mềm **kiểm tra tính hợp lệ (validate)**, vd XmlTextReader, hay kiểm tra đơn hàng trong thương mại điện tử.\n\n## 5. Thực thể (entity) [tr. 47](#p47)–[tr. 59](#p59)\n- Khai báo trong `<!DOCTYPE Goc [ <!ENTITY Ten \"gia tri\"> ]>` và dùng bằng `&Ten;`.\n- Có 4 dạng:\n  1. Chuỗi bên trong tài liệu: `<!ENTITY copyright-notice \"Copyright © 2006…\">`.\n  2. **Ký tự đặc biệt định sẵn**: `&lt;` `&gt;` `&quot;` `&apos;` `&amp;`, vd `AT&amp;T`. Có thể dùng mã số: thập phân `&#97;` = 'a', thập lục phân `&#x30;` = '0'.\n     - Slide ghi `&#x41;` là 'a'. *Bổ sung*: 0x41 = 65 = **'A'** hoa. 'a' là `&#x61;`.\n  3. Giá trị bên ngoài (ảnh, âm thanh): `<!ENTITY Hinh SYSTEM \"Hinh.jpg\">`.\n  4. Tài liệu XML khác: chia nhỏ tài liệu, vd 12 file phiếu thu theo tháng gộp vào `Thu_tien.xml`. Slide gõ nhầm `SYSEM`, `DOC_TYPE`.\n\n## 6. Tên có tiền tố và Namespace [tr. 60](#p60)–[tr. 69](#p69)\n- Có 2 loại tên: tên không tiền tố (chữ, số, `-`, `_`, `.`) và **tên có tiền tố** `tien_to:ten`, vd `A:MAT_HANG`, `B:MAT_HANG`.\n- Vấn đề: hai tài liệu cùng dùng `<table>` (cái bàn và bảng dữ liệu). Khi gộp dữ liệu sẽ **xung đột tên**.\n- **Namespace** là tập hợp tên gắn với element/attribute để giải quyết xung đột khi tổng hợp từ nhiều nguồn.\n  - Khai báo: `<prefix:element xmlns:prefix=\"URI\">`.\n  - URI là chuỗi định danh duy nhất trên Internet.\n  - Có thể khai báo ngay tại element hoặc gom lên root.\n\n## 7. DTD chi tiết [tr. 71](#p71)–[tr. 104](#p104)\n- 3 cách khai báo:\n  - Nội bộ: `<!DOCTYPE Goc [ … ]>`.\n  - Tập tin ngoài: `<!DOCTYPE Goc SYSTEM \"file.dtd\">`.\n  - Chuẩn công khai: `<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01…\">`.\n- `<!ELEMENT Ten Bieu_thuc>` với các ký hiệu:\n  - `A, B`: tuần tự.\n  - `A*`: ≥ 0 lần. `A+`: ≥ 1 lần. `A?`: 0 hoặc 1 lần.\n  - `A|B`: chọn A hoặc B.\n- Từ khoá:\n  - `ANY`: nội dung bất kỳ.\n  - `EMPTY`: thẻ rỗng, chỉ có thuộc tính.\n  - `(#PCDATA)`: chuỗi văn bản, không chứa thẻ con.\n- Ví dụ:\n  - `<!ELEMENT DA_GIAC (DIEM,DIEM,DIEM+)>`: ít nhất 3 điểm.\n  - `<!ELEMENT X ((A,B)|(C,D))>`.\n  - `<!ELEMENT LOP (HOC_SINH*)>`.\n- **Thuộc tính**: `<!ATTLIST Ten_the Ten_tt Kieu Tham_so …>`.\n  - Kiểu: `CDATA` (chuỗi) hoặc **liệt kê** `(Giỏi|Khá|…)`.\n  - Tham số:\n    - `#REQUIRED`: bắt buộc, dùng phổ biến nhất.\n    - `#IMPLIED`: tuỳ chọn.\n    - `#FIXED \"gia_tri\"`: giá trị cố định.\n  - Nhiều ví dụ trên slide viết thiếu `!` (`<ATTLIST`). *Bổ sung*: cú pháp đúng là `<!ATTLIST`. Giá trị liệt kê đúng chuẩn ngăn cách bằng `|`.\n\n## 8. XML Schema [tr. 105](#p105)–[tr. 139](#p139)\n- Schema là **một tài liệu XML** mô tả cấu trúc của tài liệu XML khác. Root là `<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">`.\n- Mỗi thẻ có một **kiểu**. Có 3 loại kiểu:\n  1. **Built-in** (`xs:string`, `xs:int`, `xs:float`, `xs:date`, `xs:boolean`…): cho thẻ không có thuộc tính và không chứa thẻ con.\n  2. **simpleType**: kiểu do người dùng định nghĩa bằng cách giới hạn kiểu cơ sở qua `xs:restriction`.\n     - Cận: `minInclusive`/`minExclusive`, `maxInclusive`/`maxExclusive`. Vd KY_SO 0–9, DIEM_SO 0–10.\n     - Liệt kê: `xs:enumeration`, vd LOAI_HOC_LUC.\n  3. **complexType**: cho thẻ **có thuộc tính hoặc có thẻ con**.\n     - Cấu trúc nội dung: `xs:sequence` (tuần tự), `xs:choice` (chọn).\n     - Số lần lặp: `minOccurs`/`maxOccurs`, vd DA_GIAC có DIEM min = max = 3.\n     - Thuộc tính: `xs:attribute name type` kèm `default`, `fixed`, `use`.\n- Thuật giải đặc tả: xét kiểu của thẻ gốc (phức hợp, đơn giản hay cơ sở) rồi đệ quy xuống kiểu của các thẻ con và thuộc tính.\n- Bài tập 3 trên slide [tr. 146](#p146) có nhiều lỗi nên tự kiểm tra:\n  - Gõ nhầm `xs:sequense`.\n  - Khai báo `KieuSinhVien` nhưng dùng `KSinhVien`.\n  - `KBangDiem` thiếu `xs:sequence` và `maxOccurs=\"unbounded\"`.\n  - `xs:restriction` đóng sớm nên `xs:pattern` và các cận nằm ngoài restriction.",
+  "keyConcepts": [
+    {
+      "term": "XML",
+      "definition": "eXtensible Markup Language – ngôn ngữ đánh dấu cho phép tự tạo thẻ, dữ liệu tự mô tả; tập con của SGML; do W3C đề xuất.",
+      "pages": [
+        4,
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "HTML vs XML",
+      "definition": "HTML trình bày/hiển thị dữ liệu; XML lưu trữ, truyền tải và mô tả nội dung dữ liệu.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Ưu điểm XML",
+      "definition": "Dữ liệu độc lập (text), dễ đọc/phân tích, dễ tạo, dùng cho cấu hình và RPC/web service.",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "XML Parser",
+      "definition": "Phần mềm đọc, phân tích tài liệu XML dựa trên cú pháp chung.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "RSS",
+      "definition": "Ứng dụng XML để cung cấp tin tự động cho hệ thống khác.",
+      "pages": [
+        12,
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Thẻ có nội dung / thẻ rỗng",
+      "definition": "<Ten>…</Ten> và <Ten/>; thuộc tính dạng ten=\"gia_tri\".",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Lồng nhau hoàn toàn",
+      "definition": "Thẻ cha phải chứa cả thẻ mở và thẻ đóng của thẻ con.",
+      "pages": [
+        19,
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Root element",
+      "definition": "Thẻ gốc duy nhất chứa mọi thẻ khác trong tài liệu XML.",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Well-formed document",
+      "definition": "Tài liệu đúng cú pháp: 1 root, đủ thẻ đóng, phân biệt hoa thường, đóng đúng thứ tự, thuộc tính trong nháy.",
+      "pages": [
+        22,
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Valid document (DTD/Schema-constrained)",
+      "definition": "Tài liệu có DTD hoặc Schema để kiểm tra hợp lệ cấu trúc.",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Khai báo tham số <?xml ?>",
+      "definition": "Tham số version, encoding, standalone (yes/no, mặc định no).",
+      "pages": [
+        26,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Processing instruction",
+      "definition": "<?Bo_xu_ly Du_lieu?> – thông tin cho công cụ xử lý, vd <?xml-stylesheet …?>.",
+      "pages": [
+        30,
+        31
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Comment XML",
+      "definition": "<!-- … --> (slide ghi <-- … -->); không dùng -- bên trong, không đặt trong thẻ hay trước <?xml?>.",
+      "pages": [
+        32
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "term": "CDATA",
+      "definition": "<![CDATA[ … ]]> – parser không phân tích nội dung, cho phép dùng < > trực tiếp; không chứa ]]>.",
+      "pages": [
+        33,
+        36
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "PCDATA",
+      "definition": "Parsed Character Data – văn bản được parser phân tích, không chứa < & trực tiếp.",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "DTD",
+      "definition": "Document Type Definition – đặc tả cấu trúc, ra đời sớm, đơn giản, chỉ có kiểu dữ liệu đơn giản.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "XML Schema",
+      "definition": "Ngôn ngữ đặc tả do W3C đề xuất, viết bằng XML, đặc tả chi tiết kiểu dữ liệu; khó hơn DTD.",
+      "pages": [
+        38,
+        105
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Entity (thực thể)",
+      "definition": "Tên gợi nhớ tham chiếu giá trị chuẩn bị trước, khai báo <!ENTITY …> và dùng &Ten;.",
+      "pages": [
+        47,
+        50
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Entity định sẵn",
+      "definition": "&lt; &gt; &quot; &apos; &amp;; ký tự theo mã &#thập_phân; hoặc &#xhex;.",
+      "pages": [
+        52,
+        54
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "External entity",
+      "definition": "<!ENTITY Ten SYSTEM \"file\"> tham chiếu tập tin ngoài (ảnh, XML khác).",
+      "pages": [
+        56,
+        58
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Namespace",
+      "definition": "Tập hợp tên gắn với element/attribute qua prefix và xmlns:prefix=\"URI\" để tránh xung đột tên.",
+      "pages": [
+        65,
+        67
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "DOCTYPE nội bộ / SYSTEM / PUBLIC",
+      "definition": "DTD trong tài liệu; trong tập tin ngoài; DTD chuẩn công khai.",
+      "pages": [
+        71,
+        72,
+        73
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Toán tử DTD , * + ? |",
+      "definition": "Tuần tự; ≥0 lần; ≥1 lần; 0 hoặc 1 lần; chọn một.",
+      "pages": [
+        74
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "ANY / EMPTY / #PCDATA",
+      "definition": "Nội dung bất kỳ; thẻ rỗng (chỉ thuộc tính); chuỗi văn bản không chứa thẻ con.",
+      "pages": [
+        75,
+        76
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "ATTLIST",
+      "definition": "<!ATTLIST Thẻ TênTT Kiểu ThamSố> – khai báo thuộc tính.",
+      "pages": [
+        87
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "#REQUIRED / #IMPLIED / #FIXED",
+      "definition": "Thuộc tính bắt buộc; tuỳ chọn; giá trị cố định.",
+      "pages": [
+        97,
+        99,
+        102
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Built-in type",
+      "definition": "Kiểu có sẵn của Schema (xs:string, xs:int, xs:date…) cho thẻ không thuộc tính, không thẻ con.",
+      "pages": [
+        113,
+        114
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "simpleType",
+      "definition": "Kiểu do người dùng giới hạn từ kiểu cơ sở bằng restriction (cận min/max, enumeration).",
+      "pages": [
+        115,
+        116,
+        119
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "minInclusive vs minExclusive",
+      "definition": "Inclusive cho phép giá trị biên; exclusive không cho phép.",
+      "pages": [
+        117
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "complexType",
+      "definition": "Kiểu cho thẻ có thuộc tính hoặc chứa thẻ con; dùng sequence/choice, minOccurs/maxOccurs, attribute.",
+      "pages": [
+        121,
+        124,
+        126,
+        128
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Tài liệu XML well-formed",
+      "language": "xml",
+      "code": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<DUONG_TRON Ban_kinh=\"5\">\n  <DIEM x=\"4\" y=\"2\"/>\n</DUONG_TRON>",
+      "explanation": "Dòng khai báo tham số, một root element, thẻ rỗng DIEM có thuộc tính, mọi giá trị thuộc tính trong dấu nháy.",
+      "parts": [
+        {
+          "lines": "1",
+          "note": "Khai báo phiên bản và encoding."
+        },
+        {
+          "lines": "2",
+          "note": "Root element có thuộc tính Ban_kinh."
+        },
+        {
+          "lines": "3",
+          "note": "Thẻ rỗng tự đóng />."
+        }
+      ],
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "CDATA so với nội dung được phân tích",
+      "language": "xml",
+      "code": "<employee>\n<![CDATA[\n  <firstname>vimal</firstname>\n  <lastname>jaiswal</lastname>\n]]>\n</employee>\n\n<employee>\n  <firstname>vimal</firstname>\n  <lastname>jaiswal</lastname>\n</employee>",
+      "explanation": "Trong CDATA các \"thẻ\" chỉ là chuỗi ký tự, parser không tạo element; ở tài liệu thứ hai chúng là element thật.",
+      "parts": [
+        {
+          "lines": "2-5",
+          "note": "Khối CDATA: parser bỏ qua, coi là text."
+        },
+        {
+          "lines": "8-11",
+          "note": "PCDATA thông thường: firstname, lastname là element con."
+        }
+      ],
+      "pages": [
+        33,
+        35
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Entity nội bộ",
+      "language": "xml",
+      "code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE example [\n  <!ENTITY copy \"©\">\n  <!ENTITY copyright-notice \"Copyright © 2006, XYZ Enterprises\">\n]>\n<root>\n  &copyright-notice;\n  <company>AT&amp;T</company>\n</root>",
+      "explanation": "Entity khai báo trong DOCTYPE, tham chiếu bằng &tên;. Ký tự & trong nội dung phải viết &amp;.",
+      "parts": [
+        {
+          "lines": "2-5",
+          "note": "Khai báo entity trong DTD nội bộ."
+        },
+        {
+          "lines": "7",
+          "note": "Được thay bằng chuỗi Copyright © 2006, XYZ Enterprises."
+        },
+        {
+          "lines": "8",
+          "note": "Entity định sẵn &amp; cho dấu &."
+        }
+      ],
+      "pages": [
+        48,
+        53
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Namespace tránh xung đột tên",
+      "language": "xml",
+      "code": "<root xmlns:p=\"http://www.w3.org/TR/html4/\"\n      xmlns:s=\"https://www.w3schools.com/furniture\">\n  <p:table>\n    <p:tr><p:td>Apples</p:td><p:td>Bananas</p:td></p:tr>\n  </p:table>\n  <s:table>\n    <s:name>African Coffee Table</s:name>\n    <s:width>80</s:width>\n    <s:length>120</s:length>\n  </s:table>\n</root>",
+      "explanation": "Hai thẻ cùng tên table nhưng thuộc hai namespace khác nhau (bảng HTML và đồ nội thất) nên không xung đột.",
+      "parts": [
+        {
+          "lines": "1-2",
+          "note": "Khai báo hai prefix p và s với URI riêng ngay tại root."
+        },
+        {
+          "lines": "3-5",
+          "note": "table của HTML."
+        },
+        {
+          "lines": "6-10",
+          "note": "table là đồ nội thất."
+        }
+      ],
+      "pages": [
+        68,
+        69
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "DTD có element và attribute (đã chuẩn hoá cú pháp)",
+      "language": "xml",
+      "code": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE PHIEU_DIEM [\n  <!ELEMENT PHIEU_DIEM (HOC_SINH, DIEM_SO+)>\n  <!ELEMENT HOC_SINH EMPTY>\n  <!ATTLIST HOC_SINH\n      Ho_ten    CDATA #REQUIRED\n      Ngay_sinh CDATA #REQUIRED\n      Xep_loai  (Gioi|Kha|TrungBinh|Yeu) #IMPLIED>\n  <!ELEMENT DIEM_SO EMPTY>\n  <!ATTLIST DIEM_SO\n      Ten_mon CDATA #REQUIRED\n      Gia_tri CDATA #REQUIRED>\n]>",
+      "explanation": "PHIEU_DIEM gồm 1 HOC_SINH rồi ≥1 DIEM_SO; các thẻ đều rỗng, thông tin nằm trong thuộc tính. Slide viết <ATTLIST (thiếu !) và ATTLIST DIEM thay vì DIEM_SO – bản này đã sửa.",
+      "parts": [
+        {
+          "lines": "3",
+          "note": "Tuần tự HOC_SINH rồi DIEM_SO lặp ≥ 1 lần."
+        },
+        {
+          "lines": "4",
+          "note": "EMPTY: chỉ có thuộc tính."
+        },
+        {
+          "lines": "5-8",
+          "note": "CDATA + #REQUIRED; kiểu liệt kê + #IMPLIED (tuỳ chọn)."
+        },
+        {
+          "lines": "9-12",
+          "note": "Thuộc tính của DIEM_SO."
+        }
+      ],
+      "pages": [
+        95,
+        96
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "XML Schema: simpleType và complexType",
+      "language": "xml",
+      "code": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">\n  <xs:element name=\"DA_THUC\" type=\"K_DA_THUC\"/>\n  <xs:complexType name=\"K_DA_THUC\">\n    <xs:sequence>\n      <xs:element name=\"DON_THUC\" type=\"K_DON_THUC\" minOccurs=\"1\" maxOccurs=\"unbounded\"/>\n    </xs:sequence>\n    <xs:attribute name=\"Ten\" type=\"xs:string\"/>\n    <xs:attribute name=\"Bien_so\" type=\"xs:string\"/>\n  </xs:complexType>\n  <xs:complexType name=\"K_DON_THUC\">\n    <xs:attribute name=\"He_so\" type=\"xs:float\"/>\n    <xs:attribute name=\"So_mu\" type=\"SO_TU_NHIEN\"/>\n  </xs:complexType>\n  <xs:simpleType name=\"SO_TU_NHIEN\">\n    <xs:restriction base=\"xs:int\">\n      <xs:minInclusive value=\"0\"/>\n    </xs:restriction>\n  </xs:simpleType>\n</xs:schema>",
+      "explanation": "Đa thức gồm ≥1 đơn thức; đơn thức chỉ có thuộc tính He_so (float) và So_mu (số tự nhiên ≥ 0).",
+      "parts": [
+        {
+          "lines": "3",
+          "note": "Khai báo root DA_THUC với kiểu phức hợp."
+        },
+        {
+          "lines": "5-7",
+          "note": "sequence + minOccurs: DON_THUC xuất hiện ít nhất 1 lần (maxOccurs=unbounded bổ sung cho rõ)."
+        },
+        {
+          "lines": "8-9",
+          "note": "Thuộc tính kiểu built-in xs:string."
+        },
+        {
+          "lines": "11-14",
+          "note": "complexType chỉ có thuộc tính."
+        },
+        {
+          "lines": "15-19",
+          "note": "simpleType giới hạn xs:int với cận dưới 0 (có biên)."
+        }
+      ],
+      "pages": [
+        107,
+        109,
+        110
+      ],
+      "source": "slide"
+    }
+  ],
+  "figures": [
+    {
+      "page": 6,
+      "caption": "So sánh HTML và XML"
+    },
+    {
+      "page": 20,
+      "caption": "Lồng nhau hoàn toàn và không hoàn toàn"
+    },
+    {
+      "page": 35,
+      "caption": "Hiển thị CDATA và PCDATA"
+    },
+    {
+      "page": 74,
+      "caption": "Ký hiệu biểu thức trong DTD"
+    },
+    {
+      "page": 112,
+      "caption": "Các kiểu định nghĩa sẵn của XML Schema"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "XML là viết tắt của gì?",
+      "back": "eXtensible Markup Language.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "XML và HTML cùng dựa trên chuẩn nào?",
+      "back": "SGML.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "Khác biệt mục đích HTML và XML?",
+      "back": "HTML hiển thị dữ liệu; XML mô tả, lưu trữ và truyền tải dữ liệu.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "Thẻ XML có được định nghĩa trước không?",
+      "back": "Không – người tạo tự quy ước; mô tả bằng DTD hoặc Schema.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "Kể 3 ứng dụng của XML.",
+      "back": "File cấu hình (web.config, web.xml); RSS; trao đổi dữ liệu/web service.",
+      "pages": [
+        8,
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Tài liệu XML có thể có mấy root element?",
+      "back": "Đúng một.",
+      "pages": [
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "`<A><B></A></B>` có hợp lệ không?",
+      "back": "Không – thẻ phải lồng nhau hoàn toàn.",
+      "pages": [
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Tên thẻ XML có phân biệt hoa thường không?",
+      "back": "Có.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "3 kiểu tài liệu XML?",
+      "back": "Well-formed; DTD-constrained; XML Schema-constrained.",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "3 tham số trong <?xml ?>?",
+      "back": "version, encoding, standalone.",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Giá trị mặc định của standalone?",
+      "back": "\"no\".",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "Gắn CSS cho tài liệu XML?",
+      "back": "`<?xml-stylesheet type=\"text/css\" href=\"Dinh_dang.css\"?>`",
+      "pages": [
+        31
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "CDATA khác PCDATA?",
+      "back": "CDATA không được parser phân tích; PCDATA được phân tích.",
+      "pages": [
+        33,
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "Chuỗi nào không được xuất hiện trong CDATA?",
+      "back": "`]]>`",
+      "pages": [
+        36
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "DTD vs XML Schema?",
+      "back": "DTD sớm, đơn giản, kiểu dữ liệu đơn giản; Schema của W3C, viết bằng XML, kiểu dữ liệu chi tiết, khó hơn.",
+      "pages": [
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Ý nghĩa A*, A+, A? trong DTD?",
+      "back": "≥0 lần; ≥1 lần; 0 hoặc 1 lần.",
+      "pages": [
+        74
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "EMPTY trong DTD nghĩa là gì?",
+      "back": "Thẻ không có nội dung, chỉ có thuộc tính.",
+      "pages": [
+        75
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Đặc tả đa giác có ít nhất 3 điểm bằng DTD?",
+      "back": "`<!ELEMENT DA_GIAC (DIEM,DIEM,DIEM+)>`",
+      "pages": [
+        86
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "#REQUIRED, #IMPLIED, #FIXED?",
+      "back": "Bắt buộc; tuỳ chọn; giá trị cố định.",
+      "pages": [
+        97,
+        99,
+        102
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "Khai báo DTD ở tập tin ngoài?",
+      "back": "`<!DOCTYPE Goc SYSTEM \"file.dtd\">`",
+      "pages": [
+        72
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "5 entity định sẵn của XML?",
+      "back": "&lt; &gt; &quot; &apos; &amp;",
+      "pages": [
+        52
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "&#97; và &#x30; là ký tự gì?",
+      "back": "'a' và '0'.",
+      "pages": [
+        54
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "Namespace dùng để làm gì?",
+      "back": "Tránh xung đột tên element/attribute khi gộp XML từ nhiều nguồn.",
+      "pages": [
+        65
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "Cú pháp khai báo namespace?",
+      "back": "`<prefix:el xmlns:prefix=\"URI\">`",
+      "pages": [
+        67
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-25",
+      "front": "3 loại kiểu trong XML Schema?",
+      "back": "Built-in, simpleType, complexType.",
+      "pages": [
+        111
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-26",
+      "front": "Khi nào bắt buộc dùng complexType?",
+      "back": "Khi thẻ có thuộc tính hoặc chứa thẻ con.",
+      "pages": [
+        121,
+        135
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-27",
+      "front": "minInclusive khác minExclusive?",
+      "back": "Inclusive cho phép bằng biên; exclusive không cho phép.",
+      "pages": [
+        117
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-28",
+      "front": "Khai báo giá trị liệt kê trong Schema?",
+      "back": "`<xs:restriction base=\"xs:string\"><xs:enumeration value=\"Giỏi\"/>…`",
+      "pages": [
+        119,
+        120
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-29",
+      "front": "Đặc tả số lần lặp trong Schema?",
+      "back": "Thuộc tính minOccurs, maxOccurs của xs:element.",
+      "pages": [
+        128
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "Mục đích chính của XML là gì?",
+      "options": [
+        "Trình bày giao diện trang web",
+        "Thay thế CSS",
+        "Mô tả, lưu trữ và trao đổi dữ liệu giữa các hệ thống",
+        "Viết script phía client"
+      ],
+      "answer": 2,
+      "explanation": "XML designed for storing and transporting data; HTML for presentation.",
+      "pages": [
+        5,
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "vận dụng",
+      "question": "Tài liệu nào well-formed?",
+      "options": [
+        "<a><b></a></b>",
+        "<a x=1></a>",
+        "<root><A></a></root>",
+        "<root><item id=\"1\"/><item id=\"2\"/></root>"
+      ],
+      "answer": 3,
+      "explanation": "Đáp án đúng có 1 root, thẻ rỗng đóng đúng, thuộc tính trong nháy; các đáp án khác vi phạm lồng nhau, thiếu nháy, sai hoa thường.",
+      "pages": [
+        20,
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "hiểu",
+      "question": "Vì sao tài liệu sau không well-formed?",
+      "code": {
+        "language": "xml",
+        "code": "<?xml version=\"1.0\"?>\n<Title>A</Title>\n<Author>B</Author>"
+      },
+      "options": [
+        "Thiếu encoding",
+        "Có hai element cấp cao nhất, không có root duy nhất",
+        "Thẻ phải viết thường",
+        "Thiếu DTD"
+      ],
+      "answer": 1,
+      "explanation": "Một tài liệu XML phải có duy nhất một root element.",
+      "pages": [
+        21,
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "hiểu",
+      "question": "Tham số standalone=\"no\" có nghĩa gì (theo slide)?",
+      "options": [
+        "Tài liệu không có encoding",
+        "Giá trị mặc định – tài liệu có thể liên kết với tài liệu khác (vd DTD ngoài)",
+        "Tài liệu không hợp lệ",
+        "Tài liệu chỉ có một thẻ"
+      ],
+      "answer": 1,
+      "explanation": "standalone chỉ nhận yes/no, mặc định no; mô tả liên kết của tài liệu với tài liệu khác.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "vận dụng",
+      "question": "Muốn đặt đoạn `if (a < b && c > d)` vào XML mà không phải escape, dùng?",
+      "options": [
+        "<!-- if (a < b && c > d) -->",
+        "<![CDATA[ if (a < b && c > d) ]]>",
+        "<?code if (a < b && c > d) ?>",
+        "<PCDATA>if (a < b && c > d)</PCDATA>"
+      ],
+      "answer": 1,
+      "explanation": "CDATA yêu cầu parser không phân tích nội dung, cho phép dùng < > & trực tiếp.",
+      "pages": [
+        33
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "hiểu",
+      "question": "Điểm khác giữa CDATA và comment?",
+      "options": [
+        "Comment là một phần dữ liệu của tài liệu, CDATA thì không",
+        "CDATA vẫn là một phần tài liệu, comment thì không",
+        "Cả hai đều bị parser loại bỏ",
+        "CDATA chỉ chứa số"
+      ],
+      "answer": 1,
+      "explanation": "CDATA is still a part of the document while a comment is not.",
+      "pages": [
+        36
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "nhớ",
+      "question": "Trong DTD, `B+` nghĩa là?",
+      "options": [
+        "B xuất hiện 0 hoặc 1 lần",
+        "B xuất hiện ít nhất 0 lần",
+        "B xuất hiện ít nhất 1 lần",
+        "Chọn B hoặc phần tử khác"
+      ],
+      "answer": 2,
+      "explanation": "+: ≥1 lần; *: ≥0; ?: 0 hoặc 1; |: chọn.",
+      "pages": [
+        74
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "vận dụng",
+      "question": "Với `<!ELEMENT X (A,B*,C?,D)>`, chuỗi con nào hợp lệ?",
+      "options": [
+        "A, D",
+        "B, A, D",
+        "A, C, C, D",
+        "A, B, B, C"
+      ],
+      "answer": 0,
+      "explanation": "A bắt buộc đầu, B lặp ≥0, C 0–1 lần, D bắt buộc cuối. \"A, D\" thoả; các đáp án khác sai thứ tự, C lặp 2 lần hoặc thiếu D.",
+      "pages": [
+        83,
+        84
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "vận dụng",
+      "question": "DTD nào mô tả: lớp gồm nhiều học sinh hoặc không có học sinh nào?",
+      "options": [
+        "<!ELEMENT LOP (HOC_SINH+)>",
+        "<!ELEMENT LOP (HOC_SINH?)>",
+        "<!ELEMENT LOP (HOC_SINH*)>",
+        "<!ELEMENT LOP EMPTY>"
+      ],
+      "answer": 2,
+      "explanation": "* cho phép 0 hoặc nhiều lần.",
+      "pages": [
+        82
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "hiểu",
+      "question": "Thuộc tính khai báo `#IMPLIED` có nghĩa gì?",
+      "options": [
+        "Bắt buộc phải có",
+        "Có giá trị cố định",
+        "Tuỳ chọn, không bắt buộc",
+        "Chỉ chứa số"
+      ],
+      "answer": 2,
+      "explanation": "#IMPLIED: thuộc tính tuỳ chọn.",
+      "pages": [
+        99
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-11",
+      "level": "vận dụng",
+      "question": "Slide viết `&#x41;` là \"ký tự a\". Thực tế `&#x41;` là ký tự gì?",
+      "options": [
+        "a",
+        "A",
+        "0",
+        "@"
+      ],
+      "answer": 1,
+      "explanation": "0x41 = 65 = 'A' (chữ hoa); 'a' là &#97; hay &#x61;.",
+      "pages": [
+        54
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-12",
+      "level": "vận dụng",
+      "question": "Viết tên công ty AT&T trong nội dung XML đúng cách?",
+      "options": [
+        "<cty>AT&T</cty>",
+        "<cty>AT&amp;T</cty>",
+        "<cty>AT&&T</cty>",
+        "<cty>AT\\&T</cty>"
+      ],
+      "answer": 1,
+      "explanation": "Ký tự & phải dùng entity định sẵn &amp;.",
+      "pages": [
+        53
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "hiểu",
+      "question": "Namespace giải quyết vấn đề gì?",
+      "options": [
+        "Tăng tốc parser",
+        "Mã hoá dữ liệu XML",
+        "Xung đột tên element/attribute khi gộp XML từ nhiều nguồn",
+        "Thay thế DTD"
+      ],
+      "answer": 2,
+      "explanation": "Hai tài liệu cùng có <table> với ý nghĩa khác nhau – prefix + URI phân biệt.",
+      "pages": [
+        63,
+        65
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "vận dụng",
+      "question": "Lỗi trong ghi chú XML sau (theo cú pháp chuẩn)?",
+      "code": {
+        "language": "xml",
+        "code": "<- This is about movies! ->"
+      },
+      "options": [
+        "Ghi chú phải dùng <!-- … -->",
+        "Không có lỗi",
+        "Ghi chú phải đặt trong CDATA",
+        "Không được có dấu !"
+      ],
+      "answer": 0,
+      "explanation": "Cú pháp comment chuẩn: <!-- nội dung -->. Đây là một lỗi cần sửa trong Bài tập 2.",
+      "pages": [
+        143,
+        32
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-15",
+      "level": "nhớ",
+      "question": "Trong XML Schema, kiểu nào dùng cho thẻ có thuộc tính?",
+      "options": [
+        "Built-in type",
+        "simpleType",
+        "complexType",
+        "Không dùng kiểu"
+      ],
+      "answer": 2,
+      "explanation": "Với các thẻ có thuộc tính, nhất thiết phải sử dụng kiểu phức hợp.",
+      "pages": [
+        121,
+        135
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-16",
+      "level": "vận dụng",
+      "question": "simpleType sau chấp nhận giá trị nào?",
+      "code": {
+        "language": "xml",
+        "code": "<xs:simpleType name=\"T\">\n  <xs:restriction base=\"xs:int\">\n    <xs:minExclusive value=\"0\"/>\n    <xs:maxInclusive value=\"9\"/>\n  </xs:restriction>\n</xs:simpleType>"
+      },
+      "options": [
+        "0 đến 9",
+        "1 đến 9",
+        "0 đến 8",
+        "1 đến 10"
+      ],
+      "answer": 1,
+      "explanation": "minExclusive 0 loại giá trị 0; maxInclusive 9 cho phép 9.",
+      "pages": [
+        117
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-17",
+      "level": "vận dụng",
+      "question": "Muốn DA_GIAC chứa đúng 3 DIEM trong XML Schema, khai báo?",
+      "options": [
+        "<xs:element name=\"DIEM\" type=\"DIEM\" minOccurs=\"3\" maxOccurs=\"3\"/>",
+        "<xs:element name=\"DIEM\" count=\"3\"/>",
+        "<xs:choice min=\"3\">",
+        "<!ELEMENT DA_GIAC (DIEM,DIEM,DIEM)>"
+      ],
+      "answer": 0,
+      "explanation": "minOccurs/maxOccurs đặc tả số lần lặp; đáp án cuối là cú pháp DTD, không phải Schema.",
+      "pages": [
+        130
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-18",
+      "level": "vận dụng",
+      "question": "Trong schema Bài tập 3 trên slide, lỗi nào khiến schema không hợp lệ?",
+      "code": {
+        "language": "xml",
+        "code": "<xs:element name=\"SinhVien\" type=\"KSinhVien\"/>\n...\n<xs:complexType name=\"KieuSinhVien\">\n  <xs:sequense> ... </xs:sequense>\n</xs:complexType>"
+      },
+      "options": [
+        "Kiểu tham chiếu KSinhVien không tồn tại (đặt tên KieuSinhVien) và xs:sequense sai chính tả",
+        "Không được dùng xs:string",
+        "complexType phải có attribute",
+        "Tên kiểu phải trùng tên thẻ"
+      ],
+      "answer": 0,
+      "explanation": "Tên kiểu phải khớp; phần tử đúng là xs:sequence.",
+      "pages": [
+        146
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "So sánh XML và HTML. Trình bày các quy tắc để một tài liệu XML là well-formed, cho ví dụ đúng và sai.",
+      "hints": "- HTML hiển thị, XML mô tả/lưu trữ/trao đổi [tr. 6](#p6).\n- Quy tắc: 1 root, thẻ đóng, phân biệt hoa thường, lồng nhau hoàn toàn, thuộc tính trong nháy, không trùng tên [tr. 19](#p19)–[tr. 23](#p23).\n- Ví dụ <A><B></A></B> sai [tr. 20](#p20).",
+      "pages": [
+        6,
+        20,
+        21,
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Trình bày các thành phần nội dung phụ của tài liệu XML: thẻ khai báo tham số, chỉ thị xử lý, ghi chú, CDATA. Phân biệt CDATA và PCDATA.",
+      "hints": "- <?xml version encoding standalone?> [tr. 26](#p26)–[tr. 29](#p29).\n- <?xml-stylesheet …?> [tr. 30](#p30)–[tr. 31](#p31).\n- Ghi chú <!-- --> và lưu ý [tr. 32](#p32).\n- CDATA không phân tích, PCDATA được phân tích; ví dụ employee [tr. 33](#p33)–[tr. 36](#p36).",
+      "pages": [
+        26,
+        29,
+        31,
+        32,
+        33,
+        34,
+        36
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "Viết DTD cho tài liệu XML lưu danh mục sách: mỗi Sach có thuộc tính id bắt buộc, gồm Tac_gia (1 hoặc nhiều), Ten_sach, Gia, NXB, Xuat_ban (tuỳ chọn).",
+      "hints": "- `<!ELEMENT Danh_muc_sach (Sach*)>` [tr. 82](#p82).\n- `<!ELEMENT Sach (Tac_gia+, Ten_sach, Gia, NXB, Xuat_ban?)>` [tr. 74](#p74).\n- `<!ELEMENT Tac_gia (#PCDATA)>` … [tr. 76](#p76).\n- `<!ATTLIST Sach id CDATA #REQUIRED>` [tr. 97](#p97); có thể dùng kiểu ID.\n- Tham khảo bài tập [tr. 142](#p142).",
+      "pages": [
+        74,
+        76,
+        82,
+        97,
+        142
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "So sánh DTD và XML Schema. Viết XML Schema cho phân số có Tu_so là số nguyên bất kỳ và Mau_so là số nguyên dương.",
+      "hints": "- Đặc điểm DTD vs Schema [tr. 38](#p38).\n- Ví dụ PHAN_SO DTD [tr. 40](#p40) và Schema [tr. 41](#p41).\n- complexType PHAN_SO với sequence Tu_so (xs:int), Mau_so (simpleType restriction xs:int minExclusive 0) [tr. 116](#p116)–[tr. 117](#p117), [tr. 124](#p124).",
+      "pages": [
+        38,
+        40,
+        41,
+        117,
+        124
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-05",
+      "question": "Namespace trong XML là gì? Tại sao cần? Cho ví dụ hai thẻ table thuộc hai namespace khác nhau và giải thích cú pháp xmlns.",
+      "hints": "- Xung đột tên table cái bàn vs bảng dữ liệu [tr. 63](#p63)–[tr. 64](#p64).\n- Định nghĩa, lợi ích [tr. 65](#p65).\n- `<prefix:el xmlns:prefix=\"URI\">`, URI duy nhất [tr. 67](#p67); khai báo tại element hoặc root [tr. 68](#p68)–[tr. 69](#p69).",
+      "pages": [
+        63,
+        65,
+        67,
+        68,
+        69
+      ],
+      "source": "slide"
+    }
+  ]
+}

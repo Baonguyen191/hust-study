@@ -1,0 +1,946 @@
+{
+  "version": 1,
+  "subject": "CNWeb",
+  "lesson": "lec-3-css",
+  "title": "Bài 3 – CSS",
+  "summary": "## Phần 1 – Basic CSS\n\n### 1. Content vs. Presentation [tr. 4](#p4)–[tr. 5](#p5)\n- Tag HTML chủ yếu mô tả **kiểu nội dung**. **Style sheet** gắn định dạng hiển thị vào element.\n- Phiên bản: CSS1 (W3C, 1996), CSS2 (1998), CSS3 (tương thích ngược với CSS2).\n- Xu hướng **tách nội dung khỏi trình bày**, giúp dễ bảo trì và có giao diện thống nhất cho nhiều trang.\n- **Cascading**: style định nghĩa ở 3 cấp. *Cấp thấp hơn ghi đè cấp cao hơn*.\n  1. **Inline**: một element.\n  2. **Document**: cả trang.\n  3. **External**: file dùng chung cho nhiều trang.\n- **User-defined style sheet** của người dùng có thể ghi đè style của designer, vd phóng to chữ cho người khiếm thị.\n\n### 2. Inline style [tr. 6](#p6)–[tr. 8](#p8)\n- Thuộc tính `style` chứa các cặp `property:value` ngăn cách bằng `;`.\n- Nhóm property thường gặp:\n  - Font và màu: `font-family`, `font-style`, `font-weight`, `font-size`, `color` (tên màu hoặc mã `#000080`), `background-color`.\n  - Văn bản: `text-decoration`, `text-align`, `vertical-align`, `text-indent`.\n  - Hộp: `margin`, `padding`, `border-width`, `border-color`, `border-style` (dashed, dotted, double, none).\n  - List: `list-style-type` (square, decimal, lower-alpha, upper-roman).\n- Có thể áp cho table, caption, tr để tạo hiệu ứng [tr. 8](#p8).\n\n### 3. Document style sheet [tr. 9](#p9)–[tr. 11](#p11)\n- Inline style dễ gây thiếu nhất quán và trộn content với presentation, nên **dùng càng ít càng tốt**.\n- Document style sheet đặt trong `<style>` ở `<head>` và áp cho mọi element cùng loại.\n- **Subclass**: `p.indented {…}` kế thừa mặc định của `<p>` và thêm thuộc tính mới. Dùng bằng `class=\"indented\"`. Nhờ vậy `<body>` \"sạch\" hơn.\n- Rất tiện để định dạng bảng: chỉ cần sửa một chỗ.\n\n### 4. Pseudo-elements [tr. 12](#p12)\n- Trạng thái link: `:visited`, `:active`, `:hover`.\n- Phần đầu đoạn văn: `:first-line`, `:first-letter`.\n- Lưu ý: đổi giao diện các element quen thuộc dễ gây khó hiểu cho người dùng.\n\n### 5. External style sheet [tr. 13](#p13)–[tr. 14](#p14)\n- Theo nguyên lý **modularity**: style để trong file riêng, nhiều trang link tới cùng file. Kết quả là giao diện đồng nhất và sửa một chỗ thì cả site đổi theo.\n- Nhúng bằng `<link rel=\"stylesheet\" type=\"text/css\" href=\"myStyle.css\">`. File .css **không chứa** thẻ `<style>`.\n\n### 6. `<div>` và `<span>` [tr. 15](#p15)\n- `<span>` bao một phần nội dung bên trong element lớn hơn để áp style. Mặc định span không thay đổi gì.\n- `<div>` tạo một section/khối, vd 5 đoạn văn cùng style.\n- Cả hai lồng được và có thuộc tính `id`, `class`.\n- Class độc lập khai báo dạng `.bigred {…}`.\n\n### 7. Quy tắc thiết kế [tr. 16](#p16)\n- Dùng màu và font tiết chế. Nghĩ tới người khiếm thị. Chỉ dùng ảnh khi phù hợp.\n- Không dựa vào kích thước cửa sổ/font để dàn trang. Không gây phiền (pop-up, quảng cáo…).\n- Chia tài liệu dài thành nhiều trang. Test trên nhiều browser. Dùng style sheet.\n\n## Phần 2 – Advanced CSS (CSS3)\n\n### 8. Rounded corners – `border-radius` [tr. 18](#p18)–[tr. 22](#p22)\n- Bo góc cho element có nền màu, có viền hoặc có ảnh nền (`background: url(...)`, `background-position`, `background-repeat`).\n- border-radius nhận được nhiều giá trị [tr. 22](#p22). *Bổ sung*: thứ tự là top-left, top-right, bottom-right, bottom-left.\n  - 2 giá trị: (TL & BR) và (TR & BL).\n  - 3 giá trị: TL, (TR & BL), BR.\n\n### 9. Shadows [tr. 23](#p23)–[tr. 25](#p25)\n- `box-shadow: 5px 5px 3px 1px #999`:\n  1. Horizontal offset (âm thì lệch sang trái).\n  2. Vertical offset (âm thì lệch lên trên).\n  3. Blur radius: càng lớn càng mờ. Tuỳ chọn, mặc định 0.\n  4. Spread distance: càng lớn bóng càng to. Tuỳ chọn, mặc định 0.\n  5. Màu: tuỳ chọn.\n- Thêm `inset` để đổ bóng vào **bên trong** hộp: `box-shadow: inset 0 0 7px 5px #ddd`.\n- `text-shadow: -2px 2px 2px #999` có 4 giá trị: h-offset, v-offset, blur (tuỳ chọn), màu (tuỳ chọn; bỏ thì bóng cùng màu chữ).\n\n### 10. Selector nâng cao [tr. 26](#p26)–[tr. 28](#p28)\n- **Universal** `*`: `* {margin:0; padding:0}` reset toàn trang. `#contact * {display:block}` áp cho mọi phần tử bên trong `#contact`.\n- **Child** `>`: chỉ con **trực tiếp**. Vd `#genus_examples > li {border:1px solid red}`.\n- **Adjacent sibling** `+`: phần tử **ngay sau**. Vd `h1 + p {font-weight:bold}` chỉ in đậm đoạn đầu tiên ngay sau h1.\n\n### 11. Màu nâng cao [tr. 29](#p29)–[tr. 30](#p30)\n- Màu khai báo được bằng tên, RGB, hex. CSS3 thêm **HSL**: `hsl(hue, saturation, lightness)`.\n  - **Hue** là góc trên vòng màu 0–360: 0/360 đỏ, 120 xanh lá, 240 xanh dương.\n  - **Saturation** tính bằng %: 100% là màu đầy đủ.\n  - **Lightness** tính bằng %: 0% đen, 100% trắng.\n- **HSLA** [tr. 30](#p30). *Bổ sung*: HSL thêm kênh alpha (độ trong suốt) từ 0 (trong suốt) tới 1 (đục), vd `hsla(120, 100%, 50%, 0.3)`.\n\n### 12. Transitions [tr. 31](#p31)\n- Tạo animation đổi giá trị property mượt theo thời gian, **không cần JavaScript**. Gồm 4 thuộc tính:\n  - `transition-property`: property nào chuyển đổi.\n  - `transition-duration`: chuyển đổi kéo dài bao lâu.\n  - `transition-timing-function`: tốc độ đều hay tăng/giảm tốc.\n  - `transition-delay`: chờ bao lâu mới bắt đầu.\n\n### 13. Background nâng cao [tr. 32](#p32)–[tr. 34](#p34)\n- **Nhiều ảnh nền**: `background-image: url(a.jpg), url(b.gif), url(c.png)`.\n- **`background-size`**:\n  - `auto`: giữ kích thước gốc.\n  - Độ dài, phần trăm hoặc kết hợp.\n  - `contain`: giữ tỉ lệ, lớn nhất có thể mà vẫn **nằm gọn** trong hộp.\n  - `cover`: giữ tỉ lệ, **phủ kín** hộp, có thể bị cắt.\n- **`background-origin`**: `border-box` (từ góc viền), `padding-box` (**mặc định**, từ mép padding), `content-box` (từ mép nội dung).\n\n### 14. Transformations [tr. 35](#p35)\n- `translate()`: dịch chuyển theo X, Y.\n- `rotate()`: xoay theo độ.\n- `scale()`: phóng to/thu nhỏ.\n- `skew()`: nghiêng theo trục X, Y.\n- `matrix()`: gộp mọi phép biến đổi 2D.",
+  "keyConcepts": [
+    {
+      "term": "Cascading Style Sheets",
+      "definition": "Style định nghĩa ở 3 cấp inline / document / external; cấp thấp (gần element) ghi đè cấp cao.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "User-defined style sheet",
+      "definition": "Style sheet của người dùng có thể ghi đè style của designer, vd phóng to chữ cho người khiếm thị.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Inline style",
+      "definition": "Thuộc tính style với các cặp property:value cách nhau bằng dấu chấm phẩy, chỉ áp cho một element.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Document style sheet",
+      "definition": "Rule CSS đặt trong <style> ở head; áp cho mọi element cùng loại trong trang.",
+      "pages": [
+        9,
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Subclass p.indented",
+      "definition": "Lớp con của p, kế thừa mặc định của p và thêm định dạng; dùng qua class=\"indented\".",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Pseudo-elements",
+      "definition": ":visited, :active, :hover cho link; :first-line, :first-letter cho đoạn văn.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "External style sheet",
+      "definition": "File .css riêng (không có thẻ <style>) được nhiều trang nhúng qua <link rel=\"stylesheet\">.",
+      "pages": [
+        13,
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Modularity",
+      "definition": "Tách style thành module dùng lại; sửa một nơi, thay đổi lan ra toàn site.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "span / div",
+      "definition": "span: bao một phần nội dung để áp style (mặc định không đổi gì); div: tạo khối/section.",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "border-radius",
+      "definition": "Thuộc tính bo tròn góc của element (nền màu, viền hoặc ảnh nền).",
+      "pages": [
+        18,
+        19,
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Thứ tự nhiều giá trị border-radius",
+      "definition": "top-left, top-right, bottom-right, bottom-left (theo chiều kim đồng hồ).",
+      "pages": [
+        22
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "term": "box-shadow",
+      "definition": "Đổ bóng cho hộp: h-offset, v-offset, blur, spread, color; `inset` để đổ bóng bên trong.",
+      "pages": [
+        23,
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "text-shadow",
+      "definition": "Đổ bóng cho chữ: h-offset, v-offset, blur (tuỳ chọn), color (tuỳ chọn, mặc định màu chữ).",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Universal selector *",
+      "definition": "Chọn mọi phần tử; dùng để reset hoặc áp cho mọi phần tử bên trong một selector.",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Child selector >",
+      "definition": "Chọn phần tử là con trực tiếp của phần tử khác.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Adjacent sibling selector +",
+      "definition": "Chọn phần tử đứng ngay sau một phần tử khác cùng cha.",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "HSL",
+      "definition": "hsl(hue 0–360, saturation %, lightness %); 0 đỏ, 120 xanh lá, 240 xanh dương.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "HSLA",
+      "definition": "HSL kèm kênh alpha (0 trong suốt – 1 đục).",
+      "pages": [
+        30
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "term": "CSS transition",
+      "definition": "Đổi giá trị property mượt theo thời gian không cần JS: property, duration, timing-function, delay.",
+      "pages": [
+        31
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Multiple backgrounds",
+      "definition": "Nhiều ảnh nền cho một hộp, liệt kê url cách nhau dấu phẩy.",
+      "pages": [
+        32
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "background-size contain vs cover",
+      "definition": "contain: vừa khít trong hộp, giữ tỉ lệ; cover: phủ kín hộp, giữ tỉ lệ, có thể bị cắt.",
+      "pages": [
+        33
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "background-origin",
+      "definition": "Điểm bắt đầu ảnh nền: border-box, padding-box (mặc định), content-box.",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "CSS transforms",
+      "definition": "translate, rotate, scale, skew, matrix – dịch, xoay, co giãn, nghiêng phần tử.",
+      "pages": [
+        35
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Document style sheet với subclass",
+      "language": "html",
+      "code": "<head>\n  <style type=\"text/css\">\n     h1 {color:blue; text-align:center}\n     p.indented {text-indent:0.2in}\n  </style>\n</head>\n<body>\n  <h1> Centered Title </h1>\n  <p class=\"indented\">This paragraph will have the first line indented.</p>\n  <p>This paragraph will not be indented.</p>\n</body>",
+      "explanation": "Mọi h1 đều xanh và căn giữa; chỉ đoạn có class indented bị thụt dòng đầu.",
+      "parts": [
+        {
+          "lines": "2-5",
+          "note": "Rule CSS đặt trong <style> ở head."
+        },
+        {
+          "lines": "4",
+          "note": "Subclass p.indented."
+        },
+        {
+          "lines": "9",
+          "note": "Áp subclass bằng class."
+        },
+        {
+          "lines": "10",
+          "note": "Thẻ p thường – không thụt."
+        }
+      ],
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "External style sheet",
+      "language": "html",
+      "code": "<!-- page26.html -->\n<head>\n  <link rel=\"stylesheet\" type=\"text/css\" href=\"myStyle.css\" title=\"myStyle\" />\n</head>\n\n/* myStyle.css */\nh1 {color : blue; text-align : center}\np.indented {text-indent: 0.2in}",
+      "explanation": "Trang HTML chỉ chứa cấu trúc; toàn bộ định dạng nằm trong myStyle.css dùng chung cho cả site.",
+      "parts": [
+        {
+          "lines": "3",
+          "note": "Nhúng file CSS ngoài."
+        },
+        {
+          "lines": "6-8",
+          "note": "Nội dung file .css – chỉ có rule, không có thẻ <style>."
+        }
+      ],
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "span với class",
+      "language": "html",
+      "code": "<style type=\"text/css\">\n  .bigred {font-size: 24pt; font-family: Arial; color: red}\n</style>\n<p> Now is the <span class=\"bigred\"> best time </span> ever! </p>\n<p> Now is the <span> best time </span> ever! </p>",
+      "explanation": "Chỉ cụm \"best time\" ở đoạn đầu bị đổi style; span không class ở đoạn hai không tạo khác biệt.",
+      "parts": [
+        {
+          "lines": "2",
+          "note": "Class độc lập (không gắn tên thẻ)."
+        },
+        {
+          "lines": "4",
+          "note": "Áp class cho một phần đoạn văn."
+        },
+        {
+          "lines": "5",
+          "note": "span mặc định giữ nguyên nội dung."
+        }
+      ],
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Rounded corners và shadows",
+      "language": "css",
+      "code": "#rcorners1 {\n  border-radius: 25px;\n  background: #73AD21;\n  padding: 20px;\n  width: 200px;\n  height: 150px;\n}\n.card  { box-shadow: 5px 5px 3px 1px #999; }\n.inner { box-shadow: inset 0 0 7px 5px #ddd; }\nh1     { text-shadow: -2px 2px 2px #999; }",
+      "explanation": "border-radius bo góc 25px; box-shadow theo thứ tự h-offset, v-offset, blur, spread, color; inset đổ bóng vào trong; text-shadow cho chữ.",
+      "parts": [
+        {
+          "lines": "2",
+          "note": "Bo tròn cả 4 góc 25px."
+        },
+        {
+          "lines": "8",
+          "note": "Bóng lệch phải 5px, xuống 5px, blur 3px, spread 1px, màu #999."
+        },
+        {
+          "lines": "9",
+          "note": "inset: bóng nằm bên trong hộp."
+        },
+        {
+          "lines": "10",
+          "note": "Bóng chữ lệch trái 2px (giá trị âm), xuống 2px."
+        }
+      ],
+      "pages": [
+        18,
+        23,
+        24,
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Selector universal, child, adjacent",
+      "language": "css",
+      "code": "* { margin: 0; padding: 0; }\n#contact * { display: block; }\n#genus_examples > li { border: 1px solid red }\nh1 + p { font-weight: bold }",
+      "explanation": "Bốn kiểu chọn phần tử nâng cao của CSS.",
+      "parts": [
+        {
+          "lines": "1",
+          "note": "Reset margin/padding cho mọi phần tử."
+        },
+        {
+          "lines": "2",
+          "note": "Mọi phần tử nằm trong #contact hiển thị dạng block."
+        },
+        {
+          "lines": "3",
+          "note": "Chỉ li là con trực tiếp của #genus_examples."
+        },
+        {
+          "lines": "4",
+          "note": "Chỉ đoạn p đứng ngay sau h1."
+        }
+      ],
+      "pages": [
+        26,
+        27,
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Transition và transform (ví dụ tổng hợp)",
+      "language": "css",
+      "code": ".box {\n  background-color: hsl(240, 100%, 50%);\n  transition-property: transform, background-color;\n  transition-duration: 0.5s;\n  transition-timing-function: ease-in-out;\n  transition-delay: 0.1s;\n}\n.box:hover {\n  background-color: hsla(0, 100%, 50%, 0.6);\n  transform: rotate(15deg) scale(1.2);\n}",
+      "explanation": "Khi hover, hộp xoay 15° và phóng 1.2 lần, màu chuyển từ xanh dương sang đỏ bán trong suốt, trong 0.5s sau 0.1s chờ.",
+      "parts": [
+        {
+          "lines": "2",
+          "note": "HSL: hue 240 = xanh dương."
+        },
+        {
+          "lines": "3-6",
+          "note": "4 thuộc tính transition."
+        },
+        {
+          "lines": "9",
+          "note": "HSLA: thêm alpha 0.6."
+        },
+        {
+          "lines": "10",
+          "note": "Kết hợp rotate() và scale()."
+        }
+      ],
+      "pages": [
+        29,
+        31,
+        35
+      ],
+      "source": "bổ sung"
+    }
+  ],
+  "figures": [
+    {
+      "page": 5,
+      "caption": "Ba cấp Cascading Style Sheets"
+    },
+    {
+      "page": 12,
+      "caption": "Pseudo-elements cho link và first-letter"
+    },
+    {
+      "page": 23,
+      "caption": "Các tham số của box-shadow"
+    },
+    {
+      "page": 28,
+      "caption": "Adjacent selector h1 + p"
+    },
+    {
+      "page": 33,
+      "caption": "background-size: contain vs cover"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "CSS1, CSS2 ra đời năm nào?",
+      "back": "CSS1: 1996 (W3C); CSS2: 1998.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "3 cấp của Cascading Style Sheets?",
+      "back": "Inline, document, external; cấp thấp ghi đè cấp cao.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "User-defined style sheet dùng để làm gì?",
+      "back": "Cho người dùng ghi đè style của designer (vd phóng chữ to cho người khiếm thị).",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "Cú pháp inline style?",
+      "back": "`style=\"prop1:value1; prop2:value2\"`",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "Vì sao nên hạn chế inline style?",
+      "back": "Dễ không nhất quán giữa các element tương tự; trộn nội dung với trình bày.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Document style sheet đặt ở đâu?",
+      "back": "Trong thẻ `<style>` ở phần `<head>`.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "p.indented kế thừa gì?",
+      "back": "Kế thừa mọi mặc định của `<p>` và thêm định dạng mới.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "File .css ngoài có chứa thẻ <style> không?",
+      "back": "Không – chỉ chứa các rule CSS.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "Lợi ích của external style sheet?",
+      "back": "Dùng chung cho nhiều trang, giao diện đồng nhất, sửa một nơi áp toàn site.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "span khác div?",
+      "back": "span: một phần nội dung trong element lớn; div: khối/section gồm nhiều phần tử.",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Thuộc tính bo góc trong CSS3?",
+      "back": "`border-radius`",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "5 giá trị của box-shadow theo thứ tự?",
+      "back": "h-offset, v-offset, blur radius, spread distance, color.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "Đổ bóng vào trong hộp?",
+      "back": "Thêm từ khoá `inset` vào box-shadow.",
+      "pages": [
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "Bỏ màu trong text-shadow thì bóng màu gì?",
+      "back": "Cùng màu với chữ.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Selector `*` dùng để làm gì?",
+      "back": "Chọn mọi phần tử (vd reset margin/padding).",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "`A > B` chọn gì?",
+      "back": "B là con trực tiếp của A.",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "`h1 + p` chọn gì?",
+      "back": "Đoạn p đứng ngay sau h1 (chỉ đoạn đầu tiên).",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Hue 0, 120, 240 là màu gì?",
+      "back": "Đỏ, xanh lá, xanh dương.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "Lightness 0% và 100% trong HSL?",
+      "back": "0% đen, 100% trắng.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "HSLA thêm gì so với HSL?",
+      "back": "Kênh alpha – độ trong suốt (0–1).",
+      "pages": [
+        30
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "fc-21",
+      "front": "4 thuộc tính của CSS transition?",
+      "back": "transition-property, transition-duration, transition-timing-function, transition-delay.",
+      "pages": [
+        31
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "background-size: contain vs cover?",
+      "back": "contain: nằm gọn trong hộp; cover: phủ kín hộp, có thể bị cắt; cả hai giữ tỉ lệ.",
+      "pages": [
+        33
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "Giá trị mặc định của background-origin?",
+      "back": "padding-box.",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "Các hàm transform 2D?",
+      "back": "translate(), rotate(), scale(), skew(), matrix().",
+      "pages": [
+        35
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "Cấp style sheet nào áp dụng cho nhiều tài liệu?",
+      "options": [
+        "Inline",
+        "Document",
+        "External",
+        "User-defined"
+      ],
+      "answer": 2,
+      "explanation": "External style sheets can be linked and applied to numerous documents.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "vận dụng",
+      "question": "Đoạn sau hiển thị chữ \"Hi\" màu gì?",
+      "code": {
+        "language": "html",
+        "code": "<head>\n  <link rel=\"stylesheet\" href=\"site.css\">  <!-- p {color: green} -->\n  <style> p {color: blue} </style>\n</head>\n<body>\n  <p style=\"color: red\">Hi</p>\n</body>"
+      },
+      "options": [
+        "green",
+        "blue",
+        "red",
+        "đen mặc định"
+      ],
+      "answer": 2,
+      "explanation": "Inline là cấp thấp nhất, ghi đè document và external.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "vận dụng",
+      "question": "Đâu là inline style hợp lệ?",
+      "options": [
+        "<p style=\"color=red, font-size=12pt\">",
+        "<p style=\"color:red; font-size:12pt\">",
+        "<p css=\"color:red\">",
+        "<p style={color:red}>"
+      ],
+      "answer": 1,
+      "explanation": "Danh sách property:value ngăn cách bằng dấu chấm phẩy.",
+      "pages": [
+        6
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "hiểu",
+      "question": "Vì sao document style sheet được ưu tiên hơn inline style?",
+      "options": [
+        "Vì chạy nhanh hơn",
+        "Vì inline style không hỗ trợ màu",
+        "Vì định dạng thống nhất cho mọi element cùng loại và tách nội dung khỏi trình bày",
+        "Vì inline style không được browser hỗ trợ"
+      ],
+      "answer": 2,
+      "explanation": "Inline dễ gây thiếu nhất quán, trộn content & presentation; document style sheet sạch hơn.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "vận dụng",
+      "question": "Lỗi trong file myStyle.css sau là gì?",
+      "code": {
+        "language": "css",
+        "code": "<style>\n  h1 {color: blue; text-align: center}\n</style>"
+      },
+      "options": [
+        "Thiếu dấu ; sau center",
+        "text-align không có giá trị center",
+        "h1 phải viết hoa",
+        "External style sheet không được chứa thẻ <style>"
+      ],
+      "answer": 3,
+      "explanation": "Note: no <style> tags are used in the external style sheet.",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "nhớ",
+      "question": "Pseudo-class áp dụng cho link đã được ghé thăm?",
+      "options": [
+        ":visited",
+        ":active",
+        ":hover",
+        ":first-line"
+      ],
+      "answer": 0,
+      "explanation": ":visited – đã ghé; :active – đang nhấn; :hover – đang rê chuột.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "hiểu",
+      "question": "Thẻ nào phù hợp để đổi màu một từ trong đoạn văn?",
+      "options": [
+        "<div>",
+        "<span>",
+        "<p>",
+        "<section>"
+      ],
+      "answer": 1,
+      "explanation": "span định nghĩa một element nằm trong element lớn hơn, để áp style cho đúng phần đó.",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "vận dụng",
+      "question": "`box-shadow: 5px 5px 3px 1px #999` – giá trị 3px là gì?",
+      "options": [
+        "Spread distance",
+        "Vertical offset",
+        "Độ dày viền",
+        "Blur radius"
+      ],
+      "answer": 3,
+      "explanation": "Thứ tự: h-offset, v-offset, blur radius, spread, color.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "hiểu",
+      "question": "`text-shadow: -2px 2px 2px` (không ghi màu) tạo bóng thế nào?",
+      "options": [
+        "Lệch sang trái 2px, xuống 2px, cùng màu chữ",
+        "Lệch phải 2px, lên 2px, màu đen",
+        "Không có bóng vì thiếu màu",
+        "Bóng nằm bên trong chữ"
+      ],
+      "answer": 0,
+      "explanation": "Giá trị âm của h-offset đẩy bóng sang trái; bỏ màu thì bóng cùng màu chữ.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "vận dụng",
+      "question": "Với CSS `h1 + p {font-weight:bold}`, đoạn nào được in đậm?",
+      "code": {
+        "language": "html",
+        "code": "<h1>Clouded leopards</h1>\n<p>Đoạn A</p>\n<p>Đoạn B</p>"
+      },
+      "options": [
+        "Cả A và B",
+        "Chỉ B",
+        "Chỉ A",
+        "Không đoạn nào"
+      ],
+      "answer": 2,
+      "explanation": "Adjacent selector chỉ chọn phần tử đứng ngay sau h1.",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-11",
+      "level": "vận dụng",
+      "question": "Với `ul > li {color:red}`, mục nào màu đỏ?",
+      "code": {
+        "language": "html",
+        "code": "<ul>\n  <li>X</li>\n  <li>Y\n    <ol><li>Z</li></ol>\n  </li>\n</ul>"
+      },
+      "options": [
+        "Chỉ Z",
+        "X và Y (Z có thể thừa hưởng màu do kế thừa, nhưng selector chỉ chọn X, Y)",
+        "Chỉ X",
+        "Không mục nào"
+      ],
+      "answer": 1,
+      "explanation": "Child selector chọn li là con trực tiếp của ul: X và Y. Z là con của ol nên không bị chọn trực tiếp (màu đỏ có thể kế thừa từ Y).",
+      "pages": [
+        27
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "nhớ",
+      "question": "Trong HSL, hue = 120 là màu gì?",
+      "options": [
+        "Đỏ",
+        "Xanh dương",
+        "Vàng",
+        "Xanh lá"
+      ],
+      "answer": 3,
+      "explanation": "0/360 đỏ, 120 xanh lá, 240 xanh dương.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "hiểu",
+      "question": "Thuộc tính transition nào quy định chuyển động đều hay tăng/giảm tốc?",
+      "options": [
+        "transition-timing-function",
+        "transition-duration",
+        "transition-delay",
+        "transition-property"
+      ],
+      "answer": 0,
+      "explanation": "timing-function: constant speed hay accelerates/decelerates.",
+      "pages": [
+        31
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "hiểu",
+      "question": "Muốn ảnh nền phủ kín toàn bộ hộp, giữ tỉ lệ, chấp nhận bị cắt – dùng?",
+      "options": [
+        "background-size: contain",
+        "background-size: auto",
+        "background-size: cover",
+        "background-origin: content-box"
+      ],
+      "answer": 2,
+      "explanation": "cover phủ kín vùng nền, có thể cắt chiều cao hoặc chiều rộng; contain luôn nằm gọn.",
+      "pages": [
+        33
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-15",
+      "level": "nhớ",
+      "question": "Giá trị mặc định của background-origin?",
+      "options": [
+        "border-box",
+        "padding-box",
+        "content-box",
+        "margin-box"
+      ],
+      "answer": 1,
+      "explanation": "padding-box là mặc định.",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-16",
+      "level": "vận dụng",
+      "question": "Muốn nghiêng một phần tử 20° theo trục X, dùng hàm nào?",
+      "options": [
+        "rotate(20deg)",
+        "translate(20deg)",
+        "scale(20deg)",
+        "skew(20deg)"
+      ],
+      "answer": 3,
+      "explanation": "skew() nghiêng phần tử theo các góc trên trục X/Y; rotate() là xoay.",
+      "pages": [
+        35
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Trình bày khái niệm Cascading Style Sheets. So sánh inline, document và external style sheet về cách khai báo, phạm vi áp dụng và ưu nhược điểm. Cho ví dụ minh hoạ thứ tự ưu tiên.",
+      "hints": "- Tách content/presentation [tr. 4](#p4).\n- 3 cấp, cấp thấp ghi đè [tr. 5](#p5); user-defined style sheet.\n- Inline: attribute style [tr. 6](#p6), nhược điểm [tr. 9](#p9).\n- Document: <style> trong head, subclass [tr. 10](#p10).\n- External: <link>, modularity [tr. 13](#p13)–[tr. 14](#p14).\n- Ví dụ cùng p có 3 màu khác nhau → inline thắng.",
+      "pages": [
+        4,
+        5,
+        9,
+        10,
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Giải thích và cho ví dụ về các selector: class, pseudo-class của link, universal (*), child (>) và adjacent (+).",
+      "hints": "- Class: `p.indented`, `.bigred` [tr. 10](#p10), [tr. 15](#p15).\n- Link states :visited :active :hover, :first-letter [tr. 12](#p12).\n- `* {margin:0}`, `#contact *` [tr. 26](#p26).\n- `#genus_examples > li` [tr. 27](#p27).\n- `h1 + p` chỉ đoạn đầu sau h1 [tr. 28](#p28).",
+      "pages": [
+        10,
+        12,
+        26,
+        27,
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "Viết CSS cho một thẻ card: bo góc 10px, đổ bóng nhẹ, màu nền dùng HSL; khi hover card phóng to 1.05 lần và đổi màu nền mượt trong 0.3 giây.",
+      "hints": "- `border-radius: 10px` [tr. 18](#p18).\n- `box-shadow: 0 2px 6px 0 #999` (giải thích từng giá trị) [tr. 23](#p23).\n- `background-color: hsl(210, 60%, 90%)` [tr. 29](#p29).\n- `transition-property: transform, background-color; transition-duration: 0.3s` [tr. 31](#p31).\n- `.card:hover {transform: scale(1.05); background-color: hsl(210, 60%, 80%)}` [tr. 35](#p35).",
+      "pages": [
+        18,
+        23,
+        29,
+        31,
+        35
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "Trình bày các tính năng CSS3 về background (multiple backgrounds, background-size, background-origin) và transformations.",
+      "hints": "- Nhiều url cách nhau dấu phẩy [tr. 32](#p32).\n- auto / length / % / contain / cover [tr. 33](#p33).\n- border-box / padding-box (mặc định) / content-box [tr. 34](#p34).\n- translate, rotate, scale, skew, matrix [tr. 35](#p35).",
+      "pages": [
+        32,
+        33,
+        34,
+        35
+      ],
+      "source": "slide"
+    }
+  ]
+}

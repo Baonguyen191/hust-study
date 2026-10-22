@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "subject": "IoT",
+  "lesson": "c2a-cam-bien-chuan-truyen-thong",
+  "title": "Chương 2a – Cảm biến, thiết bị & chuẩn truyền thông",
+  "summary": "## 2.1. Cảm biến và thiết bị IoT\n- Thuật ngữ \"thiết bị (device)\" thường ngầm bao gồm cả các cảm biến gắn kèm [tr. 62](#p62).\n- **Cảm biến** quan sát thay đổi xung quanh và gửi thông tin cho thiết bị. **Thiết bị** thu thập dữ liệu từ cảm biến và gửi lên cloud/server [tr. 63](#p63).\n- Đặc điểm của thiết bị [tr. 64](#p64):\n  - Có thể **hạn chế tài nguyên** (CPU, bộ nhớ).\n  - Có thể giao tiếp riêng, không kết nối trực tiếp với cloud, vd qua **BLE (Bluetooth Low Energy)**.\n  - Có thể **lưu trữ, xử lý, phân tích dữ liệu trước** khi gửi lên cloud.\n- **Phân loại cảm biến** [tr. 65](#p65) theo 3 tiêu chí:\n  - Yêu cầu nguồn cấp. *Bổ sung*: chủ động (active) cần nguồn ngoài, thụ động (passive) thì không.\n  - Loại tín hiệu: analog hoặc digital.\n  - Loại đại lượng đo: nhiệt độ, độ ẩm, ánh sáng, chuyển động…\n- **Tiêu chí lựa chọn cảm biến** [tr. 66](#p66)–[tr. 71](#p71):\n  - **Durability (độ bền)** theo môi trường hoạt động, vd cảm biến nhiệt **chống nước** cho trạm thời tiết.\n  - **Accuracy (độ chính xác)** vừa đủ nhu cầu, vì độ chính xác cao thì đắt. Vd kho hàng chấp nhận ±2 độ, thiết bị y tế cần ±0,2 độ.\n  - **Versatility (tính linh hoạt)**: chịu được biến động môi trường, vd trạm thời tiết hoạt động cả mùa hè lẫn mùa đông.\n  - **Power consumption**: thiết bị dùng pin hoặc năng lượng mặt trời cần **sleep mode** và chỉ wake-up khi đo hoặc gửi.\n  - **Môi trường đặc biệt**: vd cảm biến pH, DO, TDS đặt trong nước nuôi thuỷ sản.\n  - **Cost**: mạng IoT có hàng trăm, hàng nghìn thiết bị, nên phải tính chi phí lắp đặt, bảo trì, thay thế.\n- **Thiết bị IoT** [tr. 72](#p72):\n  - Một \"thing\" là đơn vị xử lý có khả năng kết nối Internet để trao đổi dữ liệu với cloud. Còn gọi là smart device hoặc connected device.\n  - Thiết bị giao tiếp 2 loại dữ liệu chính: **telemetry** và **state**.\n- **Các loại thông tin** [tr. 73](#p73)–[tr. 76](#p76):\n  - **Device metadata**: mô tả thiết bị, **ít thay đổi**. Gồm ID, class/type, model, revision, ngày sản xuất, số serial phần cứng.\n  - **Telemetry**: dữ liệu thu thập từ cảm biến, **chỉ đọc**.\n  - **State information**: trạng thái hiện thời của thiết bị, **đọc/ghi được**, cập nhật ít thường xuyên.\n  - **Commands**: hành động thiết bị thực hiện, vd quay 360°, bật/tắt đèn, tăng tần suất gửi dữ liệu.\n- **Định nghĩa thiết bị** tuỳ thuộc dự án [tr. 77](#p77)–[tr. 81](#p81). Ví dụ giám sát nhiệt độ phòng khách sạn, mỗi phòng có 3 cảm biến (sàn, giường, trần):\n  - **Giải pháp 1**: mỗi cảm biến là **một thiết bị riêng** gửi bản ghi riêng: `{deviceID, location, room, temp}`.\n  - **Giải pháp 2**: **một thiết bị cho cả phòng** gửi một bản ghi gồm 3 nhiệt độ, có thể tính sẵn `average_temp` trên thiết bị.\n  - Chọn cách nào tuỳ vào mục đích dùng dữ liệu hiện tại và tiềm năng sau này.\n\n## 2.2. Các chuẩn truyền thông cho IoT [tr. 82](#p82)\nGồm: NFC/RFID, Bluetooth, WiFi, GSM/GPRS/2G/3G/4G/LTE, ZigBee, 6LoWPAN, Thread.\n- **RFID** [tr. 83](#p83):\n  - Tần số: 120–150 kHz (LF), **13,56 MHz (HF)**, 433 MHz, 865–868 MHz (châu Âu), 902–928 MHz (Bắc Mỹ), 2,45–5,8 GHz, 3,1–10 GHz.\n  - Tầm **10 cm – 200 m**.\n  - Ứng dụng: thu phí đường bộ, kiểm soát ra vào toà nhà, kiểm kê hàng.\n- **NFC** [tr. 84](#p84): **13,56 MHz**, tầm **< 0,2 m**. Ứng dụng: ví/thẻ thông minh, action tag, kiểm soát truy cập.\n- **Bluetooth** [tr. 85](#p85): **2,4 GHz**, tầm **1–100 m**. Ứng dụng: tai nghe, khoá dongle, fitness tracker.\n- **WiFi** [tr. 86](#p86): 2,4 / 3,6 / 4,9–5,0 GHz, tầm thường tới **100 m** (mở rộng được). Ứng dụng: router, tablet.\n- **GSM** [tr. 87](#p87): châu Âu 900 MHz và 1,8 GHz, Mỹ 1,9 GHz và 850 MHz. Tốc độ **9,6 kbps**. Ứng dụng: điện thoại, M2M, công tơ thông minh, theo dõi tài sản.\n- **ZigBee** [tr. 88](#p88): ZigBee 3.0 dựa trên **IEEE 802.15.4**, 2,4 GHz, tầm 10–100 m, tốc độ **250 kbps**.\n- **6LoWPAN** [tr. 89](#p89): **IPv6 over Low-power Wireless Personal Area Networks**, đưa IPv6 vào mạng PAN không dây công suất thấp.\n- **Thread** [tr. 90](#p90)–[tr. 91](#p91):\n  - Giao thức IP dựa trên IPv6, thiết kế cho **tự động hoá nhà thông minh và toà nhà**.\n  - Thread Group ra mắt giữa năm 2014. Dựa trên **IEEE 802.15.4 + IPv6 + 6LoWPAN**, tần số 2,4 GHz (ISM).",
+  "keyConcepts": [
+    {
+      "term": "Cảm biến vs thiết bị",
+      "definition": "Cảm biến quan sát thay đổi môi trường; thiết bị thu thập dữ liệu từ cảm biến và gửi lên cloud/server.",
+      "pages": [
+        63
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Thiết bị hạn chế tài nguyên",
+      "definition": "Thiết bị IoT có thể ít CPU, bộ nhớ; có thể giao tiếp cục bộ (BLE) và xử lý trước khi gửi.",
+      "pages": [
+        64
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "BLE",
+      "definition": "Bluetooth Low Energy – giao tiếp công suất thấp, thiết bị không cần kết nối trực tiếp cloud.",
+      "pages": [
+        64
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Phân loại cảm biến",
+      "definition": "Theo yêu cầu nguồn cấp, theo loại tín hiệu (analog/digital), theo loại đại lượng đo.",
+      "pages": [
+        65
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Durability",
+      "definition": "Độ bền phù hợp môi trường hoạt động, giảm chi phí sửa chữa thay thế.",
+      "pages": [
+        66
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Accuracy",
+      "definition": "Độ chính xác vừa đủ nhu cầu vì độ chính xác cao thì đắt (kho ±2°, y tế ±0,2°).",
+      "pages": [
+        67
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Versatility",
+      "definition": "Khả năng vận hành khi môi trường biến động.",
+      "pages": [
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Power consumption & sleep mode",
+      "definition": "Thiết bị dùng pin/năng lượng mặt trời cần chế độ ngủ, chỉ thức khi đo hoặc truyền.",
+      "pages": [
+        69
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Smart / connected device",
+      "definition": "Đơn vị xử lý có khả năng kết nối Internet để trao đổi dữ liệu với cloud.",
+      "pages": [
+        72
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Device metadata",
+      "definition": "Thông tin mô tả thiết bị, ít thay đổi: ID, class/type, model, revision, ngày sản xuất, serial.",
+      "pages": [
+        73
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Telemetry",
+      "definition": "Dữ liệu thiết bị thu thập qua cảm biến – chỉ đọc.",
+      "pages": [
+        74
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "State information",
+      "definition": "Trạng thái hiện thời của thiết bị – đọc/ghi được, cập nhật không thường xuyên.",
+      "pages": [
+        75
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Device commands",
+      "definition": "Hành động thiết bị thực hiện theo lệnh, vd bật/tắt đèn, tăng tần suất gửi.",
+      "pages": [
+        76
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Định nghĩa thiết bị trong dự án",
+      "definition": "Mỗi cảm biến là một thiết bị, hoặc một thiết bị quản lý nhóm cảm biến – tuỳ mục đích dữ liệu.",
+      "pages": [
+        77,
+        79,
+        81
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "RFID",
+      "definition": "Nhận dạng tần số vô tuyến, nhiều dải tần (LF, HF 13,56 MHz, UHF, microwave), tầm 10 cm – 200 m.",
+      "pages": [
+        83
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "NFC",
+      "definition": "Near-Field Communication: 13,56 MHz, tầm < 0,2 m; thẻ/ví thông minh, kiểm soát truy cập.",
+      "pages": [
+        84
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Bluetooth",
+      "definition": "2,4 GHz, tầm 1–100 m; tai nghe, fitness tracker.",
+      "pages": [
+        85
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "WiFi",
+      "definition": "2,4 / 3,6 / 5 GHz, tầm khoảng 100 m.",
+      "pages": [
+        86
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "GSM",
+      "definition": "Global System for Mobile communications; 9,6 kbps; M2M, smart meter, theo dõi tài sản.",
+      "pages": [
+        87
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "ZigBee",
+      "definition": "Dựa trên IEEE 802.15.4, 2,4 GHz, 10–100 m, 250 kbps.",
+      "pages": [
+        88
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "IEEE 802.15.4",
+      "definition": "Chuẩn mạng PAN không dây công suất thấp làm nền cho ZigBee, 6LoWPAN, Thread.",
+      "pages": [
+        88,
+        90
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "6LoWPAN",
+      "definition": "IPv6 over Low-power Wireless PANs – đưa IPv6 vào mạng PAN công suất thấp.",
+      "pages": [
+        89
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Thread",
+      "definition": "Giao thức IP (IPv6) cho nhà thông minh, ra mắt 2014, dựa trên IEEE 802.15.4 và 6LoWPAN, 2,4 GHz.",
+      "pages": [
+        90
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Hai cách định nghĩa thiết bị – dữ liệu JSON gửi lên cloud",
+      "language": "json",
+      "code": "// Giải pháp 1: mỗi cảm biến là một thiết bị\n{ \"deviceID\": \"dh28dslkja\", \"location\": \"floor\",   \"room\": 128, \"temp\": 22 }\n{ \"deviceID\": \"8d3kiuhs8a\", \"location\": \"ceiling\", \"room\": 128, \"temp\": 24 }\n{ \"deviceID\": \"kd8s8hh3o\",  \"location\": \"bedside\", \"room\": 128, \"temp\": 23 }\n\n// Giải pháp 2: một thiết bị cho cả phòng\n{ \"deviceID\": \"dh28dslkja\", \"room\": 128,\n  \"temp_floor\": 22, \"temp_ceiling\": 24, \"temp_bedside\": 23,\n  \"average_temp\": 23 }",
+      "explanation": "Giải pháp 1 linh hoạt từng cảm biến; giải pháp 2 gọn hơn và có thể tính trung bình ngay trên thiết bị.",
+      "parts": [
+        {
+          "lines": "2-4",
+          "note": "Ba thiết bị độc lập, mỗi bản ghi một nhiệt độ kèm vị trí."
+        },
+        {
+          "lines": "7-9",
+          "note": "Một bản ghi gộp, thêm average_temp tính trên thiết bị (edge processing)."
+        }
+      ],
+      "pages": [
+        79,
+        81
+      ],
+      "source": "slide"
+    }
+  ],
+  "figures": [
+    {
+      "page": 63,
+      "caption": "Cảm biến – thiết bị – cloud"
+    },
+    {
+      "page": 65,
+      "caption": "Phân loại cảm biến"
+    },
+    {
+      "page": 78,
+      "caption": "Giám sát nhiệt độ phòng khách sạn – giải pháp 1"
+    },
+    {
+      "page": 80,
+      "caption": "Giải pháp 2: một thiết bị cho nhiều cảm biến"
+    },
+    {
+      "page": 91,
+      "caption": "Kiến trúc Thread"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "Cảm biến và thiết bị khác nhau thế nào?",
+      "back": "Cảm biến quan sát thay đổi; thiết bị thu thập dữ liệu từ cảm biến và gửi lên cloud/server.",
+      "pages": [
+        63
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "3 đặc điểm của thiết bị IoT?",
+      "back": "Có thể hạn chế tài nguyên; có thể giao tiếp cục bộ (BLE); có thể xử lý trước khi gửi.",
+      "pages": [
+        64
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "3 tiêu chí phân loại cảm biến?",
+      "back": "Yêu cầu nguồn cấp, loại tín hiệu, loại thiết bị đo.",
+      "pages": [
+        65
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "Kể 6 tiêu chí lựa chọn cảm biến.",
+      "back": "Durability, accuracy, versatility, power consumption, môi trường đặc biệt, cost.",
+      "pages": [
+        66,
+        71
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "Ví dụ về yêu cầu độ chính xác khác nhau?",
+      "back": "Kho hàng ±2 độ; thiết bị y tế ±0,2 độ.",
+      "pages": [
+        67
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Thiết bị dùng pin mặt trời cần tính năng gì?",
+      "back": "Sleep mode, wake-up khi cần đo/truyền.",
+      "pages": [
+        69
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "2 loại dữ liệu thiết bị giao tiếp?",
+      "back": "Telemetry và state.",
+      "pages": [
+        72
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Device metadata gồm gì?",
+      "back": "ID, class/type, model, revision, ngày sản xuất, số serial.",
+      "pages": [
+        73
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "Telemetry có đặc điểm gì?",
+      "back": "Dữ liệu cảm biến thu thập, chỉ đọc.",
+      "pages": [
+        74
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "State information có đặc điểm gì?",
+      "back": "Trạng thái thiết bị, đọc/ghi được, cập nhật không thường xuyên.",
+      "pages": [
+        75
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "Ví dụ device command?",
+      "back": "Quay 360° sang phải; bật/tắt đèn; tăng tần suất truyền dữ liệu.",
+      "pages": [
+        76
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "Ưu điểm giải pháp 2 (1 thiết bị/phòng)?",
+      "back": "Gửi một bản ghi gộp, có thể tính nhiệt độ trung bình trên thiết bị.",
+      "pages": [
+        81
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "Kể 7 chuẩn truyền thông IoT trên slide.",
+      "back": "NFC/RFID, Bluetooth, WiFi, GSM/2G–4G/LTE, ZigBee, 6LoWPAN, Thread.",
+      "pages": [
+        82
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "Tầm hoạt động của RFID?",
+      "back": "10 cm – 200 m.",
+      "pages": [
+        83
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Tần số và tầm của NFC?",
+      "back": "13,56 MHz; < 0,2 m.",
+      "pages": [
+        84
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Tần số và tầm của Bluetooth?",
+      "back": "2,4 GHz; 1–100 m.",
+      "pages": [
+        85
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "Tầm phổ biến của WiFi?",
+      "back": "Khoảng 100 m (mở rộng được).",
+      "pages": [
+        86
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Tốc độ dữ liệu GSM trên slide?",
+      "back": "9,6 kbps.",
+      "pages": [
+        87
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "ZigBee dựa trên chuẩn nào, tốc độ bao nhiêu?",
+      "back": "IEEE 802.15.4; 250 kbps.",
+      "pages": [
+        88
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "6LoWPAN là gì?",
+      "back": "IPv6 over Low-power Wireless Personal Area Networks.",
+      "pages": [
+        89
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "Thread dựa trên những chuẩn nào?",
+      "back": "IEEE 802.15.4, IPv6 và 6LoWPAN.",
+      "pages": [
+        90
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "Thread ra mắt khi nào, dùng cho gì?",
+      "back": "Giữa năm 2014; tự động hoá nhà thông minh, toà nhà.",
+      "pages": [
+        90
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "hiểu",
+      "question": "Phát biểu nào đúng về thiết bị IoT?",
+      "options": [
+        "Có thể hạn chế tài nguyên và giao tiếp cục bộ qua BLE, xử lý dữ liệu trước khi gửi",
+        "Luôn phải kết nối trực tiếp tới cloud",
+        "Không bao giờ xử lý dữ liệu",
+        "Chỉ gửi dữ liệu metadata"
+      ],
+      "answer": 0,
+      "explanation": "Slide tr. 64.",
+      "pages": [
+        64
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "vận dụng",
+      "question": "Cần đo nhiệt độ tủ bảo quản vaccine. Tiêu chí lựa chọn cảm biến nào được ưu tiên nhất?",
+      "options": [
+        "Chi phí thấp nhất",
+        "Độ chính xác (vd ±0,2 độ)",
+        "Tầm truyền xa",
+        "Kiểu dáng"
+      ],
+      "answer": 1,
+      "explanation": "Hệ thống y tế cần độ chính xác cao ±0,2 độ, khác kho hàng ±2 độ.",
+      "pages": [
+        67
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "vận dụng",
+      "question": "Trạm đo mưa ở vùng núi chạy bằng pin mặt trời. Thiết kế nào phù hợp?",
+      "options": [
+        "Truyền dữ liệu liên tục mỗi giây",
+        "Dùng cảm biến trong nhà",
+        "Dùng sleep mode, chỉ wake-up khi đo/truyền",
+        "Bỏ qua tiêu thụ năng lượng"
+      ],
+      "answer": 2,
+      "explanation": "Power consumption: thiết bị pin mặt trời cần chế độ ngủ tiết kiệm năng lượng.",
+      "pages": [
+        69
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "hiểu",
+      "question": "Loại thông tin nào chỉ đọc, được thu thập từ môi trường qua cảm biến?",
+      "options": [
+        "Device metadata",
+        "Commands",
+        "State information",
+        "Telemetry"
+      ],
+      "answer": 3,
+      "explanation": "Telemetry: dữ liệu thu thập qua cảm biến, chỉ đọc.",
+      "pages": [
+        74
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "vận dụng",
+      "question": "Giá trị \"chế độ hoạt động hiện tại của máy bơm: ON\" có thể đọc và ghi từ cloud thuộc loại thông tin nào?",
+      "options": [
+        "State information",
+        "Metadata",
+        "Telemetry",
+        "Firmware"
+      ],
+      "answer": 0,
+      "explanation": "State information: trạng thái hiện thời, đọc/ghi được, cập nhật không thường xuyên.",
+      "pages": [
+        75
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "vận dụng",
+      "question": "Trường nào thuộc device metadata?",
+      "options": [
+        "Nhiệt độ hiện tại",
+        "Số serial phần cứng",
+        "Lệnh bật đèn",
+        "Độ ẩm trung bình"
+      ],
+      "answer": 1,
+      "explanation": "Metadata: ID, class/type, model, revision, date manufactured, hardware serial number.",
+      "pages": [
+        73
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "hiểu",
+      "question": "Trong ví dụ khách sạn, ưu điểm của giải pháp 2 (một thiết bị cho cả phòng) là?",
+      "options": [
+        "Mỗi cảm biến có ID riêng trên cloud",
+        "Không cần cảm biến",
+        "Gửi một bản ghi gộp và có thể tính trung bình ngay trên thiết bị",
+        "Không cần kết nối mạng"
+      ],
+      "answer": 2,
+      "explanation": "Có thể bổ sung xử lý tính nhiệt độ trung bình trên thiết bị.",
+      "pages": [
+        81
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "nhớ",
+      "question": "NFC hoạt động ở tần số và tầm nào?",
+      "options": [
+        "2,4 GHz, 100 m",
+        "5 GHz, 50 m",
+        "900 MHz, 10 km",
+        "13,56 MHz, < 0,2 m"
+      ],
+      "answer": 3,
+      "explanation": "NFC: 13.56 MHz, range < 0.2 m.",
+      "pages": [
+        84
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "vận dụng",
+      "question": "Hệ thống thu phí không dừng trên đường cao tốc dùng công nghệ nào trong số các chuẩn trên slide?",
+      "options": [
+        "RFID",
+        "NFC",
+        "ZigBee",
+        "Thread"
+      ],
+      "answer": 0,
+      "explanation": "RFID examples: road tolls, building access, inventory.",
+      "pages": [
+        83
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "nhớ",
+      "question": "ZigBee 3.0 dựa trên chuẩn nào?",
+      "options": [
+        "IEEE 802.11",
+        "IEEE 802.15.4",
+        "IEEE 802.3",
+        "IEEE 802.15.1"
+      ],
+      "answer": 1,
+      "explanation": "ZigBee 3.0 based on IEEE 802.15.4; 2.4 GHz; 250 kbps.",
+      "pages": [
+        88
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-11",
+      "level": "hiểu",
+      "question": "6LoWPAN giải quyết vấn đề gì?",
+      "options": [
+        "Tăng tốc WiFi",
+        "Mã hoá dữ liệu",
+        "Đưa IPv6 vào mạng PAN không dây công suất thấp",
+        "Thay thế GSM"
+      ],
+      "answer": 2,
+      "explanation": "IPv6 protocol over low-power wireless PANs.",
+      "pages": [
+        89
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "hiểu",
+      "question": "Thread khác ZigBee ở điểm cốt lõi nào?",
+      "options": [
+        "Thread không dùng IEEE 802.15.4",
+        "Thread chỉ dùng cho ô tô",
+        "Thread hoạt động ở 13,56 MHz",
+        "Thread là giao thức dựa trên IP (IPv6 + 6LoWPAN)"
+      ],
+      "answer": 3,
+      "explanation": "Thread: giao thức IP dựa trên IPv6, IEEE 802.15.4, 6LoWPAN.",
+      "pages": [
+        90
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "vận dụng",
+      "question": "Thiết bị theo dõi xe tải chạy khắp tỉnh, cần gửi vị trí định kỳ. Chuẩn nào phù hợp nhất trong các lựa chọn?",
+      "options": [
+        "GSM/cellular",
+        "Bluetooth",
+        "NFC",
+        "ZigBee"
+      ],
+      "answer": 0,
+      "explanation": "GSM: examples – asset tracking, M2M; các chuẩn còn lại tầm ngắn.",
+      "pages": [
+        87
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Trình bày các tiêu chí lựa chọn cảm biến cho hệ thống IoT, mỗi tiêu chí cho một ví dụ. Áp dụng cho hệ thống giám sát chất lượng nước ao nuôi tôm.",
+      "hints": "- Durability, accuracy, versatility, power, môi trường đặc biệt, cost [tr. 66](#p66)–[tr. 71](#p71).\n- Áp dụng: cảm biến pH, DO, TDS chống nước, đặt trong nước; pin mặt trời + sleep mode; chi phí cho nhiều ao.",
+      "pages": [
+        66,
+        67,
+        69,
+        70,
+        71
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Phân biệt các loại thông tin của thiết bị IoT (metadata, telemetry, state, commands). Cho ví dụ cho một thiết bị máy bơm thông minh.",
+      "hints": "- Thiết bị, telemetry/state [tr. 72](#p72).\n- Metadata [tr. 73](#p73); telemetry [tr. 74](#p74); state [tr. 75](#p75); commands [tr. 76](#p76).\n- Ví dụ: ID/model; lưu lượng nước; trạng thái ON/OFF; lệnh bật/tắt.",
+      "pages": [
+        72,
+        73,
+        74,
+        75,
+        76
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "So sánh các chuẩn truyền thông NFC, RFID, Bluetooth, WiFi, GSM, ZigBee về tần số, tầm, ứng dụng. Thread và 6LoWPAN có điểm gì khác biệt?",
+      "hints": "- Bảng thông số tr. [tr. 83](#p83)–[tr. 88](#p88).\n- 6LoWPAN: IPv6 trên PAN công suất thấp [tr. 89](#p89).\n- Thread: IP-based, IEEE 802.15.4 + 6LoWPAN, nhà thông minh [tr. 90](#p90).",
+      "pages": [
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "source": "slide"
+    }
+  ]
+}

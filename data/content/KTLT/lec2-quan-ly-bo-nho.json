@@ -1,0 +1,881 @@
+{
+  "version": 1,
+  "subject": "KTLT",
+  "lesson": "lec2-quan-ly-bo-nho",
+  "title": "Bài 2 – Quản lý bộ nhớ",
+  "summary": "## 1. Biến, địa chỉ, giá trị [tr. 2](#p2)–[tr. 4](#p4)\n- Mỗi biến có **tên** và **giá trị**. Khai báo biến thì một vùng nhớ được cấp phát. Kích thước vùng nhớ phụ thuộc kiểu, vd `int` là 4 byte.\n- `int x = 10;`:\n  - `x` là tên biến.\n  - `&x` là **địa chỉ ô nhớ đầu tiên** của vùng nhớ chứa x (vd 65325).\n  - `*(&x)` hoặc `x` là giá trị 10.\n- In địa chỉ bằng `printf(\"%p\", &x)` (dạng hex) hoặc `%lu` (dạng thập phân).\n\n## 2. Con trỏ [tr. 5](#p5)–[tr. 13](#p13)\n- **Con trỏ** là biến chứa **địa chỉ vùng nhớ** của một biến khác. Khai báo: `data_type* ptr_name;`.\n- `int *p = &x;` nghĩa là p **trỏ tới** x. `*p` là **tham chiếu ngược (dereference)**, lấy giá trị tại địa chỉ p, tức 10.\n- Ví dụ: `*p = 20;` thì x cũng thành 20. `int b = *p;` thì b nhận 10.\n- **Sai lầm**: `int *p; *p = 10;` – p **chưa trỏ tới đâu** (con trỏ chưa khởi tạo) [tr. 9](#p9).\n- Con trỏ cũng có địa chỉ riêng: `&ptr` khác giá trị `ptr` (là `&x`) [tr. 10](#p10).\n- **Phép toán trên con trỏ** [tr. 11](#p11)–[tr. 13](#p13):\n  - Cộng/trừ số nguyên n cho con trỏ: kết quả trỏ tới đối tượng cách **n phần tử**. Địa chỉ thay đổi n × `sizeof(kiểu)`.\n    - Ví dụ: char* 100 → `++` thành 101. short* 200 → 202. long* 300 → 304.\n    - Tiếp theo: `plong += 5` thành 324, `pchar -= 10` thành 91, `pshort += 5` thành 212.\n  - **Trừ 2 con trỏ** cho ra **số phần tử** giữa chúng.\n  - **Không** được cộng, nhân, chia 2 con trỏ. Được gán và so sánh, nhưng chú ý **tương thích kiểu**.\n  - `++` và `--` có độ ưu tiên cao hơn `*`: `*p++` là `*(p++)`, tức tăng **địa chỉ**, không tăng giá trị. `*p++ = *q++;` tương đương `*p = *q; p = p+1; q = q+1;`.\n- **Con trỏ `void *`** [tr. 14](#p14)–[tr. 15](#p15):\n  - Con trỏ không định kiểu, trỏ được tới mọi loại biến.\n  - **Không truy cập trực tiếp** được: `*p = 2.5` lỗi. Phải ép kiểu trước: `*((float*)p) = 2.5;`.\n\n## 3. Con trỏ và mảng, xâu [tr. 16](#p16)–[tr. 21](#p21)\n- Tên mảng là **hằng địa chỉ** bằng địa chỉ phần tử đầu: `a == &a[0]`, `a+i == &a[i]`.\n  - Vì là hằng nên **không được** `a++` hay gán `a = ...`.\n  - Với `int *pa = &a[0];` thì `pa+1` trỏ phần tử thứ 2, và `*(pa+i)` chính là `a[i]`.\n- Xâu: `char tinhthanh[30] = \"Da Lat\";` hoặc `char *tinhthanh = \"Da lat\";`.\n  - Với mảng ký tự thì **không gán trực tiếp** `tinhthanh = \"Da lat\"` sau khai báo được.\n  - Slide viết `*(tinhthanh+3) = \"l\"`. *Bổ sung*: phải là ký tự `'l'`, không phải chuỗi. Ngoài ra **không được sửa** chuỗi hằng mà `char*` trỏ tới.\n- **Mảng con trỏ** `<kiểu> *<tên>[n];`, vd `char *ds[10];` là 10 con trỏ char để lưu 10 xâu.\n  - Ưu điểm: **hoán đổi con trỏ** thay vì sao chép dữ liệu (sắp xếp danh sách tên theo ABC), truyền tham số tiện.\n  - Khởi tạo: `char *ma[10] = {\"mot\",\"hai\",\"ba\",...};`.\n- **Con trỏ trỏ tới con trỏ** [tr. 22](#p22)–[tr. 23](#p23):\n  - `int **p2 = &p1;` thì `**p2` là x.\n  - Mảng 2 chiều: `M[i][k] == *(*(M+i)+k)`. Trong đó `M+i` là địa chỉ hàng i, `*(M+i)+k` là địa chỉ phần tử [i][k].\n\n## 4. Bộ nhớ động [tr. 24](#p24)–[tr. 31](#p31)\n- **Bộ nhớ tĩnh**: khai báo trước khi chạy, kích thước cố định, dễ phải dự trữ quá lớn.\n- **Bộ nhớ động**: cấp phát lúc chạy theo nhu cầu, **giải phóng** khi không cần.\n  - C dùng `malloc`, `calloc`, `realloc`, `free`.\n  - C++ dùng `new`, `delete`.\n- Cú pháp:\n  - `p = new T;` cấp một biến. `p = new T[n];` cấp mảng.\n  - `delete p;` giải phóng biến. `delete [] p;` giải phóng mảng.\n- Bộ nhớ động do HĐH quản lý và chia sẻ giữa các ứng dụng nên có thể **không đủ**.\n  - Slide nói khi đó `new` trả **NULL** và kiểm tra `if (ptr == NULL)`.\n  - *Bổ sung*: theo chuẩn C++, `new` ném **`std::bad_alloc`**. Muốn nhận NULL phải dùng `new (std::nothrow)`.\n- Ví dụ nhập mảng `long` động [tr. 28](#p28): `arr = new long[n]; ... delete [] arr;`. Slide dùng `scanf(\"%d\", &arr[i])` cho `long`, chuẩn phải là `%ld`.\n- **Mảng 2 chiều động**:\n  - **Cách 1**: biểu diễn bằng mảng 1 chiều, `X[i][j] = A[i*n + j]`.\n  - **Cách 2**: con trỏ của con trỏ.\n    - Một khối liền: `mt = new int*[R]; temp = new int[R*C]; mt[i] = temp + i*C;`, giải phóng `delete[] mt[0]; delete[] mt;`.\n    - Hoặc cấp **từng hàng** `M[i] = new float[C]`, giải phóng từng hàng rồi `delete[] M`.",
+  "keyConcepts": [
+    {
+      "term": "Địa chỉ biến &x",
+      "definition": "Toán tử & trả về địa chỉ ô nhớ đầu tiên của vùng nhớ lưu biến.",
+      "pages": [
+        2,
+        3
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Con trỏ",
+      "definition": "Biến chứa địa chỉ vùng nhớ của một biến khác; khai báo data_type* ptr.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Dereference *p",
+      "definition": "Lấy (hoặc gán) giá trị tại địa chỉ mà con trỏ đang trỏ tới.",
+      "pages": [
+        6,
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Con trỏ chưa khởi tạo",
+      "definition": "int *p; *p = 10; là sai – p chưa trỏ tới vùng nhớ hợp lệ.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Số học con trỏ",
+      "definition": "p + n trỏ tới phần tử cách n phần tử; địa chỉ thay đổi n × sizeof(kiểu).",
+      "pages": [
+        11,
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Hiệu hai con trỏ",
+      "definition": "Cho số phần tử giữa hai con trỏ cùng kiểu.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Phép toán không hợp lệ",
+      "definition": "Không cộng, nhân, chia hai con trỏ; chỉ gán, so sánh khi tương thích kiểu.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "*p++",
+      "definition": "++ ưu tiên cao hơn * nên *p++ = *(p++): tăng địa chỉ, không tăng giá trị.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Con trỏ void*",
+      "definition": "Con trỏ không định kiểu; phải ép kiểu trước khi truy cập dữ liệu.",
+      "pages": [
+        14,
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Tên mảng là hằng địa chỉ",
+      "definition": "a == &a[0], a+i == &a[i]; không được a++ hay gán a.",
+      "pages": [
+        16,
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "*(pa+i) == a[i]",
+      "definition": "Truy cập phần tử mảng qua con trỏ.",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Con trỏ và xâu",
+      "definition": "char *s = \"...\" trỏ tới xâu; mảng char không gán trực tiếp được sau khai báo.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Mảng con trỏ",
+      "definition": "kiểu *ten[n]; mỗi phần tử là một con trỏ – hoán đổi con trỏ thay vì sao chép dữ liệu.",
+      "pages": [
+        19,
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Con trỏ trỏ tới con trỏ",
+      "definition": "kiểu **p2 = &p1; **p2 truy cập biến gốc.",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "M[i][k] = *(*(M+i)+k)",
+      "definition": "Biểu diễn mảng 2 chiều qua con trỏ của con trỏ.",
+      "pages": [
+        22,
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Bộ nhớ tĩnh vs động",
+      "definition": "Tĩnh: cố định trước khi chạy; động: cấp phát/giải phóng lúc chạy theo nhu cầu.",
+      "pages": [
+        24,
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "malloc/calloc/realloc/free",
+      "definition": "Các hàm quản lý bộ nhớ động trong C.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "new / delete",
+      "definition": "Cấp phát và giải phóng bộ nhớ động trong C++; mảng dùng new T[n] và delete [] p.",
+      "pages": [
+        25,
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Cấp phát thất bại",
+      "definition": "Slide: new trả NULL; theo chuẩn C++ new ném std::bad_alloc, new(std::nothrow) mới trả NULL.",
+      "pages": [
+        27
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "term": "Mảng 2 chiều bằng mảng 1 chiều",
+      "definition": "X[i][j] = A[i*n + j] với n là số cột.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Mảng 2 chiều bằng con trỏ của con trỏ",
+      "definition": "Cấp mảng con trỏ hàng rồi cấp dữ liệu (liền khối hoặc từng hàng); giải phóng theo thứ tự ngược.",
+      "pages": [
+        30,
+        31
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Biến, địa chỉ và con trỏ",
+      "language": "c",
+      "code": "#include <stdio.h>\nint main() {\n    int x = 10;\n    int *ptr;\n    ptr = &x;\n    printf(\"Value of x is %d\\n\", x);\n    printf(\"Address of x is %lu\\n\", (unsigned long) &x);\n    printf(\"Value of pointer ptr is %lu\\n\", (unsigned long) ptr);\n    printf(\"Address of pointer ptr is %lu\\n\", (unsigned long) &ptr);\n    printf(\"Ptr pointing value is %d\\n\", *ptr);\n    return 0;\n}",
+      "explanation": "Giá trị của ptr bằng địa chỉ của x; bản thân ptr nằm ở một địa chỉ khác; *ptr cho giá trị 10.",
+      "parts": [
+        {
+          "lines": "4-5",
+          "note": "Khai báo con trỏ và cho trỏ tới x."
+        },
+        {
+          "lines": "8",
+          "note": "Giá trị con trỏ = &x."
+        },
+        {
+          "lines": "9",
+          "note": "Địa chỉ của chính con trỏ."
+        },
+        {
+          "lines": "10",
+          "note": "Dereference."
+        }
+      ],
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Số học con trỏ và *p++",
+      "language": "c",
+      "code": "int a[5] = {1, 2, 3, 4, 5};\nint *p = a;\nprintf(\"%d \", *p++);   // 1  (in a[0] rồi p trỏ a[1])\nprintf(\"%d \", *p);     // 2\nprintf(\"%d \", (*p)++); // 2  (in rồi tăng a[1] thành 3)\nprintf(\"%d \", a[1]);   // 3\nint *q = &a[4];\nprintf(\"%ld \", (long)(q - p));  // 3 phần tử\nprintf(\"%d\\n\", *(a + 3));       // 4",
+      "explanation": "Kết quả đã chạy thử với g++: 1 2 2 3 3 4.",
+      "parts": [
+        {
+          "lines": "3",
+          "note": "*p++ = *(p++): lấy giá trị rồi tăng địa chỉ."
+        },
+        {
+          "lines": "5",
+          "note": "(*p)++ tăng giá trị được trỏ."
+        },
+        {
+          "lines": "8",
+          "note": "Hiệu hai con trỏ = số phần tử."
+        },
+        {
+          "lines": "9",
+          "note": "*(a+3) ≡ a[3]."
+        }
+      ],
+      "pages": [
+        11,
+        13,
+        17
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "title": "Con trỏ void",
+      "language": "c",
+      "code": "float x; int y;\nvoid *p;          // con trỏ void\np = &x;           // p chứa địa chỉ số thực x\n// *p = 2.5;      // lỗi: không truy cập trực tiếp qua void*\n*((float*)p) = 2.5;   // x = 2.5\np = &y;\n*((int*)p) = 2;       // y = 2",
+      "explanation": "void* chỉ lưu địa chỉ, không biết kiểu dữ liệu; phải ép kiểu trước khi đọc/ghi.",
+      "parts": [
+        {
+          "lines": "2-3",
+          "note": "void* trỏ được tới mọi kiểu."
+        },
+        {
+          "lines": "4",
+          "note": "Dereference void* là lỗi biên dịch."
+        },
+        {
+          "lines": "5-7",
+          "note": "Ép kiểu rồi mới truy cập."
+        }
+      ],
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Mảng con trỏ – sắp xếp tên theo ABC",
+      "language": "c",
+      "code": "#define MAXHS 50\n#define MAXLEN 30\nchar ds[MAXHS][MAXLEN];\nchar *ptr[MAXHS], *tmp;\nint n = 3;\nfor (int i = 0; i < n; i++) ptr[i] = ds[i];   // sau khi nhập ds\nfor (int i = 0; i < n - 1; i++)\n    for (int j = i + 1; j < n; j++)\n        if (strcmp(ptr[i], ptr[j]) > 0) {\n            tmp = ptr[i]; ptr[i] = ptr[j]; ptr[j] = tmp;  // đổi con trỏ, không chép xâu\n        }\nfor (int i = 0; i < n; i++) printf(\"\\n%d : %s\", i + 1, ptr[i]);",
+      "explanation": "Sắp xếp bằng cách hoán đổi con trỏ – nhanh hơn sao chép cả xâu (slide dùng gets, hàm không an toàn đã bị loại khỏi chuẩn C11).",
+      "parts": [
+        {
+          "lines": "3-4",
+          "note": "Mảng xâu và mảng con trỏ."
+        },
+        {
+          "lines": "6",
+          "note": "Mỗi con trỏ trỏ tới một xâu."
+        },
+        {
+          "lines": "9-11",
+          "note": "So sánh xâu, hoán đổi con trỏ."
+        }
+      ],
+      "pages": [
+        20,
+        21
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Cấp phát mảng động và mảng 2 chiều",
+      "language": "cpp",
+      "code": "long *arr = new long[n];\nif (arr == NULL) { printf(\"Cap phat khong thanh cong\\n\"); exit(1); }\nfor (int i = 0; i < n; i++) scanf(\"%ld\", &arr[i]);  // slide ghi %d\ndelete [] arr;\n\n// Mảng 2 chiều R x C – con trỏ của con trỏ, một khối liền\nint **mt = new int*[R];\nint *temp = new int[R * C];\nfor (int i = 0; i < R; ++i) { mt[i] = temp; temp += C; }\ndelete [] mt[0];\ndelete [] mt;\n\n// Hoặc cấp từng hàng\nfloat **M = new float*[R];\nfor (int i = 0; i < R; i++) M[i] = new float[C];\nfor (int i = 0; i < R; i++) delete [] M[i];\ndelete [] M;",
+      "explanation": "Mảng dùng new[] thì phải giải phóng bằng delete[]. Chú ý: theo chuẩn C++, new ném std::bad_alloc thay vì trả NULL.",
+      "parts": [
+        {
+          "lines": "1-4",
+          "note": "Mảng 1 chiều động (slide tr. 28)."
+        },
+        {
+          "lines": "7-11",
+          "note": "Một khối R*C, mt[i] trỏ đầu mỗi hàng; giải phóng khối dữ liệu rồi mảng con trỏ."
+        },
+        {
+          "lines": "14-17",
+          "note": "Cấp và giải phóng từng hàng."
+        }
+      ],
+      "pages": [
+        28,
+        30,
+        31
+      ],
+      "source": "slide"
+    }
+  ],
+  "figures": [
+    {
+      "page": 3,
+      "caption": "Tên biến, địa chỉ và giá trị trong bộ nhớ"
+    },
+    {
+      "page": 8,
+      "caption": "Con trỏ trỏ tới biến"
+    },
+    {
+      "page": 12,
+      "caption": "Ví dụ số học con trỏ"
+    },
+    {
+      "page": 29,
+      "caption": "Mảng 2 chiều biểu diễn bằng mảng 1 chiều"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "&x trả về gì?",
+      "back": "Địa chỉ ô nhớ đầu tiên của vùng nhớ lưu x.",
+      "pages": [
+        2,
+        3
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "Con trỏ là gì?",
+      "back": "Biến chứa địa chỉ vùng nhớ của một biến khác.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "Cú pháp khai báo con trỏ?",
+      "back": "`data_type* ptr_name;`",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "*p gọi là gì?",
+      "back": "Tham chiếu ngược (dereference) – giá trị tại địa chỉ p.",
+      "pages": [
+        6,
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "Vì sao `int *p; *p = 10;` sai?",
+      "back": "p chưa được khởi tạo, không trỏ tới vùng nhớ hợp lệ.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "long* 300 ++ thành bao nhiêu (long 4 byte)?",
+      "back": "304.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "Trừ 2 con trỏ được gì?",
+      "back": "Số phần tử giữa chúng.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Phép toán nào không hợp lệ giữa 2 con trỏ?",
+      "back": "Cộng, nhân, chia.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "*p++ tương đương?",
+      "back": "*(p++) – tăng địa chỉ, không tăng giá trị.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "Truy cập dữ liệu qua void* thế nào?",
+      "back": "Ép kiểu trước: *((float*)p) = 2.5.",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "a và &a[0] quan hệ thế nào?",
+      "back": "Bằng nhau – tên mảng là hằng địa chỉ phần tử đầu.",
+      "pages": [
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "Vì sao không được a++ với mảng a?",
+      "back": "Tên mảng là hằng.",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "*(pa+i) bằng gì nếu pa = &a[0]?",
+      "back": "a[i].",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "char *ds[10] là gì?",
+      "back": "Mảng 10 con trỏ char, lưu 10 xâu.",
+      "pages": [
+        19
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Ưu điểm của mảng con trỏ?",
+      "back": "Hoán đổi con trỏ thay vì sao chép đối tượng; truyền tham số tiện.",
+      "pages": [
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Biểu thức con trỏ của M[i][k]?",
+      "back": "*(*(M+i)+k).",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "Hàm quản lý bộ nhớ động trong C?",
+      "back": "malloc, calloc, realloc, free.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Cấp phát và giải phóng mảng động trong C++?",
+      "back": "`p = new T[n];` và `delete [] p;`",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "Khi không đủ bộ nhớ, new làm gì theo chuẩn C++?",
+      "back": "Ném std::bad_alloc (slide nói trả NULL; dùng new(std::nothrow) để nhận NULL).",
+      "pages": [
+        27
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "fc-20",
+      "front": "Công thức mảng 2 chiều m×n lưu bằng mảng 1 chiều?",
+      "back": "X[i][j] = A[i*n + j].",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "Giải phóng mảng 2 chiều cấp phát một khối (mt, mt[0])?",
+      "back": "`delete [] mt[0]; delete [] mt;`",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "Với `int x = 10; int *p = &x;`, biểu thức nào có giá trị 10?",
+      "options": [
+        "*p",
+        "&p",
+        "p",
+        "&x"
+      ],
+      "answer": 0,
+      "explanation": "*p là tham chiếu ngược tới x.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "vận dụng",
+      "question": "Đoạn sau in ra gì?",
+      "code": {
+        "language": "c",
+        "code": "int x = 10;\nint *p = &x;\n*p = 20;\nint b = *p + 1;\nprintf(\"%d %d\", x, b);"
+      },
+      "options": [
+        "10 11",
+        "20 21",
+        "10 21",
+        "20 11"
+      ],
+      "answer": 1,
+      "explanation": "Gán qua *p thay đổi x thành 20; b = 21.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "vận dụng",
+      "question": "Lỗi trong đoạn code sau?",
+      "code": {
+        "language": "c",
+        "code": "int *p;\n*p = 10;"
+      },
+      "options": [
+        "Thiếu dấu &",
+        "Không được gán số cho con trỏ",
+        "p chưa được khởi tạo – ghi vào địa chỉ không xác định",
+        "Không có lỗi"
+      ],
+      "answer": 2,
+      "explanation": "Slide: // this is not correct.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "vận dụng",
+      "question": "char *pc, short *ps, long *pl có địa chỉ 100, 200, 300 (short 2 byte, long 4 byte). Sau `pc++; ps++; pl++;` giá trị là?",
+      "options": [
+        "101, 201, 301",
+        "104, 204, 304",
+        "100, 200, 300",
+        "101, 202, 304"
+      ],
+      "answer": 3,
+      "explanation": "Mỗi lần tăng đúng sizeof(kiểu).",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "vận dụng",
+      "question": "Tiếp câu trên (pl = 304), `pl += 5;` cho pl bằng?",
+      "options": [
+        "324",
+        "309",
+        "320",
+        "329"
+      ],
+      "answer": 0,
+      "explanation": "304 + 5×4 = 324.",
+      "pages": [
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "vận dụng",
+      "question": "Đoạn sau in ra gì?",
+      "code": {
+        "language": "c",
+        "code": "int a[5] = {1,2,3,4,5};\nint *p = a;\nprintf(\"%d \", *p++);\nprintf(\"%d\", *p);"
+      },
+      "options": [
+        "1 1",
+        "1 2",
+        "2 2",
+        "2 3"
+      ],
+      "answer": 1,
+      "explanation": "*p++ lấy a[0]=1 rồi p trỏ a[1]=2 (đã chạy thử).",
+      "pages": [
+        13
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-07",
+      "level": "vận dụng",
+      "question": "Đoạn sau in ra gì?",
+      "code": {
+        "language": "c",
+        "code": "int a[5] = {1,2,3,4,5};\nint *p = &a[1];\nprintf(\"%d \", (*p)++);\nprintf(\"%d\", a[1]);"
+      },
+      "options": [
+        "2 2",
+        "3 3",
+        "2 3",
+        "3 4"
+      ],
+      "answer": 2,
+      "explanation": "(*p)++ trả giá trị cũ 2 rồi tăng a[1] thành 3.",
+      "pages": [
+        13
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-08",
+      "level": "hiểu",
+      "question": "Vì sao `*p = 2.5;` báo lỗi khi `void *p = &x;`?",
+      "options": [
+        "Vì x không phải float",
+        "Vì p chưa khởi tạo",
+        "Vì 2.5 là double",
+        "Vì void* không biết kiểu đối tượng, phải ép kiểu trước khi truy cập"
+      ],
+      "answer": 3,
+      "explanation": "Cần *((float*)p) = 2.5.",
+      "pages": [
+        14,
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "hiểu",
+      "question": "Với `int a[30];`, câu lệnh nào KHÔNG hợp lệ?",
+      "options": [
+        "a++;",
+        "pa = &a[0];",
+        "int *pa = a;",
+        "*(a+2) = 5;"
+      ],
+      "answer": 0,
+      "explanation": "a là hằng địa chỉ, không dùng trong lệnh gán hay tăng giảm.",
+      "pages": [
+        17
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "vận dụng",
+      "question": "Slide viết `*(tinhthanh+3) = \"l\";`. Lỗi là gì?",
+      "options": [
+        "Không có lỗi",
+        "\"l\" là chuỗi (const char*), phải dùng ký tự 'l'",
+        "Phải viết tinhthanh[3] = \"l\"",
+        "Chỉ số 3 vượt mảng"
+      ],
+      "answer": 1,
+      "explanation": "Gán chuỗi vào phần tử char là sai kiểu; nếu tinhthanh trỏ tới chuỗi hằng thì sửa cũng là hành vi không xác định.",
+      "pages": [
+        18
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-11",
+      "level": "vận dụng",
+      "question": "Đoạn sau in ra gì?",
+      "code": {
+        "language": "c",
+        "code": "int x = 12;\nint *p1 = &x;\nint **p2 = &p1;\n**p2 = 20;\nprintf(\"%d\", x);"
+      },
+      "options": [
+        "12",
+        "Địa chỉ của p1",
+        "20",
+        "Lỗi"
+      ],
+      "answer": 2,
+      "explanation": "**p2 là x.",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "vận dụng",
+      "question": "Với `int m[2][3] = {{1,2,3},{4,5,6}};`, `*(*(m+1)+2)` bằng?",
+      "options": [
+        "3",
+        "5",
+        "4",
+        "6"
+      ],
+      "answer": 3,
+      "explanation": "m[1][2] = 6 (đã chạy thử).",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "hiểu",
+      "question": "Cặp lệnh nào đúng để cấp và giải phóng mảng 100 số nguyên?",
+      "options": [
+        "int *p = new int[100]; delete [] p;",
+        "int *p = new int(100); delete [] p;",
+        "int *p = new int[100]; delete p;",
+        "int *p = malloc(100); delete p;"
+      ],
+      "answer": 0,
+      "explanation": "new T[n] đi với delete [] p; new int(100) là một số nguyên giá trị 100.",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "hiểu",
+      "question": "Theo chuẩn C++, khi không đủ bộ nhớ `new int[N]` làm gì?",
+      "options": [
+        "Trả NULL",
+        "Ném ngoại lệ std::bad_alloc",
+        "Trả con trỏ ngẫu nhiên",
+        "Treo chương trình"
+      ],
+      "answer": 1,
+      "explanation": "Slide nói trả NULL; chuẩn hiện đại ném bad_alloc, chỉ new(std::nothrow) trả nullptr.",
+      "pages": [
+        27
+      ],
+      "source": "bổ sung"
+    },
+    {
+      "id": "q-15",
+      "level": "vận dụng",
+      "question": "Mảng 2 chiều 4 dòng × 5 cột lưu trong mảng 1 chiều A. Phần tử X[2][3] ứng với?",
+      "options": [
+        "A[23]",
+        "A[11]",
+        "A[13]",
+        "A[10]"
+      ],
+      "answer": 2,
+      "explanation": "X[i][j] = A[i*n + j] = A[2*5 + 3] = A[13].",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-16",
+      "level": "vận dụng",
+      "question": "Đoạn code (theo slide) nhập mảng long bằng `scanf(\"%d\", &arr[i])`. Vấn đề?",
+      "options": [
+        "Không có",
+        "arr chưa cấp phát",
+        "Phải dùng cin",
+        "Định dạng %d không khớp kiểu long – phải dùng %ld"
+      ],
+      "answer": 3,
+      "explanation": "Sai định dạng gây hành vi không xác định trên nền tảng long khác int.",
+      "pages": [
+        28
+      ],
+      "source": "bổ sung"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Trình bày khái niệm con trỏ, toán tử & và *, các phép toán hợp lệ trên con trỏ. Cho ví dụ số học con trỏ với các kiểu char, short, long.",
+      "hints": "- Biến, địa chỉ [tr. 2](#p2)–[tr. 4](#p4).\n- Con trỏ, dereference [tr. 5](#p5)–[tr. 9](#p9).\n- Phép toán: cộng/trừ n, trừ 2 con trỏ, không cộng/nhân/chia; ví dụ 100/200/300 [tr. 11](#p11)–[tr. 12](#p12).\n- *p++ [tr. 13](#p13).",
+      "pages": [
+        5,
+        7,
+        11,
+        12,
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Phân tích mối quan hệ giữa con trỏ và mảng (1 chiều, 2 chiều), mảng con trỏ. Viết hàm sắp xếp danh sách tên bằng cách hoán đổi con trỏ.",
+      "hints": "- a == &a[0], a+i, *(pa+i) [tr. 16](#p16)–[tr. 17](#p17).\n- Mảng con trỏ, ưu điểm [tr. 19](#p19)–[tr. 21](#p21).\n- M[i][k] = *(*(M+i)+k) [tr. 22](#p22)–[tr. 23](#p23).",
+      "pages": [
+        16,
+        17,
+        19,
+        20,
+        21,
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "So sánh cấp phát bộ nhớ tĩnh và động. Viết chương trình C++ nhập n, cấp phát mảng động n số nguyên, tính tổng và giải phóng bộ nhớ; xử lý trường hợp cấp phát thất bại.",
+      "hints": "- Tĩnh vs động [tr. 24](#p24)–[tr. 25](#p25).\n- new/delete, new[]/delete[] [tr. 26](#p26).\n- Kiểm tra cấp phát [tr. 27](#p27) (chuẩn: try/catch bad_alloc hoặc nothrow).\n- Ví dụ [tr. 28](#p28).",
+      "pages": [
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "Trình bày hai cách cấp phát động cho mảng hai chiều R × C và cách giải phóng tương ứng. Nêu ưu nhược điểm.",
+      "hints": "- Cách 1: mảng 1 chiều, X[i][j] = A[i*n+j] – liền khối, tính chỉ số thủ công [tr. 29](#p29).\n- Cách 2a: mảng con trỏ hàng + một khối dữ liệu, giải phóng mt[0] rồi mt [tr. 30](#p30).\n- Cách 2b: cấp từng hàng, giải phóng từng hàng rồi M [tr. 31](#p31) – linh hoạt (hàng dài khác nhau) nhưng nhiều lần cấp phát.",
+      "pages": [
+        29,
+        30,
+        31
+      ],
+      "source": "slide"
+    }
+  ]
+}

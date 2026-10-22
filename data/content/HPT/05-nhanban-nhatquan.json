@@ -1,0 +1,891 @@
+{
+  "version": 1,
+  "subject": "HPT",
+  "lesson": "05-nhanban-nhatquan",
+  "title": "Chương 5 – Nhân bản & nhất quán (Replication & Consistency)",
+  "summary": "## 1. Vì sao nhân bản (replication)?\n- Ví dụ **CDN** như Akamai [tr. 4](#p4)–[tr. 7](#p7):\n  - Mục đích: tăng hiệu năng, giảm tải mạng, chịu lỗi tốt hơn.\n  - Thị trường CDN khoảng 15,47 tỷ USD (2021), tăng mạnh nhờ OTT, VOD, thương mại điện tử, game online.\n  - Ví dụ thực tế: chuyển từ IPTV sang OTT.\n- Lý do nhân bản [tr. 10](#p10): **độ tin cậy/sẵn sàng**, **hiệu năng**, khả năng co giãn. Đổi lại phải đảm bảo **nhất quán dữ liệu**.\n- **Nhất quán** [tr. 11](#p11):\n  - Các bản sao phải có cùng dữ liệu, nhưng không thể đồng bộ tức khắc. Câu hỏi là đồng bộ khi nào và bằng cách nào.\n  - **Nhất quán mạnh thì tốn hiệu năng**.\n  - Ví dụ cache trình duyệt: cấm cache thì chậm, server cập nhật mọi cache thì tốn kém. Giải pháp là **nhất quán hợp lý**.\n- Ưu/nhược [tr. 12](#p12):\n  - Ưu: truy cập nhanh hơn, giảm băng thông.\n  - Nhược: phát sinh băng thông đồng bộ, hệ thống phức tạp hơn.\n  - Phụ thuộc tỉ lệ cập nhật/truy cập. Thống nhất chặt làm giảm hiệu năng. Thống nhất lỏng thì phải cân nhắc mức độ nhất quán so với chi phí.\n\n## 2. Mô hình nhất quán hướng dữ liệu (data-centric)\n- Đối tượng là **kho dữ liệu phân tán**: mỗi tiến trình truy cập bản sao cục bộ [tr. 15](#p15).\n- **Mô hình nhất quán** là cam kết giữa tiến trình và kho dữ liệu. Không có đồng hồ toàn cục nên khó định nghĩa \"giá trị mới nhất\". Vì vậy dùng khái niệm **phạm vi sai lệch** [tr. 16](#p16).\n- Phân loại [tr. 14](#p14):\n  - Hướng dữ liệu: nhất quán liên tục; nhất quán theo thứ tự thao tác (tuần tự, nhân quả).\n  - Hướng client: đọc đơn điệu, ghi đơn điệu, đọc kết quả đã ghi, ghi theo kết quả đã đọc.\n- **Nhất quán liên tục (continuous)** [tr. 18](#p18):\n  - Đo sự bất đồng bộ qua 3 yếu tố: **sai lệch giá trị**, **sai lệch thời gian cập nhật**, **sai lệch thứ tự** cập nhật.\n  - Khi vượt ngưỡng, middleware đồng bộ để đưa sai lệch về giới hạn.\n- **Conit (consistency unit)** [tr. 19](#p19)–[tr. 20](#p20):\n  - Là đơn vị dữ liệu dùng để đo nhất quán. Ví dụ conit {x, y} trên 2 replica A, B với vector clock, order deviation và numerical deviation.\n  - Conit **lớn** thì các bản sao nhanh rơi vào trạng thái không nhất quán. Conit **nhỏ** thì có quá nhiều conit, khó quản lý. Bài toán là chọn kích thước tối ưu.\n- **Nhất quán theo thứ tự thao tác** [tr. 22](#p22)–[tr. 23](#p23):\n  - Mạnh hơn mô hình liên tục: thứ tự cập nhật phải thống nhất giữa các replica.\n  - Ký hiệu: $W_i(x)a$ là $P_i$ ghi a vào x. $R_i(x)b$ là $P_i$ đọc được b. Giá trị khởi tạo là NIL.\n- **Nhất quán tuần tự (sequential)** [tr. 25](#p25)–[tr. 26](#p26):\n  - Kết quả như thể các thao tác của mọi tiến trình được thực hiện theo **một thứ tự tuần tự nào đó**, và thao tác của mỗi tiến trình giữ nguyên thứ tự chương trình.\n  - **Mọi tiến trình thấy cùng một thứ tự các thao tác ghi**.\n  - Ví dụ (a) hợp lệ: P3 và P4 đều thấy b rồi a. Ví dụ (b) không hợp lệ: P3 thấy b→a, P4 thấy a→b.\n- **Nhất quán nhân quả (causal)** [tr. 28](#p28)–[tr. 29](#p29):\n  - Chỉ các thao tác ghi **có quan hệ nhân quả** mới phải được mọi tiến trình thấy theo cùng thứ tự. Các ghi tương tranh có thể thấy theo thứ tự khác. Đây là mô hình **yếu hơn** tuần tự.\n  - Ví dụ (a) **vi phạm**: P2 đọc a rồi ghi b, nên W(x)a → W(x)b, nhưng P3 lại thấy b trước a.\n  - Ví dụ (b) **hợp lệ**: hai ghi tương tranh, P3 và P4 thấy theo thứ tự khác nhau cũng được.\n- **Thao tác nhóm / đoạn găng** [tr. 30](#p30)–[tr. 31](#p31):\n  - Dùng `ENTER_CS`/`LEAVE_CS` trên từng phần dữ liệu (bảng, dòng, đối tượng…). Ghi thì loại trừ, đọc thì không loại trừ.\n  - Nguyên tắc:\n    1. Chỉ vào khi mọi cập nhật đã hoàn tất.\n    2. Vào để ghi chỉ khi không ai giữ quyền.\n    3. Trước khi đọc phải kiểm tra với chủ đoạn găng xem dữ liệu đã mới nhất chưa.\n\n## 3. Mô hình nhất quán hướng client (client-centric)\n- **Eventual consistency** [tr. 34](#p34)–[tr. 35](#p35):\n  - Hệ thống chủ yếu đọc, rất ít ghi, xung đột ghi–ghi hầu như không xảy ra. Ví dụ DNS, WWW.\n  - Nếu không có cập nhật trong thời gian đủ dài thì mọi bản sao **dần nhất quán**.\n  - Vấn đề: client **di chuyển** sang replica khác có thể thấy dữ liệu cũ.\n- Đặc điểm chung: chỉ đảm bảo nhất quán **cho một client**, không đảm bảo cho truy cập cạnh tranh của tiến trình khác [tr. 36](#p36).\n- Ký pháp [tr. 37](#p37): $x_i[t]$ là giá trị x tại bản sao $L_i$ ở thời điểm t. $WS(x_i[t_1]; x_j[t_2])$ nghĩa là các ghi ở $L_i$ đã được phổ biến tới $L_j$.\n- 4 mô hình:\n  - **Đọc đơn điệu (monotonic read)**: đã đọc giá trị x thì lần đọc sau trả về **cùng hoặc mới hơn**, vd đọc email ở nơi khác vẫn thấy thư cũ [tr. 39](#p39).\n  - **Ghi đơn điệu (monotonic write)**: các ghi của một tiến trình lên cùng dữ liệu phải **hoàn tất theo thứ tự**, giống FIFO nhưng cho một tiến trình [tr. 40](#p40)–[tr. 41](#p41).\n  - **Đọc kết quả đã ghi (read-your-writes)**: sau khi ghi, lần đọc tiếp của chính tiến trình đó phải thấy kết quả ghi, vd cập nhật trang web hay đổi mật khẩu [tr. 42](#p42)–[tr. 43](#p43).\n  - **Ghi theo kết quả đã đọc (writes-follow-reads)**: thao tác ghi sau một lần đọc được thực hiện trên bản sao **ít nhất mới bằng** giá trị đã đọc, vd chỉ trả lời thư khi bản sao có thư đó [tr. 44](#p44)–[tr. 45](#p45).\n\n## 4. Quản lý bản sao\n- **Đặt máy chủ** [tr. 48](#p48)–[tr. 49](#p49): chọn K trong N vị trí.\n  - Cách 1: dựa trên khoảng cách client–replica, chọn lần lượt từng server.\n  - Cách 2: chia mạng thành autonomous system, đặt server ở router nhiều link nhất của AS lớn nhất, rồi làm tiếp với AS nhỏ hơn. Độ phức tạp **O(N²)**.\n  - Chia theo cell: độ phức tạp $O(N \\times \\max(\\log N, K))$.\n- **Quản lý nội dung** [tr. 51](#p51)–[tr. 55](#p55) có 3 loại bản sao:\n  - **Cố định (permanent)**: có từ đầu, số lượng ít. Phân phối round-robin hoặc client tự chọn. Dùng cho web, database.\n  - **Kích hoạt bởi server**: khi số yêu cầu tăng, server tạo bản sao ở vị trí gần client hơn. Server Q đếm truy cập từ C1, C2 như thể đến từ P. Ví dụ dịch vụ hosting.\n  - **Kích hoạt bởi client**: caching. Client quản lý cache, có thể chia sẻ cache.\n- **Phân phối nội dung** [tr. 57](#p57)–[tr. 60](#p60):\n  - Nội dung lan truyền:\n    - **Chỉ thông báo** cập nhật (invalidation): hợp ghi nhiều đọc ít.\n    - **Truyền dữ liệu**: hợp đọc nhiều ghi ít.\n    - **Truyền thao tác** (active replication): ít dữ liệu truyền đi.\n  - **Push** (server đẩy): nhất quán cao, server phải biết danh sách client.\n  - **Pull** (client hỏi): dùng cho cache, hợp ghi nhiều đọc ít, chậm khi cache miss. Có thể kết hợp **mixed**.\n  - **Multicast** hợp với push (một bản sao gửi cho N−1 bản sao). **Unicast** hợp với pull.\n\n## 5. Giao thức đảm bảo nhất quán\n- **Nhất quán liên tục** [tr. 62](#p62)–[tr. 66](#p66):\n  - Giới hạn **sai lệch giá trị**: trọng số ghi TW[i,j], log mỗi server.\n  - Giới hạn **sai lệch thời gian**: vector clock RVC; nếu $T(k) - RVC_k[i] > \\delta$ thì kéo cập nhật về.\n  - Giới hạn **sai lệch thứ tự**: số ghi tối đa trong hàng đợi chưa thống nhất thứ tự. Vượt quá thì dừng lại và thoả thuận với các server khác.\n- **Dựa trên bản sao primary** [tr. 67](#p67)–[tr. 70](#p70):\n  - **Ghi từ xa (remote-write, primary cố định)**: mọi ghi gửi tới primary, đọc làm cục bộ. Cập nhật chậm nhưng đảm bảo **nhất quán tuần tự**.\n  - **Ghi cục bộ (local-write)**: primary **di chuyển** tới tiến trình muốn ghi rồi ghi cục bộ.\n- **Replicated write** [tr. 71](#p71)–[tr. 74](#p74):\n  - **Nhân bản tích cực (active replication)**: phổ biến **thao tác** tới mọi bản sao. Cần cơ chế thứ tự toàn cục: Lamport (khó co giãn) hoặc **sequencer**.\n  - **Quorum** với N bản sao, đọc từ $N_R$ bản sao, ghi vào $N_W$ bản sao:\n    1. $N_R + N_W > N$: tránh xung đột **đọc–ghi**.\n    2. $N_W > N/2$: tránh xung đột **ghi–ghi**.\n  - Ví dụ N = 12: (3, 10) hợp lệ. (7, 6) **sai** vì $N_W = 6$ không > 6. (1, 12) hợp lệ, đây là ROWA: đọc 1, ghi tất cả.",
+  "keyConcepts": [
+    {
+      "term": "Nhân bản (replication)",
+      "definition": "Tạo nhiều bản sao dữ liệu/dịch vụ để tăng độ tin cậy, hiệu năng, khả năng co giãn.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "CDN",
+      "definition": "Content Delivery Network – mạng máy chủ biên phân phối nội dung gần người dùng (vd Akamai).",
+      "pages": [
+        4,
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Nhất quán mạnh vs yếu",
+      "definition": "Mạnh: mọi bản sao luôn giống nhau, tốn hiệu năng; yếu/hợp lý: chấp nhận sai lệch có kiểm soát.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Kho dữ liệu phân tán",
+      "definition": "Dữ liệu được nhân bản, mỗi tiến trình truy cập bản sao cục bộ.",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Mô hình nhất quán",
+      "definition": "Cam kết giữa tiến trình và kho dữ liệu về giá trị đọc được.",
+      "pages": [
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Nhất quán liên tục",
+      "definition": "Đo sai lệch giá trị, thời gian, thứ tự giữa các bản sao và đồng bộ khi vượt ngưỡng.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Conit",
+      "definition": "Consistency unit – đơn vị dữ liệu để đo và kiểm soát nhất quán; kích thước lớn/nhỏ đều có đánh đổi.",
+      "pages": [
+        19,
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Nhất quán tuần tự",
+      "definition": "Kết quả như mọi thao tác được thực hiện theo một thứ tự tuần tự chung, giữ thứ tự chương trình; mọi tiến trình thấy cùng thứ tự ghi.",
+      "pages": [
+        25,
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Nhất quán nhân quả",
+      "definition": "Các ghi có quan hệ nhân quả phải được mọi tiến trình thấy cùng thứ tự; ghi tương tranh thì không bắt buộc.",
+      "pages": [
+        28,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "ENTER_CS / LEAVE_CS",
+      "definition": "Dùng đoạn găng gắn với phần dữ liệu để nhóm thao tác; ghi loại trừ, đọc không loại trừ.",
+      "pages": [
+        30,
+        31
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Eventual consistency",
+      "definition": "Nếu không có cập nhật trong thời gian đủ lâu, mọi bản sao dần nhất quán; hợp hệ thống đọc nhiều (DNS, WWW).",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Mô hình hướng client",
+      "definition": "Đảm bảo nhất quán cho truy cập của một client đơn lẻ, không cho truy cập cạnh tranh.",
+      "pages": [
+        36
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Monotonic read",
+      "definition": "Đã đọc x thì các lần đọc sau trả cùng giá trị hoặc mới hơn.",
+      "pages": [
+        39
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Monotonic write",
+      "definition": "Các ghi của một tiến trình lên cùng dữ liệu hoàn tất theo đúng thứ tự.",
+      "pages": [
+        40
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Read-your-writes",
+      "definition": "Sau khi ghi, các lần đọc sau của chính tiến trình đó thấy kết quả ghi.",
+      "pages": [
+        42
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Writes-follow-reads",
+      "definition": "Ghi sau khi đọc được thực hiện trên bản sao ít nhất mới bằng giá trị đã đọc.",
+      "pages": [
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Đặt máy chủ bản sao",
+      "definition": "Chọn K trong N vị trí; theo khoảng cách client hoặc theo autonomous system (O(N²)), theo cell (O(N·max(logN,K))).",
+      "pages": [
+        48,
+        49
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Bản sao cố định",
+      "definition": "Có từ khi khởi động kho dữ liệu, số lượng nhỏ; phân phối round-robin hoặc client chọn.",
+      "pages": [
+        52
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Bản sao kích hoạt bởi server",
+      "definition": "Server tạo bản sao gần client khi số yêu cầu tăng để giảm tải.",
+      "pages": [
+        53,
+        54
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Bản sao kích hoạt bởi client",
+      "definition": "Cache do client quản lý.",
+      "pages": [
+        55
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Invalidation / truyền dữ liệu / truyền thao tác",
+      "definition": "Ba cách lan truyền cập nhật: chỉ thông báo; gửi dữ liệu mới; gửi thao tác.",
+      "pages": [
+        58
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Push vs pull",
+      "definition": "Push: server đẩy cập nhật, nhất quán cao; pull: client hỏi khi cần, hợp với cache.",
+      "pages": [
+        59
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Remote-write protocol",
+      "definition": "Primary cố định nhận mọi thao tác ghi; đọc cục bộ; đảm bảo nhất quán tuần tự.",
+      "pages": [
+        67,
+        68,
+        69
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Local-write protocol",
+      "definition": "Primary di chuyển tới tiến trình muốn ghi để ghi cục bộ.",
+      "pages": [
+        67,
+        70
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Active replication",
+      "definition": "Phổ biến thao tác tới mọi bản sao, cần thứ tự toàn cục (Lamport hoặc sequencer).",
+      "pages": [
+        72
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Quorum",
+      "definition": "Đọc N_R, ghi N_W bản sao với N_R + N_W > N và N_W > N/2.",
+      "pages": [
+        73,
+        74
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "ROWA",
+      "definition": "Read-one-write-all: N_R = 1, N_W = N – trường hợp đặc biệt của quorum.",
+      "pages": [
+        74
+      ],
+      "source": "bổ sung"
+    }
+  ],
+  "codeExamples": [],
+  "figures": [
+    {
+      "page": 14,
+      "caption": "Phân loại mô hình nhất quán"
+    },
+    {
+      "page": 19,
+      "caption": "Ví dụ conit trên hai replica"
+    },
+    {
+      "page": 26,
+      "caption": "Nhất quán tuần tự: hợp lệ và không hợp lệ"
+    },
+    {
+      "page": 29,
+      "caption": "Nhất quán nhân quả: vi phạm và hợp lệ"
+    },
+    {
+      "page": 39,
+      "caption": "Đọc đơn điệu"
+    },
+    {
+      "page": 54,
+      "caption": "Bản sao kích hoạt bởi server"
+    },
+    {
+      "page": 74,
+      "caption": "Ví dụ quorum N = 12"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "3 lợi ích của CDN/nhân bản?",
+      "back": "Tăng hiệu năng, giảm tải mạng, chịu lỗi tốt hơn.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "Cái giá phải trả khi nhân bản?",
+      "back": "Phải đảm bảo nhất quán dữ liệu; tốn băng thông đồng bộ, hệ thống phức tạp.",
+      "pages": [
+        10,
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "Vì sao không dùng nhất quán mạnh mọi lúc?",
+      "back": "Nhất quán mạnh tốn kém hiệu năng.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "2 nhóm mô hình nhất quán?",
+      "back": "Hướng dữ liệu (liên tục, tuần tự, nhân quả) và hướng client (4 mô hình).",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "3 yếu tố đo sai lệch trong nhất quán liên tục?",
+      "back": "Sai lệch giá trị, sai lệch thời gian cập nhật, sai lệch thứ tự cập nhật.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Conit là gì?",
+      "back": "Consistency unit – đơn vị dữ liệu dùng để đo/kiểm soát nhất quán.",
+      "pages": [
+        19
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "Conit lớn và nhỏ có nhược điểm gì?",
+      "back": "Lớn: bản sao nhanh không nhất quán; nhỏ: quá nhiều conit, khó quản lý.",
+      "pages": [
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Ký hiệu W_i(x)a và R_i(x)b?",
+      "back": "P_i ghi a vào x; P_i đọc x được b.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "Điều kiện cốt lõi của nhất quán tuần tự?",
+      "back": "Mọi tiến trình thấy cùng một thứ tự các thao tác ghi, giữ thứ tự chương trình của từng tiến trình.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "Nhất quán nhân quả yếu hơn tuần tự ở điểm nào?",
+      "back": "Chỉ ghi có quan hệ nhân quả mới cần cùng thứ tự; ghi tương tranh có thể thấy khác nhau.",
+      "pages": [
+        28
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "3 nguyên tắc truy cập đoạn găng?",
+      "back": "Chỉ vào khi cập nhật đã xong; ghi chỉ khi không ai giữ; đọc phải kiểm tra tính cập nhật với chủ.",
+      "pages": [
+        31
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "Eventual consistency phù hợp hệ thống nào?",
+      "back": "Hệ đọc nhiều, ghi ít, hầu như không xung đột ghi–ghi (DNS, WWW).",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "Vấn đề của eventual consistency?",
+      "back": "Client di chuyển sang bản sao khác có thể thấy dữ liệu cũ.",
+      "pages": [
+        35
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "4 mô hình nhất quán hướng client?",
+      "back": "Đọc đơn điệu, ghi đơn điệu, đọc kết quả đã ghi, ghi theo kết quả đã đọc.",
+      "pages": [
+        33,
+        36
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Monotonic read đảm bảo gì?",
+      "back": "Lần đọc sau trả giá trị cùng hoặc mới hơn lần đọc trước.",
+      "pages": [
+        39
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Ví dụ read-your-writes?",
+      "back": "Đổi mật khẩu/cập nhật trang web rồi đọc lại phải thấy bản mới.",
+      "pages": [
+        42
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "Ví dụ writes-follow-reads?",
+      "back": "Chỉ trả lời thư khi bản sao cục bộ đã có thư đó.",
+      "pages": [
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Độ phức tạp đặt server theo autonomous system?",
+      "back": "O(N²).",
+      "pages": [
+        48
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "3 loại bản sao trong quản lý nội dung?",
+      "back": "Cố định, kích hoạt bởi server, kích hoạt bởi client (cache).",
+      "pages": [
+        51,
+        52,
+        53,
+        55
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "Khi nào chỉ gửi thông báo cập nhật (invalidation)?",
+      "back": "Khi ghi nhiều, đọc ít.",
+      "pages": [
+        58
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "Push khác pull?",
+      "back": "Push: server chủ động đẩy, nhất quán cao, cần danh sách client; pull: client hỏi khi cần, chậm khi cache miss.",
+      "pages": [
+        59
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "Multicast phù hợp với push hay pull?",
+      "back": "Push.",
+      "pages": [
+        60
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "3 giới hạn của giao thức nhất quán liên tục?",
+      "back": "Sai lệch giá trị, thời gian, thứ tự thao tác.",
+      "pages": [
+        62
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "Remote-write khác local-write?",
+      "back": "Remote: primary cố định nhận mọi ghi; local: primary di chuyển tới nơi ghi.",
+      "pages": [
+        67
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-25",
+      "front": "Remote-write đảm bảo mô hình nhất quán nào?",
+      "back": "Nhất quán tuần tự.",
+      "pages": [
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-26",
+      "front": "Active replication cần cơ chế gì?",
+      "back": "Thứ tự toàn cục – đồng hồ Lamport hoặc sequencer.",
+      "pages": [
+        72
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-27",
+      "front": "2 điều kiện quorum?",
+      "back": "N_R + N_W > N (tránh đọc–ghi) và N_W > N/2 (tránh ghi–ghi).",
+      "pages": [
+        73
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-28",
+      "front": "N = 12, N_R = 7, N_W = 6 có hợp lệ không?",
+      "back": "Không – N_W = 6 không lớn hơn N/2 = 6, có thể xung đột ghi–ghi.",
+      "pages": [
+        74
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "Lý do nào KHÔNG phải mục đích của nhân bản?",
+      "options": [
+        "Giảm độ phức tạp hệ thống",
+        "Tăng hiệu năng",
+        "Tăng độ tin cậy/sẵn sàng",
+        "Khả năng co giãn"
+      ],
+      "answer": 0,
+      "explanation": "Nhân bản làm tăng mức độ phức tạp của hệ thống.",
+      "pages": [
+        10,
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "hiểu",
+      "question": "Vì sao các hệ thống thường chọn \"nhất quán hợp lý\" thay vì nhất quán mạnh?",
+      "options": [
+        "Vì nhất quán mạnh không tồn tại",
+        "Vì đạt nhất quán mạnh rất tốn kém về hiệu năng",
+        "Vì người dùng không cần dữ liệu đúng",
+        "Vì cache bị cấm"
+      ],
+      "answer": 1,
+      "explanation": "Đạt được tính nhất quán mạnh ⇒ tốn kém về hiệu năng.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "hiểu",
+      "question": "Đánh đổi khi chọn kích thước conit?",
+      "options": [
+        "Conit nhỏ làm giảm số bản sao",
+        "Conit lớn luôn tốt hơn",
+        "Conit lớn dễ quản lý nhưng bản sao nhanh mất nhất quán; conit nhỏ nhất quán cao nhưng quản lý phức tạp",
+        "Không có đánh đổi"
+      ],
+      "answer": 2,
+      "explanation": "Slide tr. 20.",
+      "pages": [
+        20
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "vận dụng",
+      "question": "P1: W(x)a; P2: W(x)b; P3: R(x)b R(x)a; P4: R(x)a R(x)b. Kho dữ liệu này có nhất quán tuần tự không?",
+      "options": [
+        "Có",
+        "Có, vì mọi tiến trình đều đọc",
+        "Không, vì P1 ghi trước P2",
+        "Không, vì P3 và P4 thấy hai ghi theo thứ tự khác nhau"
+      ],
+      "answer": 3,
+      "explanation": "Nhất quán tuần tự yêu cầu mọi tiến trình thấy cùng thứ tự các thao tác ghi (ví dụ (b) tr. 26).",
+      "pages": [
+        25,
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "vận dụng",
+      "question": "P1: W(x)a; P2: W(x)b; P3: R(x)b R(x)a; P4: R(x)b R(x)a. Có nhất quán tuần tự không?",
+      "options": [
+        "Có – tồn tại thứ tự chung W(x)b, R3(x)b, R4(x)b, W(x)a, R3(x)a, R4(x)a",
+        "Không, vì b được ghi sau a",
+        "Không, vì P1 không đọc",
+        "Không xác định được"
+      ],
+      "answer": 0,
+      "explanation": "Ví dụ (a) tr. 26: thứ tự thực tế theo thời gian không quan trọng, chỉ cần mọi tiến trình thấy cùng một thứ tự ghi.",
+      "pages": [
+        26
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "vận dụng",
+      "question": "P1: W(x)a; P2: R(x)a W(x)b; P3: R(x)b R(x)a; P4: R(x)a R(x)b. Kho dữ liệu này có nhất quán nhân quả không?",
+      "options": [
+        "Có, vì ghi tương tranh",
+        "Không, vì W(x)a → W(x)b (P2 đọc a rồi ghi b) nhưng P3 thấy b trước a",
+        "Có, vì P4 đúng thứ tự",
+        "Không, vì P1 ghi trước"
+      ],
+      "answer": 1,
+      "explanation": "Ví dụ (a) tr. 29 vi phạm nhân quả.",
+      "pages": [
+        28,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "vận dụng",
+      "question": "P1: W(x)a; P2: W(x)b (không đọc a); P3: R(x)b R(x)a; P4: R(x)a R(x)b. Có nhất quán nhân quả không?",
+      "options": [
+        "Không – vì không nhất quán tuần tự",
+        "Không – P3 và P4 thấy khác thứ tự",
+        "Có – hai ghi tương tranh nên các tiến trình được thấy theo thứ tự khác nhau",
+        "Không xác định"
+      ],
+      "answer": 2,
+      "explanation": "Ví dụ (b) tr. 29: nhất quán nhân quả nhưng không nhất quán tuần tự.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "hiểu",
+      "question": "Eventual consistency phù hợp nhất với hệ thống nào?",
+      "options": [
+        "Ngân hàng chuyển tiền",
+        "Bộ nhớ chia sẻ đa CPU",
+        "Hệ thống đặt vé đồng thời",
+        "DNS, WWW – chủ yếu đọc, rất ít ghi"
+      ],
+      "answer": 3,
+      "explanation": "Chủ yếu các tiến trình thực hiện đọc; xung đột ghi–ghi hầu như không xảy ra.",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "vận dụng",
+      "question": "Bạn đọc hộp thư ở Hà Nội, bay vào TP.HCM và kết nối tới bản sao khác thì thấy các thư đã đọc biến mất. Mô hình nào bị vi phạm?",
+      "options": [
+        "Đọc đơn điệu (monotonic read)",
+        "Ghi đơn điệu",
+        "Nhất quán tuần tự",
+        "Writes-follow-reads"
+      ],
+      "answer": 0,
+      "explanation": "Lần đọc sau phải trả giá trị cùng hoặc mới hơn lần đọc trước.",
+      "pages": [
+        39
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "vận dụng",
+      "question": "Sau khi đổi mật khẩu, bạn đăng nhập lại ngay bằng mật khẩu mới nhưng bị từ chối vì bản sao chưa cập nhật. Mô hình nào bị vi phạm?",
+      "options": [
+        "Monotonic write",
+        "Read-your-writes",
+        "Eventual consistency",
+        "Causal"
+      ],
+      "answer": 1,
+      "explanation": "Đọc kết quả đã ghi – ví dụ cập nhật mật khẩu.",
+      "pages": [
+        42
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-11",
+      "level": "hiểu",
+      "question": "Truyền \"chỉ thông báo có cập nhật\" (invalidation) thích hợp khi nào?",
+      "options": [
+        "Đọc nhiều ghi ít",
+        "Không có cập nhật",
+        "Ghi nhiều đọc ít",
+        "Chỉ có một bản sao"
+      ],
+      "answer": 2,
+      "explanation": "Giảm thông tin cần truyền, thích hợp ghi nhiều – đọc ít.",
+      "pages": [
+        58
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "hiểu",
+      "question": "Đặc điểm của push-based?",
+      "options": [
+        "Client hỏi server khi cần",
+        "Tăng thời gian truy cập khi cache miss",
+        "Thích hợp cache phía client",
+        "Server đẩy cập nhật, nhất quán cao, cần danh sách client"
+      ],
+      "answer": 3,
+      "explanation": "Push: bản sao kích hoạt bởi server, đảm bảo nhất quán cao, server cần danh sách client.",
+      "pages": [
+        59
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "nhớ",
+      "question": "Giao thức remote-write đảm bảo mô hình nhất quán nào?",
+      "options": [
+        "Sequential",
+        "Causal",
+        "Eventual",
+        "Không đảm bảo gì"
+      ],
+      "answer": 0,
+      "explanation": "Tất cả ghi chuyển đến một server – đảm bảo được nhất quán tuần tự.",
+      "pages": [
+        68
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "hiểu",
+      "question": "Active replication dùng Lamport để đảm bảo thứ tự toàn cục gặp vấn đề gì?",
+      "options": [
+        "Không đảm bảo thứ tự",
+        "Khó co giãn – thay bằng sequencer",
+        "Tốn bộ nhớ đĩa",
+        "Không dùng được multicast"
+      ],
+      "answer": 1,
+      "explanation": "Có thể sử dụng thời gian logic (Lamport) ⇒ không co giãn được; hoặc dùng sequencer.",
+      "pages": [
+        72
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-15",
+      "level": "vận dụng",
+      "question": "N = 12 bản sao. Cấu hình quorum nào KHÔNG hợp lệ?",
+      "options": [
+        "N_R = 3, N_W = 10",
+        "N_R = 1, N_W = 12",
+        "N_R = 7, N_W = 6",
+        "N_R = 5, N_W = 8"
+      ],
+      "answer": 2,
+      "explanation": "N_W = 6 không > N/2 = 6 → có thể xảy ra xung đột ghi–ghi.",
+      "pages": [
+        73,
+        74
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-16",
+      "level": "vận dụng",
+      "question": "N = 5 bản sao, N_W = 3. N_R nhỏ nhất để không đọc phải dữ liệu cũ?",
+      "options": [
+        "1",
+        "2",
+        "5",
+        "3"
+      ],
+      "answer": 3,
+      "explanation": "Cần N_R + N_W > N ⇒ N_R > 2 ⇒ N_R = 3.",
+      "pages": [
+        73
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-17",
+      "level": "hiểu",
+      "question": "Bản sao kích hoạt bởi server được tạo khi nào?",
+      "options": [
+        "Khi số yêu cầu tăng, server tạo bản sao gần client để giảm tải",
+        "Khi khởi động kho dữ liệu",
+        "Khi client tự cache",
+        "Khi server hỏng"
+      ],
+      "answer": 0,
+      "explanation": "Server đang hoạt động, số lượng yêu cầu tăng ⇒ kích hoạt bản sao ở vị trí khác.",
+      "pages": [
+        53
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Vì sao cần nhân bản dữ liệu? Phân tích mâu thuẫn giữa hiệu năng và tính nhất quán; lấy ví dụ CDN và bộ nhớ đệm trình duyệt.",
+      "hints": "- CDN, Akamai, lợi ích [tr. 4](#p4)–[tr. 7](#p7).\n- Lý do nhân bản [tr. 10](#p10).\n- Nhất quán mạnh/yếu, ví dụ cache browser [tr. 11](#p11).\n- Ưu nhược [tr. 12](#p12).",
+      "pages": [
+        4,
+        10,
+        11,
+        12
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Phân biệt nhất quán tuần tự và nhất quán nhân quả. Với mỗi mô hình cho một ví dụ hợp lệ và một ví dụ không hợp lệ (dùng ký pháp W(x)a, R(x)b).",
+      "hints": "- Ký pháp [tr. 23](#p23).\n- Tuần tự: định nghĩa, ví dụ (a)/(b) [tr. 25](#p25)–[tr. 26](#p26).\n- Nhân quả: định nghĩa, ví dụ (a) vi phạm, (b) hợp lệ [tr. 28](#p28)–[tr. 29](#p29).",
+      "pages": [
+        23,
+        25,
+        26,
+        28,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "Trình bày bốn mô hình nhất quán hướng client và cho ví dụ thực tế cho mỗi mô hình. Vì sao các mô hình này phù hợp với hệ thống eventual consistency?",
+      "hints": "- Eventual consistency, DNS/WWW, vấn đề client di động [tr. 34](#p34)–[tr. 35](#p35).\n- Đặc điểm chung [tr. 36](#p36).\n- Monotonic read (email) [tr. 39](#p39), monotonic write [tr. 40](#p40), read-your-writes (mật khẩu) [tr. 42](#p42), writes-follow-reads (trả lời thư) [tr. 44](#p44).",
+      "pages": [
+        34,
+        36,
+        39,
+        40,
+        42,
+        44
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "Trình bày các vấn đề quản lý bản sao: đặt máy chủ, các loại bản sao, các phương thức phân phối nội dung (trạng thái/thao tác, push/pull, unicast/multicast).",
+      "hints": "- Đặt K trong N vị trí, AS, O(N²) [tr. 48](#p48)–[tr. 49](#p49).\n- Cố định, kích hoạt bởi server, bởi client [tr. 52](#p52)–[tr. 55](#p55).\n- Invalidation/data/operation [tr. 58](#p58); push/pull [tr. 59](#p59); uni/multicast [tr. 60](#p60).",
+      "pages": [
+        48,
+        52,
+        53,
+        55,
+        58,
+        59,
+        60
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-05",
+      "question": "Trình bày các giao thức đảm bảo nhất quán: remote-write, local-write, active replication và quorum. Với N = 12, đánh giá các cấu hình (N_R, N_W) = (3,10), (7,6), (1,12).",
+      "hints": "- Primary-based [tr. 67](#p67)–[tr. 70](#p70).\n- Active replication, sequencer [tr. 72](#p72).\n- Quorum 2 điều kiện [tr. 73](#p73); (3,10) đúng; (7,6) sai vì N_W ≤ N/2; (1,12) đúng – ROWA [tr. 74](#p74).",
+      "pages": [
+        67,
+        68,
+        70,
+        72,
+        73,
+        74
+      ],
+      "source": "slide"
+    }
+  ]
+}

@@ -1,0 +1,1044 @@
+{
+  "version": 1,
+  "subject": "CNWeb",
+  "lesson": "lec-2-html",
+  "title": "Bài 2 – HTML",
+  "summary": "## 1. Hypertext & HTML\n- **HTML (HyperText Markup Language)**: ngôn ngữ đặc tả **nội dung tĩnh** của trang web. HTML dựa trên **SGML** [tr. 4](#p4).\n  - *Hypertext*: trang web không chỉ có chữ mà còn có multimedia và link nhảy trong cùng tài liệu hoặc sang tài liệu khác.\n  - *Markup*: văn bản được bổ sung ký hiệu đặc biệt (**tag**) để chỉ cấu trúc và kiểu nội dung.\n- Lịch sử chuẩn HTML [tr. 5](#p5):\n  - HTML 1 (Berners-Lee, 1989).\n  - HTML 2.0 (IETF, 1994).\n  - HTML 3.2 (W3C, 1996).\n  - HTML 4.0 (W3C, 1997).\n  - **XHTML 1.0** (2000): HTML 4.01 sửa lại cho đúng chuẩn XML. **XHTML 1.1** (2001): modularization.\n  - **HTML5** (WHATWG + W3C, 2006): không còn dựa trên SGML nhưng vẫn \"backward compatible\".\n- Vì sao học HTML \"tay\" bằng text editor thay vì FrontPage hay DreamWeaver [tr. 6](#p6)?\n  - Các công cụ đó sinh code kém cấu trúc.\n  - Viết tay cho phép kiểm soát low-level, tối ưu kích thước, thêm script, sửa từ xa và tuân thủ chuẩn.\n\n## 2. Tag, element và cấu trúc tài liệu\n- **Tag** nằm trong `< >`, đa số đi theo cặp mở/đóng (`<title>…</title>`). **Element** là đối tượng được bao bởi cặp tag. Element có thể lồng nhau, ví dụ `<p>` chứa `<b>`. Tài liệu HTML là tập hợp các element [tr. 7](#p7).\n- Tài liệu nằm trong `<html>…</html>` và có 2 phần [tr. 8](#p8)–[tr. 9](#p9):\n  - **HEAD**: thông tin thiết lập như `<title>`, CSS, meta data, JavaScript.\n  - **BODY**: nội dung hiển thị, gồm đoạn văn, bảng, list, ảnh, JS, PHP (đã qua PHP parser)…\n- Comment viết trong `<!-- … -->` [tr. 8](#p8).\n\n## 3. Trình bày văn bản\n- Browser tự lo layout. Mọi chuỗi whitespace gộp thành **1 khoảng trắng**. Văn bản tự xuống dòng theo cửa sổ [tr. 10](#p10).\n- Các tag can thiệp layout [tr. 10](#p10):\n  - `<p>` tạo đoạn mới.\n  - `<br/>` xuống dòng. Đây là thẻ \"self-closing\".\n  - `&nbsp;` tạo khoảng trắng không ngắt (non-breaking space).\n- Heading `<h1>` (lớn nhất) đến `<h6>` (nhỏ nhất). `<hr/>` kẻ đường ngang phân cách [tr. 11](#p11). Ví dụ trang công ty hoàn chỉnh ở [tr. 12](#p12).\n- Định dạng chữ [tr. 13](#p13):\n  - `<b>`, `<i>`, `<tt>` (fixed-width).\n  - `<big>`, `<small>`.\n  - `<em>`, `<strong>` (nhấn mạnh hơn).\n  - `<sub>`, `<sup>`.\n  - `<pre>` giữ nguyên định dạng.\n  - Escape character: `&amp; &lt; &gt; &quot; &copy;`.\n\n## 4. List, hyperlink, image\n- 3 loại list [tr. 14](#p14):\n  - `<ol>` ordered: chỉnh được kiểu đánh số và chỉ số bắt đầu.\n  - `<ul>` unordered: dùng bullet.\n  - `<dl>` definition list: `<dt>` là thuật ngữ, `<dd>` là định nghĩa.\n  - Mỗi mục của `ol`/`ul` là `<li>`.\n- **Hyperlink (anchor)** `<a href=\"URL\">` [tr. 15](#p15):\n  - Link ra Web phải bắt đầu bằng `http://`. Không có thì browser coi là file local.\n  - `target=\"_blank\"` mở link ở cửa sổ mới.\n- Link nội bộ [tr. 16](#p16):\n  - Đặt `id=\"ident\"` cho element đích, rồi dùng `<a href=\"#ident\">`.\n  - `href=\"URL#ident\"` nhảy vào giữa file khác.\n- **Image** `<img src width height alt title />` [tr. 17](#p17)–[tr. 18](#p18):\n  - Browser hiển thị được GIF, JPEG, PNG, SVG.\n  - Thường chỉ cần đặt `width` **hoặc** `height`, chiều còn lại tự scale.\n  - `title` hiện khi hover chuột.\n  - `alt` hiện khi ảnh không tải được hoặc người dùng tắt ảnh.\n\n## 5. Table và frame\n- `<table>` là bảng, `<tr>` là hàng, `<td>` là ô dữ liệu. Mặc định dữ liệu căn trái [tr. 19](#p19).\n- Định dạng qua `style` [tr. 20](#p20)–[tr. 21](#p21):\n  - Viền: `border: 1px solid`.\n  - Căn lề: `text-align`, `vertical-align` (cho ô hoặc cả hàng).\n  - Độ rộng: `width: 60%`. Mặc định bảng co theo dữ liệu.\n- `<th>` là ô tiêu đề: in đậm, căn giữa. `colspan=\"2\"` và `rowspan=\"2\"` gộp cột/hàng. `padding` là khoảng đệm trong ô [tr. 22](#p22).\n- **Frame** chia màn hình thành nhiều phần độc lập, nay đã lỗi thời [tr. 23](#p23):\n  - Search engine khó truy cập nội dung trong frame.\n  - Nút Back của browser hoạt động sai.\n  - **HTML5 không hỗ trợ** frame.\n\n## 6. Content vs. Presentation – CSS\n- Đa số tag HTML định nghĩa *kiểu nội dung*, không quy định hiển thị (ngoại lệ: `<b>`, `<i>`). **Style sheet** gắn định dạng hiển thị vào element [tr. 24](#p24).\n  - Các phiên bản: CSS1 (1996), CSS2 (1998), CSS3.\n  - Xu hướng là **tách nội dung khỏi trình bày**, giúp dễ bảo trì và trình bày nhất quán.\n- \"Cascading\" vì có 3 cấp [tr. 25](#p25):\n  1. **Inline**: áp cho một element.\n  2. **Document**: áp cho cả trang, đặt trong `<style>` ở head.\n  3. **External**: file riêng, nhiều trang dùng chung.\n  - Cấp thấp hơn (gần element hơn) **ghi đè** cấp cao hơn. Người dùng cũng có thể dùng user-defined style sheet, vd phóng to chữ.\n- **Inline style**: thuộc tính `style=\"prop:value; prop:value\"` [tr. 26](#p26)–[tr. 28](#p28).\n  - Các property: font-family, font-size, color, text-align, margin, padding, border, list-style-type…\n  - Nhược điểm: dễ thiếu nhất quán và trộn lẫn content với presentation. Nên dùng hạn chế [tr. 29](#p29).\n- **Document style sheet**: `<style>` trong `<head>` [tr. 30](#p30)–[tr. 31](#p31).\n  - Định dạng mọi element cùng loại giống nhau.\n  - Có thể định nghĩa subclass như `p.indented`, dùng bằng `class=\"indented\"`.\n- **Pseudo-element/class** [tr. 32](#p32):\n  - Trạng thái link: `a:visited`, `a:active`, `a:hover`.\n  - Phần đầu đoạn văn: `:first-line`, `:first-letter`.\n- **External style sheet** [tr. 33](#p33)–[tr. 34](#p34):\n  - File `.css` riêng, nhúng bằng `<link rel=\"stylesheet\" type=\"text/css\" href=\"myStyle.css\">`. Trong file .css **không có** thẻ `<style>`.\n  - Lợi ích: modularity, đổi một chỗ áp cho cả site. Đây là mức tách content/presentation cao nhất.\n- `<span>`: element inline bao một phần nội dung để áp style, mặc định không đổi gì. `<div>`: tạo khối/section để áp style. Cả hai có thuộc tính `id` và `class` [tr. 35](#p35).\n- Quy tắc thiết kế [tr. 36](#p36):\n  - Dùng màu và font tiết chế. Nghĩ tới người khiếm thị.\n  - Không phụ thuộc kích thước cửa sổ. Không pop-up gây khó chịu.\n  - Chia tài liệu dài thành nhiều trang. Test trên nhiều browser. Dùng style sheet.\n\n## 7. HTML5\n- Cú pháp linh hoạt [tr. 38](#p38)–[tr. 39](#p39):\n  - Tên tag **không phân biệt hoa thường** (quy ước viết thường).\n  - Quote của attribute và giá trị attribute là tuỳ chọn. Thẻ rỗng không cần đóng.\n  - Attribute có name và value, **chỉ đặt trong start tag**. Có attribute global và attribute riêng theo element.\n- `<!DOCTYPE html>` và `<meta charset=\"UTF-8\">` [tr. 40](#p40).\n- Tag cấu trúc mới (semantic) [tr. 40](#p40)–[tr. 41](#p41):\n  - `header`, `footer`, `nav`.\n  - `section` (phần chung của tài liệu), `article` (nội dung độc lập như bài blog), `aside` (nội dung ít liên quan).\n  - `figure` (kèm caption), `dialog`.\n- Media [tr. 42](#p42)–[tr. 43](#p43):\n  - `<audio controls>` với nhiều `<source>` dự phòng định dạng.\n  - `<video src controls poster width height>`.\n  - `<canvas>` để vẽ bằng JavaScript (`getContext('2d')`, `moveTo`, `lineTo`, `stroke`).\n- Kiểu `<input>` mới: color, date, datetime-local, email, month, number, range, search, tel, time, url, week… [tr. 44](#p44)",
+  "keyConcepts": [
+    {
+      "term": "HTML",
+      "definition": "HyperText Markup Language – ngôn ngữ đặc tả nội dung tĩnh trang web, gốc từ SGML.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Hypertext",
+      "definition": "Trang web chứa nhiều hơn chữ: multimedia và link tới vị trí khác/tài liệu khác.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Markup / tag",
+      "definition": "Ký hiệu đặc biệt trong `< >` bổ sung vào văn bản để chỉ cấu trúc và kiểu nội dung.",
+      "pages": [
+        4,
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "XHTML",
+      "definition": "HTML 4.01 viết lại tuân thủ chuẩn XML (XHTML 1.0, 2000); XHTML 1.1 modular hoá.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "HTML5",
+      "definition": "Phiên bản (WHATWG/W3C, 2006) không còn dựa trên SGML, tương thích ngược, thêm tag ngữ nghĩa, media, input mới.",
+      "pages": [
+        5,
+        38
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Element",
+      "definition": "Đối tượng được bao bởi cặp tag mở/đóng, có thể lồng nhau; tài liệu HTML là tập element.",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "HEAD / BODY",
+      "definition": "HEAD chứa thông tin thiết lập (title, CSS, meta, JS); BODY chứa nội dung hiển thị.",
+      "pages": [
+        8,
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Whitespace collapsing",
+      "definition": "Browser gộp mọi chuỗi khoảng trắng thành một dấu cách và tự xuống dòng theo cửa sổ.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "&nbsp;",
+      "definition": "Non-breaking space – ép hiển thị một khoảng trắng không bị gộp/ngắt dòng.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Escape character",
+      "definition": "Thực thể biểu diễn ký tự đặc biệt: &amp; &lt; &gt; &quot; &copy;.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "ol / ul / dl",
+      "definition": "Danh sách có thứ tự, không thứ tự (bullet), và danh sách định nghĩa (dt/dd).",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Anchor `<a>`",
+      "definition": "Hyperlink: `href` là đích; `target=\"_blank\"` mở cửa sổ mới; `#id` nhảy tới vị trí trong trang.",
+      "pages": [
+        15,
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "alt vs title của img",
+      "definition": "alt hiện khi ảnh không tải được/bị tắt; title hiện khi hover chuột.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "table / tr / td / th",
+      "definition": "Bảng, hàng, ô dữ liệu, ô tiêu đề (đậm, căn giữa).",
+      "pages": [
+        19,
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "colspan / rowspan",
+      "definition": "Cho ô trải qua nhiều cột / nhiều hàng.",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Frames",
+      "definition": "Chia màn hình thành phần độc lập; lỗi thời vì kém với search engine, làm hỏng nút Back, HTML5 không hỗ trợ.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Separation of content & presentation",
+      "definition": "HTML mô tả nội dung, style sheet mô tả cách hiển thị – dễ bảo trì, đồng nhất.",
+      "pages": [
+        24
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Cascading (3 cấp style)",
+      "definition": "Inline → document → external; cấp thấp (gần element) ghi đè cấp cao hơn.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Inline style",
+      "definition": "Thuộc tính `style` với cặp property:value cách nhau bằng `;` – chỉ áp cho 1 element, nên hạn chế.",
+      "pages": [
+        26,
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Document style sheet",
+      "definition": "Khối `<style>` trong `<head>`, áp định dạng cho mọi element cùng loại hoặc subclass trong trang.",
+      "pages": [
+        29,
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Class (subclass)",
+      "definition": "`p.indented {…}` định nghĩa lớp con của p; dùng bằng `class=\"indented\"`.",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Pseudo-element / pseudo-class",
+      "definition": ":visited, :active, :hover cho trạng thái link; :first-line, :first-letter cho phần đầu đoạn.",
+      "pages": [
+        32
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "External style sheet",
+      "definition": "File .css riêng nhúng bằng `<link rel=\"stylesheet\" href=…>`, dùng chung nhiều trang; không chứa thẻ <style>.",
+      "pages": [
+        33,
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "span / div",
+      "definition": "span: phần inline để áp style; div: khối/section để áp style; đều có id và class.",
+      "pages": [
+        35
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "Tag ngữ nghĩa HTML5",
+      "definition": "header, footer, nav, section, article, aside, figure, dialog – mô tả cấu trúc trang.",
+      "pages": [
+        40,
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "term": "audio / video / canvas",
+      "definition": "Phần tử media HTML5; canvas vẽ đồ hoạ bằng JavaScript qua context 2d.",
+      "pages": [
+        42,
+        43
+      ],
+      "source": "slide"
+    }
+  ],
+  "codeExamples": [
+    {
+      "title": "Cấu trúc cơ bản tài liệu HTML",
+      "language": "html",
+      "code": "<html>\n <!-- File: page01.html\n      Description: introductory page -->\n <head>\n  <title>My first HTML document</title>\n </head>\n <body>\n   <p> Hello world! </p>\n </body>\n</html>",
+      "explanation": "Khung tối thiểu của một trang: html bao ngoài, head chứa thông tin cho browser, body chứa nội dung.",
+      "parts": [
+        {
+          "lines": "1",
+          "note": "Mọi tài liệu bắt đầu bằng `<html>`."
+        },
+        {
+          "lines": "2-3",
+          "note": "Comment `<!-- … -->` – không hiển thị."
+        },
+        {
+          "lines": "4-6",
+          "note": "HEAD: `<title>` xuất hiện trên thanh tiêu đề browser."
+        },
+        {
+          "lines": "7-9",
+          "note": "BODY: nội dung hiển thị."
+        }
+      ],
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Link nội bộ trong trang",
+      "language": "html",
+      "code": "<p>\n  [ <a href=\"#HTML\">HTML</a> |\n    <a href=\"#HTTP\">HTTP</a> ]\n</p>\n<dl>\n  <dt id=\"HTML\">HTML</dt>\n  <dd>HyperText Markup Language</dd>\n  <dt id=\"HTTP\">HTTP</dt>\n  <dd>HyperText Transfer Protocol</dd>\n</dl>\n<a href=\"page07.html\" target=\"_blank\">Open page07 in a new window</a>",
+      "explanation": "Gán `id` cho element đích rồi trỏ tới bằng `href=\"#id\"`. Slide gốc viết `href=\"# HTML\"` (có dấu cách) – sai, vì id không khớp nên link không nhảy đúng.",
+      "parts": [
+        {
+          "lines": "2-3",
+          "note": "Link tới vị trí trong cùng trang qua `#id`."
+        },
+        {
+          "lines": "6-9",
+          "note": "Element đích mang `id` tương ứng."
+        },
+        {
+          "lines": "11",
+          "note": "`target=\"_blank\"` mở trang ở cửa sổ/tab mới."
+        }
+      ],
+      "pages": [
+        15,
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Bảng với th, rowspan, colspan và document style",
+      "language": "html",
+      "code": "<style type=\"text/css\">\n  table  { border: 1px solid; padding: 1px; }\n  th, td { border: 1px solid; padding: 10px; text-align: center; }\n</style>\n<table>\n  <tr> <th>HEAD1</th> <th>HEAD2</th> <th>HEAD3</th> </tr>\n  <tr> <td>one</td> <td>two</td> <td>three</td> </tr>\n  <tr> <td rowspan=\"2\"> four </td> <td colspan=\"2\"> five </td> </tr>\n  <tr> <td> six </td> <td> seven </td> </tr>\n</table>",
+      "explanation": "Ô `four` chiếm 2 hàng nên hàng cuối chỉ cần 2 ô (six, seven); ô `five` chiếm 2 cột.",
+      "parts": [
+        {
+          "lines": "1-4",
+          "note": "Document style sheet: viền và padding cho mọi ô."
+        },
+        {
+          "lines": "6",
+          "note": "`<th>` – ô tiêu đề, đậm, căn giữa."
+        },
+        {
+          "lines": "8",
+          "note": "`rowspan=\"2\"` kéo ô xuống hàng dưới; `colspan=\"2\"` trải sang 2 cột."
+        },
+        {
+          "lines": "9",
+          "note": "Hàng 4 chỉ có 2 ô vì cột 1 đã bị `four` chiếm."
+        }
+      ],
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Ba cấp style: inline, document, external",
+      "language": "html",
+      "code": "<!-- inline -->\n<p style=\"font-family:Arial,sans-serif; text-align:right\">...</p>\n\n<!-- document style sheet (trong head) -->\n<style type=\"text/css\">\n  h1 {color:blue; text-align:center}\n  p.indented {text-indent:0.2in}\n</style>\n\n<!-- external style sheet (trong head) -->\n<link rel=\"stylesheet\" type=\"text/css\" href=\"myStyle.css\" />\n\n<!-- body dùng class -->\n<p class=\"indented\">First line indented.</p>",
+      "explanation": "Cùng một kết quả có thể đạt bằng 3 cấp; external tách hẳn trình bày khỏi nội dung và dùng lại được cho nhiều trang.",
+      "parts": [
+        {
+          "lines": "2",
+          "note": "Inline: chỉ tác động một element."
+        },
+        {
+          "lines": "5-8",
+          "note": "Document: áp cho mọi h1 và mọi p có class indented trong trang."
+        },
+        {
+          "lines": "11",
+          "note": "External: file myStyle.css chỉ chứa các rule, không có thẻ <style>."
+        },
+        {
+          "lines": "14",
+          "note": "Dùng subclass bằng thuộc tính class."
+        }
+      ],
+      "pages": [
+        26,
+        30,
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Pseudo-class cho link và first-letter",
+      "language": "css",
+      "code": "a         { color: red; text-decoration: none; font-size: larger }\na:visited { color: black }\na:active  { color: orange }\na:hover   { color: blue }\np:first-letter { font-size: large; color: white; background-color: darkblue }",
+      "explanation": "Định dạng link theo trạng thái và chữ cái đầu mỗi đoạn văn.",
+      "parts": [
+        {
+          "lines": "1",
+          "note": "Mặc định link đỏ, không gạch chân."
+        },
+        {
+          "lines": "2-4",
+          "note": "Đổi màu khi đã ghé, đang nhấn, đang hover."
+        },
+        {
+          "lines": "5",
+          "note": "Chữ cái đầu đoạn: trắng trên nền xanh đậm."
+        }
+      ],
+      "pages": [
+        32
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Khung trang HTML5 với tag ngữ nghĩa",
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <title>…</title>\n  </head>\n  <body>\n    <header>...</header>\n    <nav>...</nav>\n    <article>\n      <section>…</section>\n    </article>\n    <aside>...</aside>\n    <figure>...</figure>\n    <footer>...</footer>\n  </body>\n</html>",
+      "explanation": "HTML5 khai báo DOCTYPE ngắn gọn, encoding bằng meta charset và dùng tag ngữ nghĩa thay cho div chung chung.",
+      "parts": [
+        {
+          "lines": "1",
+          "note": "DOCTYPE của HTML5."
+        },
+        {
+          "lines": "4",
+          "note": "Khai báo bảng mã UTF-8."
+        },
+        {
+          "lines": "8-9",
+          "note": "Phần đầu trang và vùng điều hướng."
+        },
+        {
+          "lines": "10-12",
+          "note": "article: nội dung độc lập; section: phần của tài liệu."
+        },
+        {
+          "lines": "13-15",
+          "note": "aside: nội dung phụ; figure: media kèm caption; footer: chân trang."
+        }
+      ],
+      "pages": [
+        40,
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "title": "Audio/Video HTML5",
+      "language": "html",
+      "code": "<audio controls=\"true\">\n  <source src=\"audiodemo.ogg\" />\n  <source src=\"audiodemo.mp3\" />\n  <source src=\"audiodemo.wav\" />\n  Not supported.\n</audio>\n<video src=\"video.ogv\" controls poster=\"poster.jpg\" width=\"320\" height=\"240\">\n  <a href=\"video.ogv\">Download movie</a>\n</video>",
+      "explanation": "Nhiều `<source>` để browser chọn định dạng hỗ trợ được; nội dung bên trong thẻ là fallback cho browser không hỗ trợ.",
+      "parts": [
+        {
+          "lines": "1-6",
+          "note": "audio với 3 nguồn dự phòng; dòng chữ hiện nếu browser không hỗ trợ."
+        },
+        {
+          "lines": "7-9",
+          "note": "video có thanh điều khiển, ảnh poster, kích thước; link tải là fallback."
+        }
+      ],
+      "pages": [
+        42
+      ],
+      "source": "slide"
+    }
+  ],
+  "figures": [
+    {
+      "page": 8,
+      "caption": "Cấu trúc tài liệu HTML: html, head, body, comment"
+    },
+    {
+      "page": 22,
+      "caption": "Bảng với th, rowspan, colspan"
+    },
+    {
+      "page": 25,
+      "caption": "Ba cấp Cascading Style Sheets"
+    },
+    {
+      "page": 41,
+      "caption": "Bố cục trang HTML5: header, nav, section, article, aside, footer"
+    },
+    {
+      "page": 44,
+      "caption": "Các kiểu input mới của HTML5"
+    }
+  ],
+  "flashcards": [
+    {
+      "id": "fc-01",
+      "front": "HTML dựa trên chuẩn nào?",
+      "back": "SGML (Standard Generalized Markup Language). HTML5 thì không còn dựa trên SGML.",
+      "pages": [
+        4,
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-02",
+      "front": "\"Markup\" trong HTML nghĩa là gì?",
+      "back": "Bổ sung ký hiệu đặc biệt (tag) vào văn bản để chỉ cấu trúc và kiểu nội dung.",
+      "pages": [
+        4
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-03",
+      "front": "XHTML 1.0 là gì?",
+      "back": "HTML 4.01 được sửa để tuân thủ chuẩn XML (W3C, 2000).",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-04",
+      "front": "Element khác tag thế nào?",
+      "back": "Tag là ký hiệu `<…>`; element là đối tượng được bao bởi cặp tag mở/đóng (gồm cả nội dung).",
+      "pages": [
+        7
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-05",
+      "front": "HEAD chứa những gì?",
+      "back": "title, CSS hoặc link CSS, meta data, JavaScript.",
+      "pages": [
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-06",
+      "front": "Viết comment trong HTML?",
+      "back": "`<!-- nội dung -->`",
+      "pages": [
+        8
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-07",
+      "front": "Browser xử lý nhiều khoảng trắng liên tiếp thế nào?",
+      "back": "Gộp thành một dấu cách.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-08",
+      "front": "Cách ép hiển thị nhiều khoảng trắng?",
+      "back": "Dùng `&nbsp;` (non-breaking space) hoặc `<pre>`.",
+      "pages": [
+        10,
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-09",
+      "front": "`<br/>` khác `<p>` thế nào?",
+      "back": "`<br/>` chỉ xuống dòng (self-closing); `<p>` bắt đầu đoạn mới, có khoảng trống phía trước.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-10",
+      "front": "Heading lớn nhất và nhỏ nhất?",
+      "back": "`<h1>` lớn nhất, `<h6>` nhỏ nhất.",
+      "pages": [
+        11
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-11",
+      "front": "`<em>` và `<strong>` khác nhau?",
+      "back": "Cả hai nhấn mạnh; `<strong>` nhấn mạnh hơn.",
+      "pages": [
+        13
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-12",
+      "front": "3 loại list trong HTML?",
+      "back": "`<ol>` (có thứ tự), `<ul>` (bullet), `<dl>` (định nghĩa: dt + dd).",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-13",
+      "front": "Mở link trong cửa sổ mới?",
+      "back": "`<a href=\"…\" target=\"_blank\">`",
+      "pages": [
+        15
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-14",
+      "front": "Nhảy tới một vị trí trong trang?",
+      "back": "Gán `id=\"x\"` cho đích và dùng `<a href=\"#x\">`.",
+      "pages": [
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-15",
+      "front": "Thuộc tính alt của img hiện khi nào?",
+      "back": "Khi ảnh không tải được hoặc người dùng tắt hiển thị ảnh.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-16",
+      "front": "Vì sao chỉ nên đặt width hoặc height cho ảnh?",
+      "back": "Chiều còn lại tự scale theo tỉ lệ; nên resize ảnh trước để tiết kiệm băng thông.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-17",
+      "front": "Gộp một ô qua 2 cột?",
+      "back": "`<td colspan=\"2\">`",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-18",
+      "front": "Vì sao không nên dùng frames?",
+      "back": "Search engine khó đọc nội dung, nút Back hoạt động lạ, HTML5 không hỗ trợ.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-19",
+      "front": "3 cấp style sheet? Cấp nào thắng?",
+      "back": "Inline, document, external; cấp thấp hơn (gần element hơn) ghi đè cấp cao hơn.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-20",
+      "front": "Nhược điểm của inline style?",
+      "back": "Dễ không đồng nhất giữa các element tương tự; trộn content với presentation.",
+      "pages": [
+        29
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-21",
+      "front": "Định nghĩa và dùng subclass `indented` cho thẻ p?",
+      "back": "`p.indented {text-indent:0.2in}` và `<p class=\"indented\">`.",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-22",
+      "front": "Các pseudo-class trạng thái link?",
+      "back": "`:visited`, `:active`, `:hover`.",
+      "pages": [
+        32
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-23",
+      "front": "Nhúng external style sheet?",
+      "back": "`<link rel=\"stylesheet\" type=\"text/css\" href=\"myStyle.css\">` trong head.",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-24",
+      "front": "span và div khác nhau?",
+      "back": "span bao một phần nội dung trong dòng; div tạo một khối/section.",
+      "pages": [
+        35
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-25",
+      "front": "DOCTYPE và khai báo charset trong HTML5?",
+      "back": "`<!DOCTYPE html>` và `<meta charset=\"UTF-8\">`.",
+      "pages": [
+        40
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-26",
+      "front": "article khác section thế nào?",
+      "back": "article: nội dung độc lập (bài blog, bài báo); section: phần chung của tài liệu, dùng với h1–h6.",
+      "pages": [
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "fc-27",
+      "front": "Kể 4 kiểu input mới HTML5.",
+      "back": "email, date, color, range (còn có number, tel, url, search, time, week, month…).",
+      "pages": [
+        44
+      ],
+      "source": "slide"
+    }
+  ],
+  "quiz": [
+    {
+      "id": "q-01",
+      "level": "nhớ",
+      "question": "Phiên bản nào là \"HTML 4.01 được sửa để tuân thủ chuẩn XML\"?",
+      "options": [
+        "HTML 3.2",
+        "XHTML 1.0",
+        "HTML5",
+        "HTML 2.0"
+      ],
+      "answer": 1,
+      "explanation": "XHTML 1.0 (W3C, 2000): HTML 4.01 modified to conform to XML standards.",
+      "pages": [
+        5
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-02",
+      "level": "hiểu",
+      "question": "Đoạn HTML sau được browser hiển thị thế nào?",
+      "code": {
+        "language": "html",
+        "code": "<p>Hello      world\n   from    HTML</p>"
+      },
+      "options": [
+        "Giữ nguyên khoảng trắng và xuống dòng",
+        "Báo lỗi cú pháp",
+        "Hello world from HTML (mỗi chuỗi whitespace thành 1 dấu cách, trên một dòng nếu đủ chỗ)",
+        "Chỉ hiển thị \"Hello\""
+      ],
+      "answer": 2,
+      "explanation": "Mọi chuỗi whitespace (kể cả xuống dòng) được hiểu là một dấu cách; browser tự wrap theo cửa sổ.",
+      "pages": [
+        10
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-03",
+      "level": "nhớ",
+      "question": "Thẻ nào tạo danh sách định nghĩa?",
+      "options": [
+        "<ol>",
+        "<ul>",
+        "<li>",
+        "<dl>"
+      ],
+      "answer": 3,
+      "explanation": "`<dl>` với `<dt>` (thuật ngữ) và `<dd>` (định nghĩa).",
+      "pages": [
+        14
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-04",
+      "level": "vận dụng",
+      "question": "Đoạn code sau (theo slide) có lỗi gì khiến link không nhảy tới mục HTML?",
+      "code": {
+        "language": "html",
+        "code": "<a href=\"# HTML\">HTML</a>\n...\n<dt id=\"HTML\">HTML</dt>"
+      },
+      "options": [
+        "Thiếu target=\"_blank\"",
+        "dt không được có id",
+        "href có dấu cách sau #, không khớp id=\"HTML\"",
+        "Phải dùng name thay vì id"
+      ],
+      "answer": 2,
+      "explanation": "Link nội bộ phải là `href=\"#HTML\"` – giá trị sau # phải trùng chính xác id.",
+      "pages": [
+        16
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-05",
+      "level": "hiểu",
+      "question": "Thuộc tính nào của `<img>` hiện văn bản thay thế khi ảnh không tải được?",
+      "options": [
+        "alt",
+        "title",
+        "src",
+        "width"
+      ],
+      "answer": 0,
+      "explanation": "alt hiển thị khi ảnh thiếu/không tải được/bị tắt; title hiện khi hover.",
+      "pages": [
+        18
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-06",
+      "level": "vận dụng",
+      "question": "Bảng sau có bao nhiêu ô `<td>` cần viết ở hàng cuối để bảng vuông vức 3 cột?",
+      "code": {
+        "language": "html",
+        "code": "<tr><td>one</td><td>two</td><td>three</td></tr>\n<tr><td rowspan=\"2\">four</td><td colspan=\"2\">five</td></tr>\n<tr> ??? </tr>"
+      },
+      "options": [
+        "1",
+        "3",
+        "4",
+        "2"
+      ],
+      "answer": 3,
+      "explanation": "Cột 1 của hàng cuối đã bị ô `four` (rowspan=2) chiếm, nên chỉ cần 2 ô (six, seven).",
+      "pages": [
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-07",
+      "level": "hiểu",
+      "question": "Lý do slide đưa ra để không dùng frames?",
+      "options": [
+        "Frames làm trang tải chậm hơn table",
+        "Search engine khó truy cập nội dung trong frame, nút Back hoạt động bất thường, HTML5 không hỗ trợ",
+        "Frames chỉ chạy trên IE",
+        "Frames không hỗ trợ CSS"
+      ],
+      "answer": 1,
+      "explanation": "Ba lý do: kém với search engine, phá hành vi Back, HTML5 không hỗ trợ.",
+      "pages": [
+        23
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-08",
+      "level": "hiểu",
+      "question": "Vì sao gọi là *Cascading* Style Sheets?",
+      "options": [
+        "Vì style được định nghĩa ở 3 cấp (inline, document, external) và cấp thấp ghi đè cấp cao",
+        "Vì CSS chạy tuần tự từ trên xuống",
+        "Vì CSS chỉ áp cho bảng",
+        "Vì CSS được tải theo thác nước từ server"
+      ],
+      "answer": 0,
+      "explanation": "Slide: style sheets defined at three different levels; lower-level style sheets can override higher-level.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-09",
+      "level": "vận dụng",
+      "question": "Trang có `<style> p {color:blue} </style>` trong head và `<p style=\"color:red\">Hi</p>`. Chữ Hi màu gì?",
+      "options": [
+        "Xanh",
+        "Đen mặc định",
+        "Đỏ",
+        "Tím (trộn màu)"
+      ],
+      "answer": 2,
+      "explanation": "Inline style là cấp thấp nhất (gần element nhất) nên ghi đè document style sheet.",
+      "pages": [
+        25
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-10",
+      "level": "vận dụng",
+      "question": "Muốn chỉ một số đoạn văn thụt đầu dòng, cách nào đúng theo slide?",
+      "code": {
+        "language": "html",
+        "code": "<style>\n  ???\n</style>\n<p class=\"indented\">...</p>"
+      },
+      "options": [
+        "#indented {text-indent:0.2in}",
+        "p.indented {text-indent:0.2in}",
+        "p:indented {text-indent:0.2in}",
+        "indented.p {text-indent:0.2in}"
+      ],
+      "answer": 1,
+      "explanation": "`p.indented` định nghĩa subclass của p, áp cho thẻ p có class=\"indented\".",
+      "pages": [
+        30
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-11",
+      "level": "nhớ",
+      "question": "Pseudo-class nào áp dụng khi rê chuột lên link?",
+      "options": [
+        ":active",
+        ":visited",
+        ":first-letter",
+        ":hover"
+      ],
+      "answer": 3,
+      "explanation": ":hover – khi con trỏ đang ở trên link; :active – đang nhấn; :visited – đã ghé.",
+      "pages": [
+        32
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-12",
+      "level": "vận dụng",
+      "question": "Nội dung file myStyle.css nào là đúng?",
+      "options": [
+        "<style> h1 {color:blue} </style>",
+        "<link rel=\"stylesheet\"> h1 {color:blue}",
+        "h1 {color : blue; text-align : center}",
+        "style=\"h1 {color:blue}\""
+      ],
+      "answer": 2,
+      "explanation": "External style sheet chỉ chứa các rule CSS, không dùng thẻ <style>.",
+      "pages": [
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-13",
+      "level": "hiểu",
+      "question": "Khi nào dùng `<span>` thay vì `<div>`?",
+      "options": [
+        "Khi muốn áp style cho một phần chữ nằm trong một đoạn văn",
+        "Khi muốn tạo một section gồm nhiều đoạn",
+        "Khi muốn chèn ảnh",
+        "Khi muốn tạo bảng"
+      ],
+      "answer": 0,
+      "explanation": "span định nghĩa một element bên trong element lớn hơn (inline); div tạo khối/section.",
+      "pages": [
+        35
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-14",
+      "level": "nhớ",
+      "question": "Phát biểu nào đúng về cú pháp HTML5?",
+      "options": [
+        "Tag name phân biệt hoa thường",
+        "Attribute có thể đặt trong end tag",
+        "Bắt buộc đóng mọi thẻ rỗng",
+        "Tag name không phân biệt hoa thường; quote của attribute là tuỳ chọn"
+      ],
+      "answer": 3,
+      "explanation": "HTML5 linh hoạt: tag case-insensitive, quote tuỳ chọn, giá trị attribute tuỳ chọn, thẻ rỗng không cần đóng; attribute chỉ ở start tag.",
+      "pages": [
+        38,
+        39
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-15",
+      "level": "hiểu",
+      "question": "Thẻ HTML5 nào phù hợp cho một bài blog độc lập trong trang?",
+      "options": [
+        "<aside>",
+        "<nav>",
+        "<article>",
+        "<header>"
+      ],
+      "answer": 2,
+      "explanation": "article: independent piece of content such as a blog entry or newspaper article.",
+      "pages": [
+        41
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-16",
+      "level": "hiểu",
+      "question": "Trong `<audio>`, vì sao khai báo nhiều `<source>`?",
+      "options": [
+        "Để phát 3 file cùng lúc",
+        "Để browser chọn định dạng mà nó hỗ trợ",
+        "Để tăng âm lượng",
+        "Vì HTML5 bắt buộc 3 nguồn"
+      ],
+      "answer": 1,
+      "explanation": "Các source ogg/mp3/wav là phương án dự phòng; dòng chữ \"Not supported.\" hiện khi browser không hỗ trợ audio.",
+      "pages": [
+        42
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "q-17",
+      "level": "vận dụng",
+      "question": "Muốn ô nhập chỉ nhận địa chỉ email với kiểm tra sẵn của browser, dùng?",
+      "options": [
+        "<input type=\"text\">",
+        "<input type=\"mail\">",
+        "<email>",
+        "<input type=\"email\">"
+      ],
+      "answer": 3,
+      "explanation": "HTML5 bổ sung input type email (cùng date, color, range, tel, url…).",
+      "pages": [
+        44
+      ],
+      "source": "slide"
+    }
+  ],
+  "examQuestions": [
+    {
+      "id": "ex-01",
+      "question": "Trình bày cấu trúc cơ bản của một tài liệu HTML và vai trò của phần HEAD, BODY. Phân biệt tag và element, cho ví dụ element lồng nhau.",
+      "hints": "- `<html>` bao ngoài; HEAD: title, CSS, meta, JS; BODY: nội dung hiển thị [tr. 8](#p8)–[tr. 9](#p9).\n- Tag trong `< >`, thường theo cặp; element = nội dung được bao bởi cặp tag, vd `<p>Part of this text is <b>bold</b>.</p>` [tr. 7](#p7).\n- Comment `<!-- -->`.",
+      "pages": [
+        7,
+        8,
+        9
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-02",
+      "question": "Giải thích nguyên tắc tách nội dung (content) và trình bày (presentation). So sánh 3 cấp style sheet (inline, document, external): cách khai báo, phạm vi, ưu nhược điểm và thứ tự ưu tiên.",
+      "hints": "- HTML mô tả nội dung, CSS mô tả trình bày; lợi ích bảo trì, đồng nhất [tr. 24](#p24).\n- Inline: thuộc tính style, 1 element, dễ thiếu nhất quán [tr. 26](#p26), [tr. 29](#p29).\n- Document: `<style>` trong head, cả trang, subclass p.indented [tr. 30](#p30).\n- External: file .css + `<link>`, nhiều trang, đổi một nơi [tr. 33](#p33)–[tr. 34](#p34).\n- Cấp thấp ghi đè cấp cao; user-defined style sheet [tr. 25](#p25).",
+      "pages": [
+        24,
+        25,
+        29,
+        30,
+        34
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-03",
+      "question": "Viết mã HTML cho bảng điểm 3 cột (Họ tên, Môn, Điểm) có hàng tiêu đề, một ô gộp 2 hàng cho tên sinh viên học 2 môn, viền 1px và căn giữa nội dung bằng document style sheet.",
+      "hints": "- `<style> table, th, td {border:1px solid} th, td {text-align:center; padding:10px} </style>` [tr. 22](#p22).\n- Hàng tiêu đề dùng `<th>`.\n- `<td rowspan=\"2\">Nguyễn A</td><td>Web</td><td>9</td>` rồi hàng sau chỉ có 2 ô `<td>HPT</td><td>8</td>`.\n- Có thể đặt `width: 60%` [tr. 21](#p21).",
+      "pages": [
+        19,
+        21,
+        22
+      ],
+      "source": "slide"
+    },
+    {
+      "id": "ex-04",
+      "question": "HTML5 có những điểm mới nào so với HTML 4? Trình bày các tag ngữ nghĩa và phần tử đa phương tiện, cho ví dụ khung trang HTML5.",
+      "hints": "- Cú pháp linh hoạt: case-insensitive, quote tuỳ chọn, thẻ rỗng không cần đóng [tr. 38](#p38).\n- `<!DOCTYPE html>`, `<meta charset>` [tr. 40](#p40).\n- header, footer, nav, section, article, aside, figure, dialog [tr. 40](#p40)–[tr. 41](#p41).\n- audio, video, canvas [tr. 42](#p42)–[tr. 43](#p43); input type mới [tr. 44](#p44).\n- Không hỗ trợ frames [tr. 23](#p23).",
+      "pages": [
+        38,
+        40,
+        41,
+        42,
+        44
+      ],
+      "source": "slide"
+    }
+  ]
+}
