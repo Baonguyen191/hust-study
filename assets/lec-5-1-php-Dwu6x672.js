@@ -1,0 +1,184 @@
+var e={version:1,subject:`CNWeb`,lesson:`lec-5-1-php`,title:`Bài 5.1 – PHP`,summary:'## 1. PHP là gì?\n- **Server-side scripting**: code được nhúng (embed) vào trang HTML và được thực thi trên server khi trang được phục vụ, sinh ra nội dung động [tr. 3](#p3).\n- Các công nghệ server-side cùng thời được slide so sánh [tr. 3](#p3):\n  - **ASP** (Microsoft): engine tích hợp sẵn trong web server, không cần process riêng. Nhược điểm: phải chạy trên server dùng phần mềm Microsoft.\n  - **Java Servlets** (Sun): giống CGI script, phải biên dịch thành class rồi được web server nạp động khi chạy.\n  - **JSP** (Java Server Pages): giống ASP, cho phép nhúng Java vào trang web.\n- PHP do **Rasmus Lerdorf** phát triển năm **1995**. Ban đầu PHP dùng để theo dõi khách truy cập web của ông. PHP miễn phí, mã nguồn mở (open-source), đi kèm Apache và tích hợp tốt với **MySQL** [tr. 4](#p4).\n- Tên PHP là từ viết tắt đệ quy (recursive acronym): **PHP: Hypertext Preprocessor** [tr. 4](#p4).\n\n### Cơ chế hoạt động [tr. 4](#p4)\n1. Request tới file có phần mở rộng `.php` hoặc `.phtml`.\n2. Server nhận ra nội dung PHP, **thực thi** code và chèn output vào trang HTML.\n3. Trang kết quả được gửi về client. Người dùng **không bao giờ thấy code PHP**, chỉ thấy output.\n\n## 2. Cú pháp cơ bản [tr. 5](#p5)\n- Khối PHP bắt đầu bằng `<?php` và kết thúc bằng `?>`. Khối này đặt được (gần như) ở bất kỳ đâu trong HTML.\n- Phần HTML ngoài khối PHP được gửi nguyên văn, PHP interpreter bỏ qua.\n- Xuất dữ liệu bằng `echo` hoặc `print`. Mỗi câu lệnh kết thúc bằng dấu `;`.\n- Comment: `//` cho một dòng, `/* ... */` cho khối nhiều dòng.\n\n## 3. Biến và kiểu dữ liệu\n- Mọi biến bắt đầu bằng **`$`**. Kiểu của biến **do ngữ cảnh sử dụng quyết định**, PHP không có strong-typing [tr. 6](#p6).\n- 4 kiểu **scalar** [tr. 6](#p6): `boolean` (true/false), `integer`, `float` (ví dụ `1.234`, `1.2e3`, `7E-10`), `string`.\n  - Chuỗi **double-quoted** `"..."` thay giá trị biến vào chuỗi (variable interpolation): `"$beer\'s taste"` thành `Heineken\'s taste`.\n  - Chuỗi **single-quoted** `\'...\'` giữ nguyên ký tự. Escape dấu nháy đơn bằng `\\\'`.\n  - Cú pháp **heredoc** `<<<EOD ... EOD;` viết chuỗi nhiều dòng.\n- **Array** [tr. 7](#p7): tạo bằng `array()`. Key là integer hoặc string, value là kiểu PHP bất kỳ.\n  - Phần tử không ghi key nhận key = (key nguyên lớn nhất + 1). Gán vào key đã có sẽ ghi đè giá trị cũ.\n  - `$arr[] = v` thêm phần tử với key nguyên kế tiếp. `unset($arr[k])` xoá một cặp key/value. `unset($arr)` xoá cả mảng.\n  - `array_values()` đánh lại chỉ số mảng từ 0 (reindex).\n- **Hằng (constant)** [tr. 8](#p8): khai báo bằng `define("NAME", value)`. Tên hằng **phân biệt hoa thường** (case-sensitive) và theo quy ước viết HOA. Tên không bắt đầu bằng chữ số. Không nên đặt tên dạng `__FOO__`. Hằng truy cập được ở mọi nơi trong script, không phụ thuộc scope.\n\n## 4. Toán tử [tr. 9](#p9)\n- Số học `+ - * / % ++ --`. Gán `= += -= *= /= %=`. So sánh `== != > < >= <=`. Logic `&& || !`.\n- **Toán tử chuỗi**: `.` nối chuỗi, `.=` nối rồi gán. Ví dụ `$a .= "World!"`.\n\n## 5. Cấu trúc điều khiển\n- `if ... else` [tr. 10](#p10). Ví dụ `date("D")` trả về tên thứ viết tắt 3 chữ (vd `"Fri"`).\n- `switch` với `case`, `break`, `default` [tr. 11](#p11). Ví dụ dùng `rand(1,5)` sinh số ngẫu nhiên.\n- `while` kiểm tra điều kiện **trước** mỗi lần lặp. `do ... while` chạy thân vòng lặp **ít nhất một lần** rồi mới kiểm tra [tr. 12](#p12).\n- `for` lặp theo bộ đếm. `foreach ($arr as $value)` hoặc `foreach ($arr as $key => $value)` duyệt từng phần tử của mảng [tr. 13](#p13).\n\n## 6. Hàm và phạm vi biến (scope)\n- Khai báo bằng `function ten($a, $b) { ... return $x; }`. Hàm trả về được **mọi kiểu**, kể cả mảng (ví dụ kết hợp với `list(...)`). PHP hỗ trợ hàm điều kiện, hàm lồng nhau và hàm đệ quy [tr. 14](#p14).\n- **Scope** [tr. 15](#p15):\n  - Biến trong hàm là **local**. Biến global bên ngoài *không* tự động thấy được trong hàm.\n  - Từ khoá `global $a, $b;` tham chiếu tới phiên bản global của biến.\n  - `static $a = 0;` giữ giá trị giữa các lần gọi hàm.\n\n## 7. Include file [tr. 16](#p16)\n- `include \'file.php\'` chèn và thực thi file khác. Ngoài ra còn `include_once`, `require` và `require_once`.\n- Scope của biến trong file được include **phụ thuộc vị trí lệnh include**. Include trong hàm thì biến của file đó thành local của hàm.\n\n## 8. Thông tin môi trường\n- `phpinfo()` in thông tin cấu hình PHP. Có thể lọc bằng hằng như `INFO_GENERAL`, `INFO_MODULES`, `INFO_VARIABLES`. Mặc định là `INFO_ALL` [tr. 17](#p17).\n- `$_SERVER` là **superglobal** chứa thông tin server/request (vd `HTTP_REFERER`, `HTTP_USER_AGENT`, `REMOTE_ADDR`) và dùng được ở mọi scope [tr. 18](#p18).\n\n## 9. Làm việc với file\n- `fopen(tên, mode)` mở file. Mode gồm `r`, `r+`, `w`, `w+`, `a`, `a+`, `x`, `x+`. Hàm trả về `false` nếu không mở được file [tr. 19](#p19).\n  - `w`/`a`: tạo file nếu file chưa có. Cẩn thận: `w` ghi đè file đã có.\n  - `x`: thất bại nếu file **đã tồn tại**.\n- `fclose()`, `feof()` (kiểm tra cuối file), `fgetc()` (đọc 1 ký tự), `fgets()` (đọc 1 dòng), `fwrite()`/`fputs()` (ghi chuỗi), `file()` (đọc cả file vào mảng, mỗi dòng một phần tử) [tr. 20](#p20).\n\n## 10. Form, cookie, ngày giờ\n- **Form handling** [tr. 21](#p21): element có thuộc tính `name` tự động có trong `$_POST` (method post) hoặc `$_GET` (method get).\n- **Cookie** [tr. 22](#p22):\n  - `setcookie(name, value, expire, path, domain)` tạo cookie. Lệnh này **phải đứng trước mọi output** (trước `<html>`) vì cookie thuộc HTTP header.\n  - Cookie chỉ "có hiệu lực" khi client gửi cookie lại server ở request sau.\n  - Đọc qua `$_COOKIE["name"]`, kiểm tra bằng `isset()`.\n- **Ngày giờ** [tr. 23](#p23): `time()` trả về Unix timestamp hiện tại. `date(format, timestamp)` định dạng thời gian, vd `date(\'Y-m-d\', time() + 7*24*60*60)` cho ngày tuần sau.\n\n## 11. Ví dụ tổng hợp: kiểm tra dữ liệu form [tr. 24](#p24)–[tr. 26](#p26)\nScript `form_checker.php` tự gửi form về chính nó và gồm 3 hàm:\n- `print_form()` in form, điền lại giá trị cũ vào `value`.\n- `check_form()`: nếu thiếu trường bắt buộc (`l_name`, `email`) thì báo lỗi và in lại form. Ngược lại gọi `confirm_form()`.\n- `confirm_form()` hiển thị thông tin đã nhận.\n\nChương trình chính: chưa submit (`!$_POST["submit"]`) thì in form trống. Đã submit thì gọi `check_form($_POST[...])`.',keyConcepts:[{term:`Server-side scripting`,definition:`Code được nhúng trong trang HTML và thực thi trên server khi trang được phục vụ, sinh nội dung động; client chỉ nhận output.`,pages:[3,4],source:`slide`},{term:`PHP: Hypertext Preprocessor`,definition:`Tên đầy đủ (viết tắt đệ quy) của PHP; ngôn ngữ server-side mã nguồn mở do Rasmus Lerdorf tạo năm 1995, tích hợp tốt với MySQL và Apache.`,pages:[4],source:`slide`},{term:`ASP / Java Servlets / JSP`,definition:`Các công nghệ server-side khác: ASP (Microsoft, tích hợp vào web server, cần phần mềm server Microsoft); Servlets (class Java biên dịch, được server nạp động); JSP (nhúng Java vào trang như ASP).`,pages:[3],source:`slide`},{term:"Khối PHP `<?php ... ?>`",definition:`Vùng mã được PHP interpreter thực thi; phần HTML bên ngoài được gửi nguyên văn.`,pages:[5],source:`slide`},{term:`echo / print`,definition:`Hai lệnh xuất output ra trang; server thay chúng bằng kết quả.`,pages:[5],source:`slide`},{term:"Biến `$` và dynamic typing",definition:"Mọi biến bắt đầu bằng `$`; kiểu được xác định theo ngữ cảnh sử dụng, không khai báo kiểu (no strong-typing).",pages:[6],source:`slide`},{term:`Kiểu scalar`,definition:`4 kiểu đơn: boolean, integer, float, string.`,pages:[6],source:`slide`},{term:`Single vs double quoted string`,definition:`Chuỗi nháy kép thay giá trị biến bên trong (interpolation); chuỗi nháy đơn giữ nguyên văn bản.`,pages:[6],source:`slide`},{term:`Heredoc`,definition:"Cú pháp `<<<EOD ... EOD;` để viết chuỗi nhiều dòng.",pages:[6],source:`slide`},{term:`Array (mảng kết hợp)`,definition:"Tạo bằng `array()`; key là integer hoặc string, value bất kỳ; key tự động = max key nguyên + 1.",pages:[7],source:`slide`},{term:`unset() / array_values()`,definition:"`unset()` xoá phần tử hoặc cả mảng; `array_values()` đánh lại chỉ số số nguyên từ 0.",pages:[7],source:`slide`},{term:`Constant – define()`,definition:"Định danh cho giá trị đơn, tạo bằng `define()`, case-sensitive, quy ước viết HOA, dùng được ở mọi scope.",pages:[8],source:`slide`},{term:"Toán tử nối chuỗi `.` và `.=`",definition:"`.` ghép hai chuỗi; `.=` ghép rồi gán lại cho biến bên trái.",pages:[9],source:`slide`},{term:`while vs do-while`,definition:"`while` kiểm tra điều kiện trước; `do-while` chạy thân vòng lặp ít nhất một lần rồi mới kiểm tra.",pages:[12],source:`slide`},{term:`foreach`,definition:"Vòng lặp duyệt từng phần tử mảng: `foreach ($a as $v)` hoặc `foreach ($a as $k => $v)`.",pages:[13],source:`slide`},{term:`Variable scope`,definition:`Biến trong hàm là local; biến global không tự động thấy được bên trong hàm.`,pages:[15],source:`slide`},{term:`global`,definition:`Từ khoá khai báo trong hàm để tham chiếu tới biến global cùng tên.`,pages:[15],source:`slide`},{term:`static (biến tĩnh)`,definition:`Biến cục bộ giữ giá trị giữa các lần gọi hàm; chỉ khởi tạo lần đầu.`,pages:[15],source:`slide`},{term:`include / require`,definition:`Chèn và thực thi file khác; biến của file include có scope tại vị trí include. Biến thể: include_once, require, require_once.`,pages:[16],source:`slide`},{term:`include vs require khi lỗi`,definition:"Khi không tìm thấy file: `include` chỉ phát warning và chạy tiếp, `require` gây fatal error dừng script; *_once không nạp lại file đã nạp.",pages:[16],source:`bổ sung`},{term:`phpinfo()`,definition:`Hàm in thông tin phiên bản/cấu hình PHP; tham số như INFO_GENERAL, INFO_MODULES lọc nội dung, mặc định INFO_ALL.`,pages:[17],source:`slide`},{term:"Superglobal `$_SERVER`",definition:`Mảng dành riêng chứa thông tin server và request (HTTP_REFERER, HTTP_USER_AGENT, REMOTE_ADDR…), dùng được ở mọi scope.`,pages:[18],source:`slide`},{term:`fopen() và mode`,definition:`Mở file: r, r+, w, w+, a, a+, x, x+; trả false khi lỗi; w/a tạo file nếu chưa có; x thất bại nếu file đã tồn tại.`,pages:[19],source:`slide`},{term:`Hàm đọc/ghi file`,definition:`fclose, feof, fgetc (1 ký tự), fgets (1 dòng), fwrite/fputs (ghi), file() (đọc cả file vào mảng).`,pages:[20],source:`slide`},{term:`$_POST / $_GET`,definition:"Superglobal chứa dữ liệu form gửi bằng method post/get, truy cập theo thuộc tính `name` của element.",pages:[21],source:`slide`},{term:`setcookie() và $_COOKIE`,definition:"`setcookie(name, value, expire, path, domain)` phải gọi trước mọi output vì là HTTP header; đọc lại qua `$_COOKIE` ở request sau, kiểm tra bằng `isset()`.",pages:[22],source:`slide`},{term:`time() và date()`,definition:"`time()` trả Unix timestamp hiện tại; `date(format[, timestamp])` trả chuỗi thời gian theo định dạng.",pages:[23],source:`slide`}],codeExamples:[{title:`Nhúng PHP vào HTML, echo/print và comment`,language:`php`,code:`<html>
+<head><title>Hello World</title></head>
+<body>
+  <p>This is going to be ignored by the PHP interpreter.</p>
+  <?php echo '<p>While this is going to be parsed.</p>'; ?>
+  <p>This will also be ignored by the PHP preprocessor.</p>
+  <?php print('<p>Hello and welcome to <i>my</i> page!</p>'); ?>
+  <?php
+   //This is a comment
+   /*
+    This is
+    a comment
+    block
+   */
+  ?>
+</body>
+</html>`,explanation:"Trang HTML bình thường xen các khối `<?php ... ?>`. Server chỉ thực thi phần trong khối PHP và thay bằng output; phần HTML còn lại gửi nguyên văn.",parts:[{lines:`4`,note:`HTML thuần – interpreter bỏ qua, gửi nguyên văn.`},{lines:`5`,note:"`echo` xuất chuỗi; dòng này được thay bằng `<p>While this is going to be parsed.</p>`."},{lines:`7`,note:"`print` cũng xuất output; mỗi lệnh kết thúc bằng `;`."},{lines:`8-15`,note:"Comment một dòng `//` và nhiều dòng `/* */` – không sinh output."}],pages:[5],source:`slide`},{title:`Kiểu scalar, chuỗi và heredoc`,language:`php`,code:`<?php
+$foo = true; if ($foo) echo "It is TRUE! <br /> \\n";
+$txt = '1234'; echo "$txt <br /> \\n";
+$a = 1.2e3; echo "$a <br /> \\n";        // 1200
+echo 'Arnold once said: "I\\'ll be back"', "<br /> \\n";
+$beer = 'Heineken';
+echo "$beer's taste is great <br /> \\n"; // Heineken's taste is great
+$str = <<<EOD
+Example of string
+spanning multiple lines
+using "heredoc" syntax.
+EOD;
+echo $str;
+?>`,explanation:`Minh hoạ 4 kiểu scalar và các cách viết chuỗi. Biến không khai báo kiểu – PHP suy ra theo giá trị gán.`,parts:[{lines:`2`,note:"boolean dùng trực tiếp trong `if`."},{lines:`3`,note:"Chuỗi '1234' – nháy kép bên echo làm biến `$txt` được thay giá trị."},{lines:`4`,note:"float viết dạng khoa học `1.2e3` = 1200."},{lines:`5`,note:"Chuỗi nháy đơn: escape dấu `'` bằng `\\'`; echo nhận nhiều tham số cách nhau bằng dấu phẩy."},{lines:`6-7`,note:"Interpolation trong chuỗi nháy kép: `$beer's` → `Heineken's`."},{lines:`8-13`,note:"Heredoc: chuỗi nhiều dòng, kết thúc bằng định danh `EOD;` ở đầu dòng."}],pages:[6],source:`slide`},{title:`Mảng: key tự động, thêm/xoá, reindex`,language:`php`,code:`<?php
+$arr = array("foo" => "bar", 12 => true);
+echo $arr["foo"]; // bar
+echo $arr[12];    // 1
+
+$arr = array(5 => 1, 12 => 2);
+foreach ($arr as $key => $value) {
+    echo $key, '=>', $value;
+}
+$arr[] = 56;    // giống $arr[13] = 56;
+$arr["x"] = 42; // thêm phần tử mới
+unset($arr[5]); // xoá phần tử key 5
+unset($arr);    // xoá cả mảng
+
+$a = array(1 => 'one', 2 => 'two', 3 => 'three');
+unset($a[2]);
+$b = array_values($a); // $b = array(0 => 'one', 1 => 'three')
+?>`,explanation:"Mảng PHP là mảng kết hợp (key → value). Slide gốc ở dòng `foreach` có thừa dấu `)` sau `$value` – bản trên đã sửa để chạy được.",parts:[{lines:`2-4`,note:"Key có thể là string hoặc integer; `true` khi echo hiển thị `1`."},{lines:`6-9`,note:`Duyệt mảng lấy cả key và value.`},{lines:`10`,note:`Không ghi key → key = max key nguyên (12) + 1 = 13.`},{lines:`12-13`,note:"`unset` xoá một cặp key/value hoặc toàn bộ mảng."},{lines:`15-17`,note:"Sau `unset($a[2])` mảng còn key 1 và 3; `array_values` đánh lại chỉ số 0, 1."}],pages:[7],source:`slide`},{title:`Phạm vi biến: local, global, static`,language:`php`,code:`<?php
+$a = 1;
+function Test() {
+    echo $a;      // $a local, chưa định nghĩa -> không in ra 1
+}
+Test();
+
+$a = 1;
+$b = 2;
+function Sum() {
+    global $a, $b;
+    $b = $a + $b;
+}
+Sum();
+echo $b;          // 3
+
+function Counter() {
+    static $n = 0;
+    echo $n;
+    $n++;
+}
+Counter(); Counter(); Counter(); // 012
+?>`,explanation:"Ba ví dụ trên slide tr. 15. Lưu ý slide gốc định nghĩa `function Test()` nhưng lại gọi `Test1()` ba lần – chạy nguyên văn sẽ lỗi *Call to undefined function Test1()*. Ở đây đổi tên thành `Counter()` cho rõ.",parts:[{lines:`2-6`,note:"Biến global `$a` không nhìn thấy được trong hàm – bên trong `$a` là biến local chưa gán."},{lines:`10-15`,note:"`global` liên kết `$a`, `$b` trong hàm với biến global, nên `$b` ngoài hàm thành 3."},{lines:`17-22`,note:"`static` chỉ khởi tạo một lần và giữ giá trị giữa các lần gọi → in 0, 1, 2."}],pages:[15],source:`slide`},{title:`include và scope của file được include`,language:`php`,code:`<?php
+// vars.php
+$color = 'green';
+$fruit = 'apple';
+?>
+<?php
+// test.php
+function foo() {
+    global $color;
+    include 'vars.php';
+    echo "A $color $fruit";  // A green apple
+}
+foo();
+echo "A $color $fruit";      // A green
+?>`,explanation:"Khi include bên trong hàm, các biến của `vars.php` thuộc scope của hàm. Chỉ `$color` được khai báo `global` nên còn thấy được bên ngoài; `$fruit` thì không.",parts:[{lines:`2-4`,note:`File được include khai báo 2 biến.`},{lines:`9-10`,note:"`global $color` trước khi include → phép gán `$color = 'green'` ghi vào biến global."},{lines:`14`,note:"Ngoài hàm chỉ còn `$color`; `$fruit` không tồn tại nên in `A green`."}],pages:[16],source:`slide`},{title:`Đọc và ghi file`,language:`php`,code:`<?php
+$myFile = "welcome.txt";
+if (!($fh = fopen($myFile, 'r')))
+    exit("Unable to open file.");
+while (!feof($fh)) {
+    $x = fgetc($fh);
+    echo $x;
+}
+fclose($fh);
+
+$fh = fopen("testFile.txt", 'a') or die("can't open file");
+fwrite($fh, "New Stuff 1\\n");
+fwrite($fh, "New Stuff 2\\n");
+fclose($fh);
+
+$lines = file('welcome.txt');
+foreach ($lines as $l_num => $line) {
+    echo "Line #{$l_num}: " . $line . "<br/>";
+}
+?>`,explanation:`Ba thao tác cơ bản: đọc từng ký tự, ghi nối (append), và đọc cả file thành mảng các dòng.`,parts:[{lines:`3-4`,note:"`fopen` trả `false` khi lỗi → dừng script bằng `exit()`."},{lines:`5-8`,note:"Lặp tới khi `feof` báo hết file, mỗi lần `fgetc` đọc 1 ký tự."},{lines:`11-14`,note:"Mode `a`: ghi nối vào cuối file, tự tạo file nếu chưa có; `or die()` xử lý lỗi."},{lines:`16-19`,note:"`file()` trả về mảng, mỗi phần tử là một dòng (key = số thứ tự dòng)."}],pages:[19,20],source:`slide`},{title:`Xử lý form với $_POST`,language:`php`,code:`<!-- form.html -->
+<form action="welcome.php" method="post">
+  Enter your name: <input type="text" name="name" /> <br/>
+  Enter your age: <input type="text" name="age" /> <br/>
+  <input type="submit" /> <input type="reset" />
+</form>
+
+<!-- welcome.php -->
+<html>
+<body>
+Welcome <?php echo $_POST["name"] . "."; ?><br />
+You are <?php echo $_POST["age"]; ?> years old!
+</body>
+</html>`,explanation:"Form gửi bằng method post tới welcome.php; mỗi input có thuộc tính `name` trở thành một key trong `$_POST`.",parts:[{lines:`2`,note:"`action` = script nhận dữ liệu, `method` = post → dữ liệu nằm trong `$_POST`."},{lines:`3-4`,note:"Thuộc tính `name` là key để đọc ở server."},{lines:`11-12`,note:"Đọc giá trị và ghép chuỗi bằng toán tử `.`."}],pages:[21],source:`slide`},{title:`Cookie: tạo và đọc`,language:`php`,code:`<?php
+setcookie("uname", $_POST["name"], time() + 36000);
+?>
+<html>
+<body>
+<p>Dear <?php echo $_POST["name"] ?>, a cookie was set on this page!</p>
+</body>
+</html>
+
+<!-- trang khác, ở request sau -->
+<?php
+if (isset($_COOKIE["uname"]))
+    echo "Welcome " . $_COOKIE["uname"] . "!<br />";
+else
+    echo "You are not logged in!<br />";
+?>`,explanation:"`setcookie` gửi header Set-Cookie nên phải nằm trước mọi output. Cookie sống 36000 giây (10 giờ) và chỉ xuất hiện trong `$_COOKIE` khi trình duyệt gửi nó lên ở request tiếp theo.",parts:[{lines:`2`,note:`Tham số: tên, giá trị, thời điểm hết hạn (timestamp hiện tại + 36000 s).`},{lines:`4`,note:"Output HTML bắt đầu sau `setcookie` – nếu đảo thứ tự sẽ không gửi được header."},{lines:`12-15`,note:"`isset()` kiểm tra cookie đã tồn tại trước khi đọc."}],pages:[22],source:`slide`}],figures:[{page:5,caption:`Cấu trúc trang PHP: khối <?php ?> xen giữa HTML, echo/print và comment`},{page:15,caption:`Ba ví dụ về variable scope: local, global, static`},{page:19,caption:`Các mode của fopen()`},{page:22,caption:`Tạo cookie bằng setcookie() và đọc bằng $_COOKIE`}],flashcards:[{id:`fc-01`,front:`PHP là viết tắt của gì?`,back:`**PHP: Hypertext Preprocessor** – một từ viết tắt đệ quy (recursive acronym).`,pages:[4],source:`slide`},{id:`fc-02`,front:`Ai tạo ra PHP và vào năm nào?`,back:`Rasmus Lerdorf, năm 1995 (ban đầu để theo dõi khách truy cập website của ông).`,pages:[4],source:`slide`},{id:`fc-03`,front:`Người dùng có thấy được mã PHP khi xem trang không?`,back:`Không. Server thực thi PHP và chỉ gửi output (HTML) về client.`,pages:[4],source:`slide`},{id:`fc-04`,front:`Server nhận ra trang chứa PHP dựa vào đâu?`,back:"Phần mở rộng file: `.php` hoặc `.phtml`.",pages:[4],source:`slide`},{id:`fc-05`,front:`Nhược điểm của ASP theo slide?`,back:`Phải chạy trên server dùng phần mềm server của Microsoft.`,pages:[3],source:`slide`},{id:`fc-06`,front:`Khối mã PHP bắt đầu và kết thúc bằng gì?`,back:"Bắt đầu `<?php`, kết thúc `?>`.",pages:[5],source:`slide`},{id:`fc-07`,front:`Hai lệnh xuất output cơ bản trong PHP?`,back:"`echo` và `print`.",pages:[5],source:`slide`},{id:`fc-08`,front:`4 kiểu scalar của PHP?`,back:`boolean, integer, float, string.`,pages:[6],source:`slide`},{id:`fc-09`,front:"Khác nhau giữa chuỗi `'...'` và `\"...\"`?",back:`Nháy kép thay giá trị biến bên trong (interpolation); nháy đơn giữ nguyên văn bản.`,pages:[6],source:`slide`},{id:`fc-10`,front:`Heredoc dùng để làm gì? Cú pháp?`,back:"Viết chuỗi nhiều dòng: `$s = <<<EOD` ... `EOD;`",pages:[6],source:`slide`},{id:`fc-11`,front:"`$arr = array(5 => 43, 32, 56);` – key của 32 và 56 là gì?",back:`6 và 7 (max key nguyên + 1).`,pages:[7],source:`slide`},{id:`fc-12`,front:"`array_values()` làm gì?",back:`Trả về mảng mới với chỉ số số nguyên đánh lại từ 0 (reindex).`,pages:[7],source:`slide`},{id:`fc-13`,front:`Cách khai báo hằng? Hằng có case-sensitive không?`,back:'`define("NAME", value)`; có, phân biệt hoa thường theo mặc định; quy ước viết HOA.',pages:[8],source:`slide`},{id:`fc-14`,front:`Toán tử nối chuỗi trong PHP?`,back:"`.` (nối) và `.=` (nối rồi gán).",pages:[9],source:`slide`},{id:`fc-15`,front:"Khác biệt giữa `while` và `do-while`?",back:"`do-while` luôn chạy thân vòng lặp ít nhất một lần vì kiểm tra điều kiện ở cuối.",pages:[12],source:`slide`},{id:`fc-16`,front:`Cú pháp foreach lấy cả key và value?`,back:"`foreach ($arr as $key => $value) { ... }`",pages:[13],source:`slide`},{id:`fc-17`,front:"Vì sao `echo $a;` trong hàm không in giá trị biến global `$a`?",back:"Biến trong hàm có scope local; cần `global $a;` (hoặc truyền tham số) để dùng biến global.",pages:[15],source:`slide`},{id:`fc-18`,front:"Biến `static` trong hàm có đặc điểm gì?",back:`Chỉ khởi tạo lần đầu và giữ giá trị giữa các lần gọi hàm.`,pages:[15],source:`slide`},{id:`fc-19`,front:`Các lệnh dùng để chèn file khác?`,back:"`include`, `include_once`, `require`, `require_once`.",pages:[16],source:`slide`},{id:`fc-20`,front:'`$_SERVER["REMOTE_ADDR"]` chứa gì?',back:`Địa chỉ IP của người dùng (client).`,pages:[18],source:`slide`},{id:`fc-21`,front:"Mode `w` và `x` của fopen khác nhau thế nào khi file đã tồn tại?",back:"`w` ghi đè (xoá nội dung cũ); `x` thất bại và trả về false.",pages:[19],source:`slide`},{id:`fc-22`,front:"`fgets()` và `fgetc()` khác nhau?",back:"`fgets()` đọc một dòng; `fgetc()` đọc một ký tự.",pages:[20],source:`slide`},{id:`fc-23`,front:`Hàm nào đọc toàn bộ file vào mảng?`,back:"`file()` – mỗi phần tử là một dòng.",pages:[20],source:`slide`},{id:`fc-24`,front:"Điều kiện để giá trị input xuất hiện trong `$_POST`?",back:'Input phải có thuộc tính `name` và form gửi bằng `method="post"`.',pages:[21],source:`slide`},{id:`fc-25`,front:"Vì sao `setcookie()` phải đặt trước `<html>`?",back:`Cookie là một phần HTTP header; header phải gửi trước mọi output.`,pages:[22],source:`slide`},{id:`fc-26`,front:`Hàm kiểm tra cookie đã được đặt?`,back:'`isset($_COOKIE["name"])`.',pages:[22],source:`slide`},{id:`fc-27`,front:"`time()` trả về gì?",back:`Unix timestamp hiện tại (số giây kể từ 1/1/1970).`,pages:[23],source:`slide`},{id:`fc-28`,front:`Ba hàm trong ví dụ form_checker.php?`,back:"`print_form()` (in form), `check_form()` (kiểm tra trường bắt buộc), `confirm_form()` (hiển thị kết quả).",pages:[24,25],source:`slide`}],quiz:[{id:`q-01`,level:`nhớ`,question:`PHP là viết tắt của cụm từ nào?`,options:[`Personal Home Page Tools`,`PHP: Hypertext Preprocessor`,`Preprocessed Hypertext Pages`,`Programmable HTML Parser`],answer:1,explanation:`Slide định nghĩa PHP là từ viết tắt đệ quy: PHP: Hypertext Preprocessor.`,pages:[4],source:`slide`},{id:`q-02`,level:`hiểu`,question:"Khi trình duyệt yêu cầu một trang `.php`, client nhận được gì?",options:[`Toàn bộ mã nguồn PHP để trình duyệt tự thông dịch`,`Mã PHP đã được biên dịch thành bytecode`,`File PHP kèm thư viện runtime`,`Chỉ output (HTML) do server sinh ra sau khi thực thi PHP`],answer:3,explanation:`Server thực thi code PHP, chèn output vào trang rồi gửi về; người dùng không bao giờ thấy mã PHP.`,pages:[4],source:`slide`},{id:`q-03`,level:`nhớ`,question:`Phát biểu nào đúng về biến trong PHP?`,options:["Biến bắt đầu bằng `$`, kiểu được xác định theo ngữ cảnh sử dụng",`Biến phải khai báo kiểu trước khi dùng`,"Biến bắt đầu bằng `@` và có strong-typing",`Biến chỉ chứa được string và integer`],answer:0,explanation:"Mọi biến bắt đầu bằng `$`; PHP không có strong-typing, kiểu phụ thuộc ngữ cảnh.",pages:[6],source:`slide`},{id:`q-04`,level:`vận dụng`,question:`Đoạn code sau in ra gì?`,code:{language:`php`,code:`<?php
+$beer = 'Heineken';
+echo "$beer's taste";
+echo ' | ';
+echo '$beer';
+?>`},options:[`Heineken's taste | Heineken`,`$beer's taste | $beer`,`Heineken's taste | $beer`,`Lỗi cú pháp vì dấu nháy đơn trong chuỗi`],answer:2,explanation:"Chuỗi nháy kép thay giá trị biến (`Heineken's taste`); chuỗi nháy đơn giữ nguyên `$beer`.",pages:[6],source:`slide`},{id:`q-05`,level:`vận dụng`,question:`Sau đoạn code, phần tử có giá trị 56 có key là bao nhiêu?`,code:{language:`php`,code:`<?php
+$arr = array(5 => 1, 12 => 2);
+$arr[] = 56;
+?>`},options:[`2`,`3`,`13`,`6`],answer:2,explanation:`Không ghi key thì PHP dùng (key nguyên lớn nhất + 1) = 12 + 1 = 13.`,pages:[7],source:`slide`},{id:`q-06`,level:`vận dụng`,question:`Đoạn code sau in ra bao nhiêu dòng "The number is ..." và số cuối cùng là gì?`,code:{language:`php`,code:`<?php
+$i = 0;
+do {
+  $i++;
+  echo "The number is $i <br />";
+} while ($i <= 10);
+?>`},options:[`10 dòng, số cuối 10`,`11 dòng, số cuối 11`,`11 dòng, số cuối 10`,`Không in gì vì $i bắt đầu bằng 0`],answer:1,explanation:`Khi $i = 10, điều kiện 10 <= 10 vẫn đúng nên lặp thêm một lần: tăng lên 11 và in ra. Tổng 11 dòng (1 → 11).`,pages:[12],source:`slide`},{id:`q-07`,level:`hiểu`,question:'Đoạn `$a = "Hello "; $a .= "World!";` cho `$a` bằng gì?',options:[`"World!"`,`"Hello "`,"Lỗi vì `.=` chỉ dùng cho số",`"Hello World!"`],answer:3,explanation:'`.=` nối chuỗi bên phải vào biến rồi gán lại: `$a = $a . "World!"`.',pages:[9],source:`slide`},{id:`q-08`,level:`vận dụng`,question:`Đoạn code sau (chép nguyên từ slide) khi chạy sẽ thế nào?`,code:{language:`php`,code:`<?php
+function Test()
+{
+   static $a = 0;
+   echo $a;
+   $a++;
+}
+Test1();
+Test1();
+Test1();
+?>`},options:[`In ra 012`,`In ra 000`,`Fatal error: gọi hàm Test1() chưa được định nghĩa`,`In ra 123`],answer:2,explanation:"Hàm được định nghĩa tên `Test` nhưng lại gọi `Test1()` → lỗi *Call to undefined function*. Nếu sửa thành `Test()` thì nhờ `static` sẽ in 012.",pages:[15],source:`slide`},{id:`q-09`,level:`vận dụng`,question:`Đoạn code sau in ra gì?`,code:{language:`php`,code:`<?php
+$a = 1;
+$b = 2;
+function Sum()
+{
+   global $a, $b;
+   $b = $a + $b;
+}
+Sum();
+echo $b;
+?>`},options:[`2`,`1`,`Lỗi undefined variable`,`3`],answer:3,explanation:"`global` khiến `$a`, `$b` trong hàm chính là biến global; `$b` được gán 1 + 2 = 3.",pages:[15],source:`slide`},{id:`q-10`,level:`hiểu`,question:"Vì sao `echo $a;` trong hàm `Test()` dưới đây không in ra 1?",code:{language:`php`,code:`<?php
+$a = 1;
+function Test() { echo $a; }
+Test();
+?>`},options:["Vì `$a` trong hàm là biến local, chưa được gán giá trị","Vì `echo` không dùng được trong hàm","Vì `$a` là hằng","Vì hàm phải có `return`"],answer:0,explanation:"Scope trong hàm là local; biến global `$a` không tự động thấy được. Cần `global $a;`.",pages:[15],source:`slide`},{id:`q-11`,level:`vận dụng`,question:"Với `vars.php` gán `$color = 'green'; $fruit = 'apple';`, dòng echo cuối in ra gì?",code:{language:`php`,code:`<?php
+function foo()
+{
+   global $color;
+   include 'vars.php';
+   echo "A $color $fruit";
+}
+foo();
+echo "A $color $fruit";
+?>`},options:[`A green apple`,`A green`,`A apple`,`A`],answer:1,explanation:"File được include trong hàm nên biến thuộc scope của `foo()`. Chỉ `$color` là global nên còn thấy bên ngoài; `$fruit` không.",pages:[16],source:`slide`},{id:`q-12`,level:`nhớ`,question:"Mode nào của `fopen()` sẽ thất bại nếu file đã tồn tại?",options:[`w`,`a`,`r+`,`x`],answer:3,explanation:"Mode `x` tạo và mở file để ghi; nếu file đã tồn tại thì hàm trả về false.",pages:[19],source:`slide`},{id:`q-13`,level:`hiểu`,question:"Vì sao `setcookie()` phải được gọi trước thẻ `<html>`?",options:[`Vì cookie là một phần HTTP header, phải gửi trước mọi output`,"Vì trình duyệt chỉ đọc cookie trong thẻ `<head>`","Vì `setcookie()` chỉ chạy được ở dòng đầu file",`Vì cookie cần được mã hoá trước khi render HTML`],answer:0,explanation:"Slide ghi chú: setcookie() phải xuất hiện trước `<html>` (hoặc mọi output) vì nó thuộc thông tin header gửi kèm trang.",pages:[22],source:`slide`},{id:`q-14`,level:`hiểu`,question:'Ngay sau khi gọi `setcookie("uname", ...)` trong một request, khi nào `$_COOKIE["uname"]` có giá trị?',options:[`Ngay dòng tiếp theo trong cùng script`,`Khi server khởi động lại`,`Ở request sau, khi client gửi cookie lên server`,"Không bao giờ, phải đọc qua `$_SERVER`"],answer:2,explanation:`Cookie chỉ có hiệu lực khi client gửi nó trở lại server, tức ở request tiếp theo.`,pages:[22],source:`slide`},{id:`q-15`,level:`nhớ`,question:`Biểu thức nào lấy địa chỉ IP của người dùng?`,options:[`$_POST["IP"]`,`$_SERVER["REMOTE_ADDR"]`,`$_COOKIE["REMOTE_ADDR"]`,`$_SERVER["HTTP_REFERER"]`],answer:1,explanation:"`$_SERVER` là superglobal chứa thông tin server/request; `REMOTE_ADDR` là IP client, `HTTP_REFERER` là trang trước đó.",pages:[18],source:`slide`},{id:`q-16`,level:`vận dụng`,question:'Form dưới đây gửi tới welcome.php. Lỗi khiến `$_POST["age"]` không có giá trị nằm ở đâu?',code:{language:`html`,code:`<form action="welcome.php" method="post">
+  Name: <input type="text" name="name" />
+  Age:  <input type="text" id="age" />
+  <input type="submit" />
+</form>`},options:['Thiếu `method="get"`',"Thẻ submit thiếu `value`",'Input tuổi chỉ có `id`, thiếu thuộc tính `name="age"`',"`action` phải là welcome.html"],answer:2,explanation:"Element form chỉ có mặt trong `$_POST`/`$_GET` khi có thuộc tính `name`.",pages:[21],source:`slide`},{id:`q-17`,level:`vận dụng`,question:`Đoạn code sau in ra gì?`,code:{language:`php`,code:`<?php
+$nextWeek = time() + (7 * 24 * 60 * 60);
+echo date('Y-m-d', $nextWeek);
+?>`},options:[`Số giây của một tuần (604800)`,`Ngày hiện tại`,`Unix timestamp của tuần sau`,`Ngày của 7 ngày sau, dạng năm-tháng-ngày`],answer:3,explanation:"`time()` + 7 ngày tính bằng giây cho timestamp tuần sau; `date('Y-m-d', ts)` định dạng nó thành chuỗi ngày.",pages:[23],source:`slide`},{id:`q-18`,level:`hiểu`,question:"Trong form_checker.php, khi nào `confirm_form()` được gọi?",options:[`Khi người dùng vừa mở trang lần đầu`,"Khi form đã submit và cả `l_name` lẫn `email` đều có giá trị","Khi thiếu trường `f_name`","Ngay sau `print_form()` trong mọi trường hợp"],answer:1,explanation:"`check_form()` báo thiếu và in lại form nếu `!$l_name || !$email`; ngược lại gọi `confirm_form()`.",pages:[25,26],source:`slide`}],examQuestions:[{id:`ex-01`,question:`Trình bày cơ chế hoạt động của một trang PHP từ lúc trình duyệt gửi request đến khi nhận kết quả. So sánh PHP với ASP, Java Servlets và JSP theo nội dung bài giảng.`,hints:"- Request tới file `.php`/`.phtml` → server nhận ra PHP qua phần mở rộng [tr. 4](#p4).\n- Server thực thi code trong `<?php ?>`, thay bằng output; HTML ngoài khối gửi nguyên văn [tr. 5](#p5).\n- Client chỉ nhận HTML, không thấy mã PHP.\n- ASP: tích hợp trong web server, cần server Microsoft; Servlets: class Java biên dịch, nạp động; JSP: nhúng Java vào trang [tr. 3](#p3).\n- PHP: mã nguồn mở, miễn phí, chạy cùng Apache, tích hợp MySQL [tr. 4](#p4).",pages:[3,4,5],source:`slide`},{id:`ex-02`,question:"Giải thích khái niệm phạm vi biến (variable scope) trong PHP. Cho ví dụ minh hoạ biến local, từ khoá `global` và biến `static`, nêu output của từng ví dụ.",hints:"- Biến trong hàm mặc định local; `echo $a` trong hàm không thấy `$a` global [tr. 15](#p15).\n- `global $a, $b;` → thao tác trên biến global; ví dụ Sum() cho `$b = 3`.\n- `static $a = 0;` giữ giá trị giữa các lần gọi → gọi 3 lần in `012` (lưu ý slide gọi nhầm `Test1()`).\n- Liên hệ: biến trong file include phụ thuộc vị trí include [tr. 16](#p16); superglobal như `$_SERVER` dùng được mọi scope [tr. 18](#p18).",pages:[15,16,18],source:`slide`},{id:`ex-03`,question:'Viết đoạn PHP đọc file `data.txt` từng dòng và in ra kèm số thứ tự dòng; sau đó ghi thêm một dòng "Done" vào cuối file. Giải thích mode fopen đã chọn và cách xử lý lỗi khi không mở được file.',hints:"- Cách 1: `$lines = file('data.txt'); foreach ($lines as $n => $line) echo \"Line #$n: $line<br/>\";` [tr. 20](#p20).\n- Cách 2: `fopen('data.txt','r')` + `while(!feof($fh)) echo fgets($fh);` + `fclose`.\n- Ghi nối: `fopen('data.txt','a') or die(...)`, `fwrite($fh, \"Done\\n\")`, `fclose`.\n- Mode `a`: ghi vào cuối, tạo file nếu chưa có; tránh `w` vì ghi đè [tr. 19](#p19).\n- fopen trả false khi lỗi → kiểm tra bằng `if (!($fh = fopen(...))) exit(...)`.",pages:[19,20],source:`slide`},{id:`ex-04`,question:'Thiết kế một trang PHP nhận tên người dùng qua form, lưu tên vào cookie trong 1 ngày, và ở lần truy cập sau hiển thị lời chào "Welcome <tên>". Nêu các lưu ý khi dùng `setcookie()`.',hints:'- Form `method="post"`, input có `name="name"` → đọc `$_POST["name"]` [tr. 21](#p21).\n- `setcookie("uname", $_POST["name"], time() + 24*60*60);` đặt **trước mọi output** vì thuộc HTTP header [tr. 22](#p22).\n- Lần sau: `if (isset($_COOKIE["uname"])) echo "Welcome " . $_COOKIE["uname"];` else hiển thị form.\n- Cookie chỉ có trong `$_COOKIE` ở request kế tiếp.\n- (Bổ sung) Nên escape output bằng `htmlspecialchars()` để tránh XSS khi in dữ liệu người dùng.',pages:[21,22,23],source:`slide`}]};export{e as default};

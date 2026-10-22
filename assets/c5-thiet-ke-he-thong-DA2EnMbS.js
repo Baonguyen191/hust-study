@@ -1,0 +1,73 @@
+var e={version:1,subject:`IoT`,lesson:`c5-thiet-ke-he-thong`,title:`Chương 5 – Thiết kế và xây dựng hệ thống IoT`,summary:`## 5.1. Học theo dự án (Project-Based Learning) [tr. 315](#p315)–[tr. 316](#p316)
+- Học bằng cách giải quyết một **bài toán/dự án IoT cụ thể**. Rèn 5 kỹ năng:
+  - Tìm vấn đề (finding problems).
+  - Phân tích thiết kế (system design & analysis).
+  - Xây dựng (implementing, programming).
+  - Trình bày, báo cáo.
+  - Làm việc nhóm.
+- Quy trình:
+  1. **Lập nhóm 3–4 thành viên**.
+  2. Xác định bài toán ứng dụng IoT.
+  3. **Phân tích, thiết kế**: kiến trúc tổng quan, chi tiết các thành phần, chọn phần cứng (máy tính nhúng, cảm biến), chọn giải pháp phần mềm/công nghệ IoT.
+  4. **Xây dựng**: lập trình các thành phần, vận dụng dịch vụ và công nghệ IoT.
+  5. Thuyết trình và báo cáo.
+
+## 5.2. Các chủ đề ứng dụng [tr. 317](#p317)–[tr. 326](#p326)
+- P1 **Smart Agriculture** (nông nghiệp thông minh).
+- P2 **Smart Home**: điều khiển từ xa bằng mobile app, **giọng nói (Google Assistant)**, giám sát từ xa.
+- P3 Smart Water Supply, P4 Smart Electrical Power: giám sát cấp nước và điện năng.
+- P5 Smart Transportation.
+- P6 **Smart Air Quality Monitoring**, kiến trúc 3 khối:
+  1. **Thu thập dữ liệu**: trạm đo với cảm biến NO2, CO2, CO, SO2, O3, NH3, **PM2.5**, GPS, module GSM 4G/WiFi.
+  2. **Giám sát và cảnh báo**: server có database và webserver.
+  3. **Phân tích dữ liệu bằng AI**.
+  - Client (PC, tablet, điện thoại) truy cập qua HTTP, TCP/IP.
+- Chủ đề khác: thu gom rác thông minh, đỗ xe thông minh, giám sát sức khoẻ, kho hàng robot.
+
+## 5.3. Các dự án mẫu
+- **Project 1 – Smart Garbage** [tr. 327](#p327)–[tr. 330](#p330):
+  - Thùng rác gửi trạng thái qua **MQTT** tới server (lưu **MongoDB**).
+  - Mobile app và web client giao tiếp với server qua **HTTP**, dùng **Google API** (bản đồ).
+  - Web app quản lý thêm/sửa thùng rác. Mobile app xem trạng thái.
+- **Project 2 – Smart Home** [tr. 331](#p331)–[tr. 338](#p338):
+  - Thiết bị **ESP8266** trong nhà ↔ **MQTT cloud** ↔ **Node server** ↔ server/mobile app.
+  - Mobile app: quản lý home/rooms, thêm thiết bị và ghép nối thiết bị vật lý, **automation**.
+  - Server có các luồng nghiệp vụ thêm/xoá người dùng, thêm nhà.
+- **Project 3 – Smart Home** [tr. 339](#p339)–[tr. 340](#p340): một thiết kế hệ thống khác và mobile app.
+- **Project 4 – Smart Garden (nhà nấm)** [tr. 341](#p341)–[tr. 349](#p349):
+  - **Kiến trúc**: cảm biến/thiết bị → node "House" → **RabbitMQ** → Houses_server và UI_backend (NodeJS) → **MongoDB** → web/mobile.
+  - **Công nghệ**: dữ liệu cảm biến ảo, server **NodeJS + ExpressJS**, DB **MongoDB**, web **ReactJS**, mobile **React Native**.
+  - **CSDL**: các collection **House** (name, width, height, member, deviceToken, events…), **DeviceType** (min, max, typeName…), **Device** (name, spaceX/Y/Z, data, active, status, history…), **User** (name, username, password, houses).
+  - **API REST**:
+    - \`POST /v1/auth/register\`, \`POST /v1/auth/login\`.
+    - \`GET /v1/device/{houseId}\`, \`PUT /v1/device/{deviceId}\`.
+    - \`GET /v1/data/{houseId}\`, \`GET /v1/house/events/{houseId}\`.
+    - \`GET /v1/house\`, \`POST /v1/house\`.
+    - \`PUT /v1/house/update-house/{houseId}\`, \`PUT /v1/house/update-member/{houseId}\`, \`PUT /v1/house/delete-member/{houseId}/{userId}\`.
+  - Có web app quản trị và mobile app.`,keyConcepts:[{term:`Project-Based Learning`,definition:`Học thông qua giải quyết một dự án IoT cụ thể, rèn kỹ năng tìm vấn đề, thiết kế, xây dựng, trình bày, làm việc nhóm.`,pages:[315],source:`slide`},{term:`Quy trình dự án IoT`,definition:`Lập nhóm 3–4 người → xác định bài toán → phân tích thiết kế (kiến trúc, chi tiết, phần cứng, phần mềm) → xây dựng → báo cáo.`,pages:[316],source:`slide`},{term:`Thiết kế kiến trúc tổng quan`,definition:`Xác định các khối thiết bị, truyền thông, server, ứng dụng và luồng dữ liệu giữa chúng.`,pages:[316],source:`slide`},{term:`Smart Home`,definition:`Điều khiển thiết bị từ xa qua mobile app, giọng nói (Google Assistant), giám sát từ xa.`,pages:[319],source:`slide`},{term:`Smart Air Quality Monitoring`,definition:`Trạm đo nhiều cảm biến khí + GPS + GSM/WiFi → server (DB, web) → cảnh báo, phân tích AI → client.`,pages:[324,325],source:`slide`},{term:`Cảm biến chất lượng không khí`,definition:`NO2, CO2, CO, SO2, O3, NH3, PM2.5.`,pages:[325],source:`slide`},{term:`Smart Garbage`,definition:`Thùng rác gửi trạng thái qua MQTT tới server MongoDB; app web/mobile qua HTTP và Google API.`,pages:[327],source:`slide`},{term:`ESP8266 + MQTT cloud`,definition:`Thiết bị trong Smart Home giao tiếp qua MQTT cloud với Node server và mobile app.`,pages:[331],source:`slide`},{term:`Automation (smart home)`,definition:`Kịch bản tự động hoá điều khiển thiết bị theo điều kiện trong mobile app.`,pages:[335],source:`slide`},{term:`RabbitMQ trong Smart Garden`,definition:`Hàng đợi thông điệp trung gian giữa node thiết bị House và các server NodeJS.`,pages:[341],source:`slide`},{term:`Stack MERN-like`,definition:`NodeJS/ExpressJS + MongoDB + ReactJS (web) + React Native (mobile).`,pages:[342],source:`slide`},{term:`Thiết kế CSDL MongoDB`,definition:`Collections House, DeviceType, Device, User với quan hệ 1–n.`,pages:[343],source:`slide`},{term:`Thiết kế REST API`,definition:`Endpoint theo tài nguyên: /v1/auth, /v1/device, /v1/data, /v1/house với GET/POST/PUT.`,pages:[344],source:`slide`}],codeExamples:[{title:`REST API của Smart Garden`,language:`http`,code:`POST /v1/auth/register                      # đăng ký
+POST /v1/auth/login                         # đăng nhập
+GET  /v1/device/{houseId}                   # danh sách thiết bị của nhà
+PUT  /v1/device/{deviceId}                  # sửa thiết bị
+GET  /v1/data/{houseId}                     # dữ liệu thống kê
+GET  /v1/house/events/{houseId}             # danh sách cảnh báo
+GET  /v1/house                              # thông tin nhà nấm
+POST /v1/house                              # thêm nhà nấm
+PUT  /v1/house/update-house/{houseId}       # sửa nhà
+PUT  /v1/house/update-member/{houseId}      # thêm thành viên
+PUT  /v1/house/delete-member/{houseId}/{userId}  # xoá thành viên`,explanation:`API được nhóm theo tài nguyên, dùng tiền tố phiên bản /v1. Ghi chú: xoá thành viên dùng PUT (cập nhật danh sách thành viên của nhà) thay vì DELETE.`,parts:[{lines:`1-2`,note:`Xác thực.`},{lines:`3-4`,note:`Thiết bị.`},{lines:`5-6`,note:`Dữ liệu và cảnh báo.`},{lines:`7-11`,note:`Quản lý nhà và thành viên.`}],pages:[344],source:`slide`},{title:`Ví dụ document MongoDB theo thiết kế CSDL (minh hoạ)`,language:`json`,code:`{
+  "_id": "ObjectId(...)",
+  "name": "Nhà nấm 1",
+  "width": 10, "height": 6,
+  "member": ["userId1", "userId2"],
+  "deviceToken": "...",
+  "events": [],
+  "delay": 30,
+  "address": "Hà Nội",
+  "device_types": ["typeId1"]
+}`,explanation:`Document của collection House theo sơ đồ CSDL trên slide (giá trị minh hoạ).`,parts:[{lines:`2-4`,note:`Thông tin nhà.`},{lines:`5`,note:`Danh sách thành viên – quan hệ với User.`},{lines:`10`,note:`Các loại thiết bị – quan hệ với DeviceType.`}],pages:[343],source:`bổ sung`}],figures:[{page:325,caption:`Kiến trúc hệ thống giám sát chất lượng không khí`},{page:327,caption:`Project 1 – Smart Garbage`},{page:331,caption:`Project 2 – Smart Home`},{page:341,caption:`Project 4 – Kiến trúc Smart Garden`},{page:343,caption:`Project 4 – Thiết kế CSDL`}],flashcards:[{id:`fc-01`,front:`5 kỹ năng rèn luyện qua học theo dự án IoT?`,back:`Tìm vấn đề, phân tích thiết kế, xây dựng, trình bày, làm việc nhóm.`,pages:[315],source:`slide`},{id:`fc-02`,front:`Quy mô nhóm dự án?`,back:`3–4 thành viên.`,pages:[316],source:`slide`},{id:`fc-03`,front:`Các bước phân tích thiết kế hệ thống IoT?`,back:`Kiến trúc tổng quan, thiết kế chi tiết, chọn phần cứng (máy tính nhúng, cảm biến), chọn giải pháp phần mềm/công nghệ.`,pages:[316],source:`slide`},{id:`fc-04`,front:`Chức năng chính của Smart Home trong slide?`,back:`Điều khiển từ xa (app), bằng giọng nói (Google Assistant), giám sát từ xa.`,pages:[319],source:`slide`},{id:`fc-05`,front:`Các cảm biến trạm quan trắc không khí?`,back:`NO2, CO2, CO, SO2, O3, NH3, PM2.5 (kèm GPS, GSM/WiFi).`,pages:[325],source:`slide`},{id:`fc-06`,front:`3 khối chức năng hệ thống giám sát không khí?`,back:`Thu thập dữ liệu cảm biến; giám sát và cảnh báo; phân tích dữ liệu dựa trên AI.`,pages:[325],source:`slide`},{id:`fc-07`,front:`Kể 4 chủ đề dự án IoT khác.`,back:`Smart garbage, smart parking, smart health monitoring, smart robotic warehouse.`,pages:[326],source:`slide`},{id:`fc-08`,front:`Smart Garbage giao tiếp thế nào?`,back:`Thùng rác → MQTT → server (MongoDB); app/web ↔ server qua HTTP, dùng Google API.`,pages:[327],source:`slide`},{id:`fc-09`,front:`Thiết bị trong Project 2 Smart Home?`,back:`ESP8266 giao tiếp qua MQTT cloud.`,pages:[331],source:`slide`},{id:`fc-10`,front:`Công nghệ của Smart Garden?`,back:`NodeJS + ExpressJS, MongoDB, ReactJS, React Native; dữ liệu cảm biến ảo.`,pages:[342],source:`slide`},{id:`fc-11`,front:`Message broker trong kiến trúc Smart Garden?`,back:`RabbitMQ.`,pages:[341],source:`slide`},{id:`fc-12`,front:`4 collection trong CSDL Smart Garden?`,back:`House, DeviceType, Device, User.`,pages:[343],source:`slide`},{id:`fc-13`,front:`API đăng nhập Smart Garden?`,back:`POST /v1/auth/login.`,pages:[344],source:`slide`},{id:`fc-14`,front:`API lấy danh sách thiết bị của một nhà?`,back:`GET /v1/device/{houseId}.`,pages:[344],source:`slide`},{id:`fc-15`,front:`API lấy cảnh báo?`,back:`GET /v1/house/events/{houseId}.`,pages:[344],source:`slide`},{id:`fc-16`,front:`API thêm nhà nấm mới?`,back:`POST /v1/house.`,pages:[344],source:`slide`}],quiz:[{id:`q-01`,level:`nhớ`,question:`Theo slide, nhóm dự án IoT gồm bao nhiêu thành viên?`,options:[`3–4`,`1–2`,`5–6`,`Không giới hạn`],answer:0,explanation:`Lập nhóm dự án: 3–4 thành viên.`,pages:[316],source:`slide`},{id:`q-02`,level:`hiểu`,question:`Bước nào thuộc giai đoạn phân tích và thiết kế hệ thống IoT?`,options:[`Thuyết trình`,`Chọn phần cứng (máy tính nhúng, sensors) và giải pháp phần mềm`,`Lập trình firmware`,`Viết báo cáo`],answer:1,explanation:`Phân tích thiết kế gồm kiến trúc, chi tiết thành phần, chọn phần cứng và phần mềm.`,pages:[316],source:`slide`},{id:`q-03`,level:`nhớ`,question:`Hệ thống giám sát chất lượng không khí dùng module nào để truyền dữ liệu từ trạm đo?`,options:[`NFC`,`RFID`,`GSM 4G/WiFi`,`Bluetooth Low Energy`],answer:2,explanation:`Measuring station có GPS và GSM 4G/WiFi module.`,pages:[325],source:`slide`},{id:`q-04`,level:`hiểu`,question:`Trong Smart Garbage, thùng rác gửi trạng thái tới server bằng giao thức nào?`,options:[`HTTP`,`SMTP`,`FTP`,`MQTT`],answer:3,explanation:`Thùng rác → MQTT → server; app/web dùng HTTP.`,pages:[327],source:`slide`},{id:`q-05`,level:`hiểu`,question:`Vai trò của RabbitMQ trong kiến trúc Smart Garden?`,options:[`Trung gian hàng đợi thông điệp giữa node thiết bị và các server`,`Lưu trữ dữ liệu lâu dài`,`Giao diện web`,`Ứng dụng mobile`],answer:0,explanation:`Node House gửi qua RabbitMQ tới Houses_server/UI_backend.`,pages:[341],source:`slide`},{id:`q-06`,level:`nhớ`,question:`Công nghệ phía server của Smart Garden?`,options:[`ASP.NET Core`,`NodeJS + ExpressJS`,`Spring Boot`,`PHP Laravel`],answer:1,explanation:`Server: NodeJS, ExpressJS; DB MongoDB; web React; mobile React Native.`,pages:[342],source:`slide`},{id:`q-07`,level:`vận dụng`,question:`Cần thêm endpoint xoá một thiết bị theo Id cho Smart Garden theo đúng chuẩn REST. Chọn?`,options:[`GET /v1/device/delete/{deviceId}`,`POST /v1/device/{deviceId}`,`DELETE /v1/device/{deviceId}`,`PUT /v1/house`],answer:2,explanation:`REST: DELETE tài nguyên theo Id (kiến thức chương 3).`,pages:[344],source:`bổ sung`},{id:`q-08`,level:`vận dụng`,question:`Endpoint nào trả danh sách cảnh báo của nhà nấm có id 7?`,options:[`GET /v1/data/7`,`POST /v1/house`,`PUT /v1/house/update-house/7`,`GET /v1/house/events/7`],answer:3,explanation:`Lấy danh sách các cảnh báo: GET /v1/house/events/{houseId}.`,pages:[344],source:`slide`},{id:`q-09`,level:`hiểu`,question:`Trong thiết kế CSDL Smart Garden, quan hệ giữa House và User thể hiện qua trường nào?`,options:[`House.member và User.houses`,`Device.spaceX`,`DeviceType.min`,`House.width`],answer:0,explanation:`House có member: Array; User có houses: Array.`,pages:[343],source:`slide`},{id:`q-10`,level:`hiểu`,question:`Thiết bị phần cứng trong Project 2 Smart Home là?`,options:[`Raspberry Pi 4`,`ESP8266`,`Arduino Mega`,`STM32`],answer:1,explanation:`Sơ đồ tổng quan: ESP8266 ↔ MQTT cloud.`,pages:[331],source:`slide`}],examQuestions:[{id:`ex-01`,question:`Trình bày quy trình thực hiện một dự án IoT theo phương pháp học dựa trên dự án. Áp dụng để đề xuất thiết kế cho hệ thống giám sát chất lượng không khí.`,hints:`- Kỹ năng và quy trình [tr. 315](#p315)–[tr. 316](#p316).
+- Kiến trúc 3 khối: thu thập (cảm biến khí, GPS, 4G/WiFi), giám sát cảnh báo (DB, web), AI; client [tr. 325](#p325).
+- Chọn giao thức (MQTT/HTTP), cloud platform (chương 2–3).`,pages:[315,316,325],source:`slide`},{id:`ex-02`,question:`Phân tích kiến trúc, công nghệ, thiết kế CSDL và API của dự án Smart Garden. Đề xuất cải tiến về bảo mật và chuẩn REST.`,hints:`- Kiến trúc với RabbitMQ, NodeJS, MongoDB [tr. 341](#p341).
+- Stack [tr. 342](#p342); CSDL 4 collection [tr. 343](#p343); API [tr. 344](#p344).
+- Cải tiến: DELETE cho xoá thành viên, xác thực JWT, HTTPS, mã hoá MQTT/AMQPS (liên hệ chương 4).`,pages:[341,342,343,344],source:`slide`},{id:`ex-03`,question:`So sánh kiến trúc truyền thông của Smart Garbage và Smart Home (Project 2). Vì sao thiết bị dùng MQTT còn ứng dụng dùng HTTP?`,hints:`- Smart Garbage: MQTT từ thùng rác, HTTP cho app/web, MongoDB, Google API [tr. 327](#p327).
+- Smart Home: ESP8266 ↔ MQTT cloud ↔ Node server ↔ app [tr. 331](#p331).
+- MQTT nhẹ, pub/sub, hợp thiết bị hạn chế; HTTP REST hợp app CRUD (chương 2–3).`,pages:[327,331],source:`slide`}]};export{e as default};
