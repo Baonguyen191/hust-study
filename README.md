@@ -33,6 +33,16 @@ npm run preview   # xem thử bản build
 
 `dist/` là site tĩnh hoàn chỉnh, dùng đường dẫn tương đối và hash router. Có thể mở bằng bất kỳ static server nào (vd `npx serve dist`). Lưu ý `dist/` chứa bản sao PDF (~130 MB).
 
+## Deploy (GitHub Pages)
+
+Site: https://baonguyen191.github.io/hust-study/
+
+```bash
+npm run deploy    # build ở máy (cần pdfRoot) rồi đẩy dist/ lên nhánh gh-pages
+```
+
+GitHub Pages phục vụ từ nhánh `gh-pages`, thường cập nhật sau 1–2 phút. Phải build ở máy vì PDF gốc không nằm trong repo. `data/raw/` cũng không đưa lên repo vì là text thô của slide; tái tạo bằng `npm run extract`. Sau khi sửa nội dung, nhớ commit + push `main` rồi chạy `npm run deploy`.
+
 ## Cấu trúc
 
 ```

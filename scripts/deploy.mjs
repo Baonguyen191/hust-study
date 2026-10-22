@@ -30,6 +30,7 @@ rmSync(join(DIST, ".git"), { recursive: true, force: true });
 run("git init -q -b gh-pages", DIST);
 run(`git config user.name "${name}"`, DIST);
 run(`git config user.email "${email}"`, DIST);
+run("git config core.autocrlf false", DIST);
 run("git add -A", DIST);
 run(`git commit -q -m "Deploy từ ${source}"`, DIST);
 run(`git push -f "${remote}" gh-pages`, DIST);
